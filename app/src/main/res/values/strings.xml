@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Prikkie</string>
+    <string name="button_recipes">Laat recepten zien</string>
+    <string name="KEY_BUDGET">Vul budget in</string>
 </resources>
