@@ -30,13 +30,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/budgetID" />
 
-    <TextView
-        android:id="@+id/budgetPrefID"
-        android:layout_width="59dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/showRecipesID" />
 </androidx.constraintlayout.widget.ConstraintLayout>
