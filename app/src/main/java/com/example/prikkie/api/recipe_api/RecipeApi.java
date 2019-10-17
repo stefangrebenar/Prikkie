@@ -1,4 +1,4 @@
-package com.example.prikkie.Api.RecipeApi;
+package com.example.prikkie.api.recipe_api;
 
 import android.content.Context;
 

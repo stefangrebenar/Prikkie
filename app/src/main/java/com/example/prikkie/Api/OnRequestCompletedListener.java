@@ -1,4 +1,4 @@
-package com.example.prikkie.Api;
+package com.example.prikkie.api;
 
 import org.json.JSONObject;
 
