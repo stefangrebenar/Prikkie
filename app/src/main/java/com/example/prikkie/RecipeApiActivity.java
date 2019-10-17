@@ -8,9 +8,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.prikkie.Api.RecipeApi.Recipe;
-import com.example.prikkie.Api.RecipeApi.RecipeApi;
-import com.example.prikkie.Api.RecipeApi.RecipePuppy;
+import com.example.prikkie.api.recipe_api.Recipe;
+import com.example.prikkie.api.recipe_api.RecipeApi;
+import com.example.prikkie.api.recipe_api.RecipePuppy;
 import com.google.android.material.textfield.TextInputEditText;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;

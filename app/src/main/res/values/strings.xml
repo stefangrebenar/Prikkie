@@ -10,6 +10,6 @@
     <string name="title_activity_main_nav">MainActivityNav</string>
     <string name="title_home">Home</string>
     <string name="title_weekly_planner">Weekly Planner</string>
-    <string name="title_notifications">Multiplayer</string>
+    <string name="title_multiplayer">Multiplayer</string>
     <string name="title_account">Account</string>
 </resources>

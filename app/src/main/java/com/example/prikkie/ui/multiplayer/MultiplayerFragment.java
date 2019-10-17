@@ -1,4 +1,4 @@
-package com.example.prikkie.ui.notifications;
+package com.example.prikkie.ui.multiplayer;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.prikkie.R;
 
-public class NotificationsFragment extends Fragment {
+public class MultiplayerFragment extends Fragment {
 
-    private NotificationsViewModel notificationsViewModel;
+    private MultiplayerViewModel multiplayerViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel =
-                ViewModelProviders.of(this).get(NotificationsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_notifications, container, false);
-        final TextView textView = root.findViewById(R.id.text_notifications);
-        notificationsViewModel.getText().observe(this, new Observer<String>() {
+        multiplayerViewModel =
+                ViewModelProviders.of(this).get(MultiplayerViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_multiplayer, container, false);
+        final TextView textView = root.findViewById(R.id.text_multiplayer);
+        multiplayerViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

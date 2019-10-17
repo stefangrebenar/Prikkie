@@ -12,9 +12,9 @@
         android:title="@string/title_weekly_planner" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_multiplayer"
         android:icon="@drawable/ic_group_black_24dp"
-        android:title="@string/title_notifications" />
+        android:title="@string/title_multiplayer" />
 
     <item
         android:id="@+id/navigation_account"
