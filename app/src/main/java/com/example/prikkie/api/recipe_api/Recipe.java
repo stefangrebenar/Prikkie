@@ -6,5 +6,5 @@ public class Recipe {
     public String imagePath;
     public ArrayList<String> ingredients = new ArrayList<String>();
     public String discription;
-    public String href;
+    public String href;//
 }
