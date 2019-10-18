@@ -71,3 +71,4 @@ fastlane/readme.md
 /captures
 .cxx
 
+.idea/vcs.xml
