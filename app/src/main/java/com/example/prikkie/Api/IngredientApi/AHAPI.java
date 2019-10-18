@@ -41,12 +41,18 @@ public class AHAPI {
 
                                 Product product = new Product();
 
-                                product.name = base.getString("title");
-                                product.description = base.getString("summary");
-                                product.weight = base.getJSONObject("price").getString("unitSize");
-//                                product.kgPrice = base.getJSONObject("price").getJSONObject("unitInfo").getDouble("price");
-                                product.price = base.getJSONObject("price").getDouble("now");
-                                product.imgURL = base.getJSONArray("images").getJSONObject(0).getString("url");
+                                if(base.has("title"))
+                                    product.name = base.getString("title");
+                                if(base.has("summary"))
+                                    product.description = base.getString("summary");
+                                if(base.getJSONObject("price").has("unitSize"))
+                                    product.weight = base.getJSONObject("price").getString("unitSize");
+                                if(base.getJSONObject("price").has("unitInfo"))
+                                    product.kgPrice = base.getJSONObject("price").getJSONObject("unitInfo").getDouble("price");
+                                if(base.getJSONObject("price").has("now"))
+                                    product.price = base.getJSONObject("price").getDouble("now");
+                                if(base.getJSONArray("images").length() > 0 && base.getJSONArray("images").getJSONObject(0).has("url"))
+                                    product.imgURL = base.getJSONArray("images").getJSONObject(0).getString("url");
 
                                 products.add(product);
                             }
