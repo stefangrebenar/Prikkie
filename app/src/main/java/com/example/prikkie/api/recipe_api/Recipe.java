@@ -1,4 +1,4 @@
-package com.example.prikkie.api.recipe_api;
+package com.example.prikkie.Api.recipe_api;
 import java.util.ArrayList;
 
 public class Recipe {
