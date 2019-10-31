@@ -11,13 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".IngredientApiActivity"></activity>
+        <activity android:name=".IngredientApiActivity"></activity><![CDATA[
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".MainActivityNav"
-            android:label="@string/title_activity_main_nav">
-        </activity>
+        ]]>
         <activity android:name=".RecipeApiActivity" />
         <activity
             android:name=".MainActivity"
