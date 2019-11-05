@@ -24,7 +24,8 @@
         android:onClick="onRecipeActivity"
         android:text="ToRecipeActivity"
         tools:layout_editor_absoluteX="37dp"
-        tools:layout_editor_absoluteY="36dp" />
+        tools:layout_editor_absoluteY="36dp"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/ingredientActivity"
@@ -33,6 +34,7 @@
         android:onClick="onIngredientActivity"
         android:text="To Ingredient Activity"
         app:layout_constraintStart_toEndOf="@+id/RecipeActivity"
-        tools:layout_editor_absoluteY="36dp" />
+        tools:layout_editor_absoluteY="36dp"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
