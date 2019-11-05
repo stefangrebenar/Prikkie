@@ -11,6 +11,8 @@ public abstract class RecipeApi {
     protected RequestQueue request;
     protected ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
+    protected abstract String AddPreferences(String currentString);
+
     public abstract void getRecipeFromApi(String keywords, String includedIngredients, String excludedIngredients);
 
     public ArrayList<Recipe> getRecipe() {

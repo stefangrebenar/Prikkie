@@ -88,11 +88,32 @@ public class RecipePuppy extends RecipeApi {
             //Add - after ,
             Log.d("TEST", "Before: "+result+excludes);
             excludes = excludes.replaceAll(",", ",-");
+            excludes = AddPreferences(excludes);
         }
         //Add to url
         result += excludes;
         Log.d("TEST", "After: "+result);
         return result;
+    }
+
+    @Override
+    protected String AddPreferences(String currentString){
+        // Get preferences
+
+        if(preferences.length() == 0) {
+            return "";
+        }
+
+        if (currentString.length() > 0) {
+            currentString += ",-" + preferences[0];
+        } else {
+            currentString += "-" + preferences[0];
+        }
+
+        //for all preferences
+        for(int i = 1; i < preferences.length(); i++){
+            currentString += ",-" + preferences[i];
+        }
     }
 
     private String constructUrl(String url, String keywords, String includedIngredients, String excludedIngredients){
