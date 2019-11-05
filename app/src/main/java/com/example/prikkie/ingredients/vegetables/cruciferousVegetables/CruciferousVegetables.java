@@ -18,6 +18,6 @@ public class CruciferousVegetables extends IngredientClassificationComponent {
         Add(new Kyona());
         Add(new Radish());
         Add(new Turnip());
-        Add(new Watercress()));
+        Add(new Watercress());
     }
 }

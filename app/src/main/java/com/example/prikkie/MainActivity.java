@@ -61,4 +61,8 @@ public class MainActivity extends AppCompatActivity {
     public void onIngredientActivity(View v){
         startActivity(new Intent(MainActivity.this, IngredientApiActivity.class));
     }
+
+    public void onAccountActivity(View v){
+        startActivity(new Intent(MainActivity.this, AccountActivity.class));
+    }
 }

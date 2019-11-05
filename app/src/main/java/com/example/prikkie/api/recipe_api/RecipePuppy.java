@@ -100,20 +100,22 @@ public class RecipePuppy extends RecipeApi {
     protected String AddPreferences(String currentString){
         // Get preferences
 
-        if(preferences.length() == 0) {
-            return "";
-        }
+//        if(preferences.length() == 0) {
+//            return "";
+//        }
+//
+//        if (currentString.length() > 0) {
+//            currentString += ",-" + preferences[0];
+//        } else {
+//            currentString += "-" + preferences[0];
+//        }
+//
+//        //for all preferences
+//        for(int i = 1; i < preferences.length(); i++){
+//            currentString += ",-" + preferences[i];
+//        }
 
-        if (currentString.length() > 0) {
-            currentString += ",-" + preferences[0];
-        } else {
-            currentString += "-" + preferences[0];
-        }
-
-        //for all preferences
-        for(int i = 1; i < preferences.length(); i++){
-            currentString += ",-" + preferences[i];
-        }
+        return currentString;
     }
 
     private String constructUrl(String url, String keywords, String includedIngredients, String excludedIngredients){

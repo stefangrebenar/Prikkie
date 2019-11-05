@@ -30,4 +30,14 @@ public abstract class IngredientClassificationComponent {
     public ArrayList<IngredientClassificationComponent> GetComponents(){
         return SubIngredients;
     }
+
+    public ArrayList<IngredientClassificationComponent> GetAllComponents()
+    {
+        ArrayList<IngredientClassificationComponent> allComponents = new ArrayList<IngredientClassificationComponent>();
+        for(IngredientClassificationComponent component: SubIngredients){
+            allComponents.add(component);
+            allComponents.addAll(component.GetAllComponents());
+        }
+        return allComponents;
+    }
 }
