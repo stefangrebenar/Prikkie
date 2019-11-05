@@ -26,4 +26,13 @@
         tools:layout_editor_absoluteX="37dp"
         tools:layout_editor_absoluteY="36dp" />
 
+    <Button
+        android:id="@+id/ingredientActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onIngredientActivity"
+        android:text="To Ingredient Activity"
+        app:layout_constraintStart_toEndOf="@+id/RecipeActivity"
+        tools:layout_editor_absoluteY="36dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

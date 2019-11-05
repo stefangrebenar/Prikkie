@@ -57,4 +57,8 @@ public class MainActivity extends AppCompatActivity {
     public void onRecipeActivity(View v){
         startActivity(new Intent(MainActivity.this, RecipeApiActivity.class));
     }
+
+    public void onIngredientActivity(View v){
+        startActivity(new Intent(MainActivity.this, IngredientApiActivity.class));
+    }
 }
