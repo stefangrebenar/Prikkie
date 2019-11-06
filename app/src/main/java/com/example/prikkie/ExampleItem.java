@@ -6,13 +6,13 @@ public class ExampleItem {
     private String mImageResource;
     private String mText1;
     private String mText2;
-    private CheckBox mCheckbox;
+    private Boolean isChecked;
 
-    public ExampleItem(String imageResource, String text1, String text2, CheckBox checkBox) {
+    public ExampleItem(String imageResource, String text1, String text2, Boolean isChecked) {
         mImageResource = imageResource;
         mText1 = text1;
         mText2 = text2;
-        mCheckbox = checkBox;
+        this.isChecked = isChecked;
     }
 
     public void changeText1(String text){
@@ -20,7 +20,7 @@ public class ExampleItem {
     }
 
     public  void  flipCheckBox(){
-        
+        isChecked = !isChecked;
     }
 
     public String getImageResource() {
@@ -33,5 +33,9 @@ public class ExampleItem {
 
     public String getText2() {
         return mText2;
+    }
+
+    public Boolean getChecked(){
+        return isChecked;
     }
 }

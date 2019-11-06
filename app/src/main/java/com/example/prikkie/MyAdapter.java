@@ -3,12 +3,11 @@ package com.example.prikkie;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.prikkie.Api.IngredientApi.Product;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -30,12 +29,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ExampleViewHolder>
         public ImageView mImageView;
         public TextView mTextView1;
         public TextView mTextView2;
+        public CheckBox mCheckBox;
 
         public ExampleViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             mTextView1 = itemView.findViewById(R.id.textView);
             mTextView2 = itemView.findViewById(R.id.textView2);
+            mCheckBox = itemView.findViewById(R.id.checkBox);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -67,9 +68,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ExampleViewHolder>
         ExampleItem currentItem = mExampleList.get(position);
 
         Picasso.get().load(currentItem.getImageResource()).resize(50,50).into(holder.mImageView);
-//        holder.mImageView.setImageResource(currentItem.getImageResource());
         holder.mTextView1.setText(currentItem.getText1());
         holder.mTextView2.setText(currentItem.getText2());
+        holder.mCheckBox.setChecked(currentItem.getChecked());
     }
 
     @Override
