@@ -19,12 +19,14 @@ public abstract class IngredientClassificationComponent {
         }
     }
 
-    public String GetEnglish(){
-        return  English;
-    }
-
-    public String GetDutch(){
-        return Dutch;
+    public String GetLanguage(int i){
+       switch(i) {
+           case 0:
+               return English;
+           case 1:
+               return Dutch;
+       }
+       return "Language not found";
     }
 
     public ArrayList<IngredientClassificationComponent> GetComponents(){

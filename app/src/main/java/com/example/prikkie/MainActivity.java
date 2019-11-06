@@ -2,6 +2,7 @@ package com.example.prikkie;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.prikkie.ingredientDB.IngredientDatabaseHandler;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -9,6 +10,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,8 +19,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Log.d("TEST123", "YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        IngredientDatabaseHandler ingredientDb = new IngredientDatabaseHandler(this);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
