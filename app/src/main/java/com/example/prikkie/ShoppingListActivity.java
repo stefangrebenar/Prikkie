@@ -35,6 +35,7 @@ public class ShoppingListActivity extends Activity {
 
     }
 
+    //Gives functionality to the add_buttons
     public void setupButtons(final Context context){
         findViewById(R.id.addProductButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +55,7 @@ public class ShoppingListActivity extends Activity {
         });
     }
 
+    //Fills the shoppinglist with random products for testing
     public void createExampleList(){
         AHAPI api = new AHAPI(){
             @Override
@@ -70,6 +72,7 @@ public class ShoppingListActivity extends Activity {
         api.getProducts(this,"Brood");
     }
 
+    //Builds the recylerView and sets up the adapter
     public void buildRecyclerView(){
         mRecyclerView = findViewById(R.id.shoppingList);
         mRecyclerView.setHasFixedSize(true);
@@ -98,6 +101,7 @@ public class ShoppingListActivity extends Activity {
         mAdapter.notifyItemChanged(position);
     }
 
+    //Code for swiping to delete.
     ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {

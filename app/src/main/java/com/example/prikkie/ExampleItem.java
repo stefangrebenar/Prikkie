@@ -13,10 +13,6 @@ public class ExampleItem {
         this.isChecked = isChecked;
     }
 
-    public void changeText1(String text){
-        mTopText = text;
-    }
-
     public  void  flipCheckBox(){
         isChecked = !isChecked;
     }
