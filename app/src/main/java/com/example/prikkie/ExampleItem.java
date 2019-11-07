@@ -6,10 +6,10 @@ public class ExampleItem {
     private String mBottomText;
     private Boolean isChecked;
 
-    public ExampleItem(String imageResource, String text1, String text2, Boolean isChecked) {
+    public ExampleItem(String imageResource, String topText, String bottomText, Boolean isChecked) {
         mImageResource = imageResource;
-        mTopText = text1;
-        mBottomText = text2;
+        mTopText = topText;
+        mBottomText = bottomText;
         this.isChecked = isChecked;
     }
 
