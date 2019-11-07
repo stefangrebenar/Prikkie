@@ -1,22 +1,20 @@
 package com.example.prikkie;
 
-import android.widget.CheckBox;
-
 public class ExampleItem {
     private String mImageResource;
-    private String mText1;
-    private String mText2;
+    private String mTopText;
+    private String mBottomText;
     private Boolean isChecked;
 
     public ExampleItem(String imageResource, String text1, String text2, Boolean isChecked) {
         mImageResource = imageResource;
-        mText1 = text1;
-        mText2 = text2;
+        mTopText = text1;
+        mBottomText = text2;
         this.isChecked = isChecked;
     }
 
     public void changeText1(String text){
-        mText1 = text;
+        mTopText = text;
     }
 
     public  void  flipCheckBox(){
@@ -27,13 +25,11 @@ public class ExampleItem {
         return mImageResource;
     }
 
-    public String getText1() {
-        return mText1;
+    public String getTopText() {
+        return mTopText;
     }
 
-    public String getText2() {
-        return mText2;
-    }
+    public String getBottomText() { return mBottomText; }
 
     public Boolean getChecked(){
         return isChecked;

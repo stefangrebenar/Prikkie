@@ -21,7 +21,7 @@ import java.util.Random;
 public class ShoppingListActivity extends Activity {
 
     private RecyclerView mRecyclerView;
-    private MyAdapter mAdapter;
+    private ShoppingListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<ExampleItem> mExampleList = new ArrayList<>();
 
@@ -74,13 +74,13 @@ public class ShoppingListActivity extends Activity {
         mRecyclerView = findViewById(R.id.shoppingList);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new MyAdapter(mExampleList);
+        mAdapter = new ShoppingListAdapter(mExampleList);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
 
-        mAdapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new ShoppingListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 flipCheckbox(position);
@@ -109,7 +109,7 @@ public class ShoppingListActivity extends Activity {
             final ExampleItem lastItem =  mExampleList.get(viewHolder.getAdapterPosition());
             final int pos = viewHolder.getAdapterPosition();
             mExampleList.remove(pos);
-            Snackbar mySnackbar = Snackbar.make(findViewById(R.id.coordinatorLayout), lastItem.getText1() + " verwijderd", 5000);
+            Snackbar mySnackbar = Snackbar.make(findViewById(R.id.coordinatorLayout), lastItem.getTopText() + " verwijderd", 5000);
             mySnackbar.setAction("Ongedaan maken", new MyUndoListener(pos, lastItem));
             mySnackbar.show();
 
