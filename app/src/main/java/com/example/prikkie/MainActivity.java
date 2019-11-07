@@ -1,5 +1,12 @@
 package com.example.prikkie;
+import android.content.Intent;
+import android.os.Bundle;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -10,35 +17,58 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
+import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText budgetID;
-    public static final String USER_PREF = "USER_PREF";
-    public static final String KEY_BUDGET = "KEY_BUDGET";
-    SharedPreferences sp;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        budgetID = (EditText) findViewById(R.id.budgetID);
-        sp = getSharedPreferences(USER_PREF, Context.MODE_PRIVATE);
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
 
-        if (sp.contains(KEY_BUDGET)) {
-            budgetID.setText(String.valueOf(sp.getInt(KEY_BUDGET, 0)));
-        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
     }
 
-    public void sendBudget(View view) {
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    Fragment selectedFragment = null;
 
-        int budget = Integer.valueOf(budgetID.getText().toString());
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(KEY_BUDGET, budget);
-        editor.apply();
+                    switch(menuItem.getItemId()){
+                        case R.id.nav_home:
+                            selectedFragment = new HomeFragment();
+                            break;
+                        case R.id.nav_planner:
+                            selectedFragment = new PlannerFragment();
+                            break;
+                        case R.id.nav_account:
+                            selectedFragment = new AccountFragment();
+                            break;
+                    }
 
-        Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                    return true;
+                }
+            };
+
+
+
+    public void onRecipeActivity(View v){
+        startActivity(new Intent(MainActivity.this, RecipeApiActivity.class));
+    }
+
+    public void onIngredientActivity(View v){
+        startActivity(new Intent(MainActivity.this, IngredientApiActivity.class));
     }
 }
