@@ -3,7 +3,6 @@ package com.example.prikkie;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,8 +35,7 @@ public class AccountActivity extends AppCompatActivity {
         ingredientDb = new IngredientDatabaseHandler(this);
 
         ArrayList<IngredientClassificationComponent> allPreSets = presets.GetComponents();
-        ArrayList<Ingredient> allIngredients = ingredientDb.AllIngredients();
-        Log.d("INGREDIENT", ingredientDb.getIngredient(1).Dutch);
+        ArrayList<Ingredient> allIngredients = ingredientDb.getAllIngredientsExcludingParents();
 //        allCheckboxes.addAll(allPreSets);
         allCheckboxes.addAll(allIngredients);
         count = allCheckboxes.size();

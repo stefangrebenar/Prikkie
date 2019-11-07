@@ -51,11 +51,12 @@ public class IngredientDatabaseHandler extends SQLiteOpenHelper {
         // Create ingredient table
         final String CREATE_INGREDIENT_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_INGREDIENTS + " (" + KEY_ID_INGREDIENTS + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_ENGLISH + " TEXT, " + KEY_DUTCH + " TEXT, " + KEY_CHECKED + " BIT)";
         // Create ingredient couple table
-        final String CREATE_COUPLE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_COUPLE + " (" + KEY_ID_COUPLE + " INTEGER PRI";
+        final String CREATE_COUPLE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_COUPLE + " (" + KEY_ID_COUPLE + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_INGREDIENT_PARENT_ID + " INTEGER, " + KEY_INGREDIENT_ID + " INTEGER)";
         // Create migration table
         final String CREATE_MIGRATION_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_MIGRATIONS + " (" + KEY_ID_MIGRATIONS + " INTEGER PRIMARY KEY AUTOINCREMENT, value INT)";
 
         db.execSQL(CREATE_INGREDIENT_TABLE);
+        db.execSQL(CREATE_COUPLE_TABLE);
         db.execSQL(CREATE_MIGRATION_TABLE);
 
         // Read migrations
@@ -65,6 +66,7 @@ public class IngredientDatabaseHandler extends SQLiteOpenHelper {
             // to get all item in dogs folder.
             String[] migrations = assetManager.list("migrations");
             InputStream inputStream;
+            Log.d("MIGRATIONS", "files = " + migrations.length);
             for (int i = 0; i < migrations.length; i++) {
                 inputStream = context.getAssets().open("migrations/migration" + (i+1) + ".sql");
 
@@ -77,9 +79,11 @@ public class IngredientDatabaseHandler extends SQLiteOpenHelper {
                             lineNumber++;
                             // Check if db contains id of migration
                             if (doesMigrationExist(Integer.parseInt(line))) {
-                                break;
+                                Log.d("MIGRATIONS", "Skipping migration " + line);
+                                continue;
                             }
                             // If not already executed, add it to db
+                            Log.d("MIGRATIONS", "Migrating " + line);
                             db.execSQL("INSERT INTO " + TABLE_NAME_MIGRATIONS + " (value) VALUES (0)");
                         }
                     } else {
@@ -99,6 +103,8 @@ public class IngredientDatabaseHandler extends SQLiteOpenHelper {
             e.printStackTrace();
         }
     }
+
+    //Checks if the migrations is already executed
         public boolean doesMigrationExist(int id){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME_MIGRATIONS,
@@ -115,13 +121,29 @@ public class IngredientDatabaseHandler extends SQLiteOpenHelper {
         return (cursor.getCount() > 0);
     }
 
+    public void addIngredientToParent(Ingredient parent, Ingredient ingredient){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_INGREDIENT_PARENT_ID, parent.Id);
+        values.put(KEY_INGREDIENT_ID, ingredient.Id);
+
+        db.insert(TABLE_NAME_COUPLE, null, values);
+        db.close();
+    }
+
+    public void removeIngredientFromParent(Ingredient parent, Ingredient ingredient){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME_COUPLE, KEY_INGREDIENT_PARENT_ID + " = ? && " + KEY_INGREDIENT_ID + " = ?", new String[] {String.valueOf(parent.Id), String.valueOf(ingredient.Id)});
+        db.close();
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_INGREDIENTS);
         this.onCreate(db);
     }
 
-    public void deleteOne(Ingredient ingredient){
+    public void deleteOneIngredient(Ingredient ingredient){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME_INGREDIENTS, KEY_ID_INGREDIENTS + " = ?", new String[] {String.valueOf(ingredient.Id)});
         db.close();
@@ -154,9 +176,37 @@ public class IngredientDatabaseHandler extends SQLiteOpenHelper {
         return null;
     }
 
-    public ArrayList<Ingredient> AllIngredients(){
+    public ArrayList<Ingredient> getAllIngredients(){
         ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
         String query = "SELECT * FROM " + TABLE_NAME_INGREDIENTS;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        Ingredient ingredient = null;
+
+        if(cursor.moveToFirst()){
+            do {
+
+                boolean checked = (Integer.parseInt(cursor.getString(3)) == 1);
+                ingredient = new Ingredient(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        checked);
+
+                ingredients.add(ingredient);
+            } while (cursor.moveToNext());
+        }
+
+        return ingredients;
+    }
+
+    public ArrayList<Ingredient> getAllIngredientsExcludingParents(){
+        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+        String query = "SELECT * FROM " + TABLE_NAME_INGREDIENTS +
+                " WHERE " + KEY_ID_INGREDIENTS + " NOT IN" +
+                " (" +
+                "SELECT " + KEY_INGREDIENT_PARENT_ID + " FROM " + TABLE_NAME_COUPLE +
+                ")";
+
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         Ingredient ingredient = null;
