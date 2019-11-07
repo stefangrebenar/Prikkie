@@ -28,7 +28,11 @@ public class IngredientDatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_CHECKED = "checked";
     private static final String[] COLUMNS_INGREDIENTS = {KEY_ID_INGREDIENTS, KEY_ENGLISH, KEY_DUTCH, KEY_CHECKED};
     // INGREDIENT COUPLES
-
+    private static final String TABLE_NAME_COUPLE = "ingredientCouples";
+    private static final String KEY_ID_COUPLE = "id";
+    private static final String KEY_INGREDIENT_PARENT_ID= "parentId";
+    private static final String KEY_INGREDIENT_ID = "ingredientId";
+    private static final String[] COLUMNS_COUPLE = {KEY_ID_COUPLE, KEY_INGREDIENT_PARENT_ID, KEY_INGREDIENT_ID};
     // MIGRATIONS
     private static final String TABLE_NAME_MIGRATIONS = "migrations";
     private static final String KEY_ID_MIGRATIONS = "id";
@@ -47,7 +51,7 @@ public class IngredientDatabaseHandler extends SQLiteOpenHelper {
         // Create ingredient table
         final String CREATE_INGREDIENT_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_INGREDIENTS + " (" + KEY_ID_INGREDIENTS + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_ENGLISH + " TEXT, " + KEY_DUTCH + " TEXT, " + KEY_CHECKED + " BIT)";
         // Create ingredient couple table
-
+        final String CREATE_COUPLE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_COUPLE + " (" + KEY_ID_COUPLE + " INTEGER PRI";
         // Create migration table
         final String CREATE_MIGRATION_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_MIGRATIONS + " (" + KEY_ID_MIGRATIONS + " INTEGER PRIMARY KEY AUTOINCREMENT, value INT)";
 
