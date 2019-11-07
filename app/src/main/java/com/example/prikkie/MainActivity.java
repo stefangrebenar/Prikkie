@@ -62,4 +62,8 @@ public class MainActivity extends AppCompatActivity {
     public void onIngredientActivity(View v){
         startActivity(new Intent(MainActivity.this, IngredientApiActivity.class));
     }
+
+    public void onShoppingListActivity(View v){
+        startActivity(new Intent(MainActivity.this, ShoppingListActivity.class));
+    }
 }
