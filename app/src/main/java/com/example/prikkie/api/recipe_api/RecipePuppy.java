@@ -59,7 +59,7 @@ public class RecipePuppy extends RecipeApi {
                     MainActivity recipeActivity = (MainActivity) context;
                     Log.d("Hoi2", recipeActivity.toString());
                     Log.d("Hoi", recipes.get(0).ingredients.get(0));
-                    recipeActivity.updateRecipes(recipes);
+                    //recipeActivity.updateRecipes(recipes);
                 }
                 catch(JSONException e){
                     e.printStackTrace();

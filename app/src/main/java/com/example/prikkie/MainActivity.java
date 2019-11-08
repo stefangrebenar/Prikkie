@@ -4,12 +4,14 @@ import android.os.Bundle;
 
 import com.example.prikkie.Api.recipe_api.Recipe;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.view.View;
 import android.view.MenuItem;
 
@@ -17,9 +19,6 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    RecipeFragment RecipeFragment;
-    SearchFragment SearchFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,24 +56,4 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             };
-
-    public void showRecipe(View v){
-        RecipeFragment.showRecipe(v);
-    }
-
-    public void updateRecipes(ArrayList<Recipe> recipes) {
-        RecipeFragment.updateRecipes(recipes);
-    }
-
-    public void getProductsButton(View v){
-        SearchFragment.getProductsButton(v);
-    }
-
-    public void onRecipeActivity(View v){
-        startActivity(new Intent(MainActivity.this, RecipeApiActivity.class));
-    }
-
-    public void onIngredientActivity(View v){
-        startActivity(new Intent(MainActivity.this, IngredientApiActivity.class));
-    }
 }
