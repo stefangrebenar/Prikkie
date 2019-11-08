@@ -18,7 +18,12 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        
+        HomeDefaultFragment HDF = new HomeDefaultFragment();
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame_container, HDF);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
 
         Button ShoppingList = (Button) view.findViewById(R.id.Shopping);
         ShoppingList.setOnClickListener(new View.OnClickListener() {
