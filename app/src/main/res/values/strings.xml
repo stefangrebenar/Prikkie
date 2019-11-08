@@ -6,13 +6,9 @@
     <string name="ingredient">i=</string>
     <string name="recipe_keyword">q=</string>
 
-    <string name="title_activity_main_nav">MainActivityNav</string>
-    <string name="title_home">Home</string>
-    <string name="title_weekly_planner">Weekly Planner</string>
-    <string name="title_multiplayer">Multiplayer</string>
-    <string name="title_account">Account</string>
-
     <string name="button_recipes">Laat recepten zien</string>
     <string name="KEY_BUDGET">Vul budget in</string>
+    <string name="title_activity_shopping_list_activity">ShoppingListACtivity</string>
+    <string name="title_activity_shopping_list">ShoppingListActivity</string>
 
 </resources>
