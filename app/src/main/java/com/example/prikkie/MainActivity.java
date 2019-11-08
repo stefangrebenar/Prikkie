@@ -3,19 +3,21 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.prikkie.ingredientDB.IngredientDatabaseHandler;
+import com.example.prikkie.Api.recipe_api.Recipe;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -54,26 +57,8 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
 
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                    getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 }
             };
-
-
-
-    public void onRecipeActivity(View v){
-        startActivity(new Intent(MainActivity.this, RecipeApiActivity.class));
-    }
-
-    public void onIngredientActivity(View v){
-        startActivity(new Intent(MainActivity.this, IngredientApiActivity.class));
-    }
-
-    public void onShoppingListActivity(View v){
-        startActivity(new Intent(MainActivity.this, ShoppingListActivity.class));
-    }
-
-    public void onAccountActivity(View v){
-        startActivity(new Intent(MainActivity.this, AccountActivity.class));
-    }
 }
