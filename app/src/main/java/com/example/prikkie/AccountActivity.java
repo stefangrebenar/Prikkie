@@ -14,17 +14,12 @@ import android.widget.GridView;
 
 import com.example.prikkie.ingredientDB.Ingredient;
 import com.example.prikkie.ingredientDB.IngredientDatabaseHandler;
-import com.example.prikkie.ingredients.IngredientClassificationComponent;
-import com.example.prikkie.ingredients.Ingredients;
-import com.example.prikkie.ingredients.presets.Presets;
 
 import java.util.ArrayList;
 
 public class AccountActivity extends AppCompatActivity {
     IngredientDatabaseHandler ingredientDb;
     public ArrayList<Ingredient> allCheckboxes = new ArrayList<Ingredient>();
-    private Ingredients ingredients = new Ingredients();
-    private Presets presets = new Presets();
     private int count;
     public ArrayList<String> preferences = new ArrayList<String>();
     private int Language = 1; //English = 0; Dutch = 1;
@@ -34,7 +29,6 @@ public class AccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ingredientDb = new IngredientDatabaseHandler(this);
 
-        ArrayList<IngredientClassificationComponent> allPreSets = presets.GetComponents();
         ArrayList<Ingredient> allIngredients = ingredientDb.getAllIngredientsExcludingParents();
 //        allCheckboxes.addAll(allPreSets);
         allCheckboxes.addAll(allIngredients);
