@@ -10,6 +10,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.prikkie.R;
 import com.example.prikkie.RecipeApiActivity;
+import com.example.prikkie.ingredientDB.Ingredient;
+import com.example.prikkie.ingredientDB.IngredientDatabaseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,28 +78,58 @@ public class RecipePuppy extends RecipeApi {
     private String prepareExcludesForUrl(String excludes, int includeLength){
         String result = "";
 
+        IngredientDatabaseHandler ingredientDb = new IngredientDatabaseHandler(context);
+        for(Ingredient ingredient : ingredientDb.GetCheckedIngredients()){
+            if(excludes.length() == 0){
+                excludes += ingredient.English;
+                continue;
+            }
+            excludes += "," + ingredient.English;
+        }
         if(excludes.length() > 0) {//If there are ingredients to exclude
             //Remove all spaces
             excludes = excludes.replaceAll("\\s+", "");
-            if(includeLength > 0)   //If there are ingredients to include, seperate them by ,
+            if(includeLength > 0)   //If there are ingredients to include, separate them by ,
             {
                 result += ",";
             }
             //Add - before ingredients to exclude them
             result += "-";
             //Add - after ,
-            Log.d("TEST", "Before: "+result+excludes);
             excludes = excludes.replaceAll(",", ",-");
+            excludes = AddPreferences(excludes);
         }
         //Add to url
         result += excludes;
-        Log.d("TEST", "After: "+result);
         return result;
+    }
+
+    @Override
+    protected String AddPreferences(String currentString){
+        // Get preferences
+
+//        if(preferences.length() == 0) {
+//            return "";
+//        }
+//
+//        if (currentString.length() > 0) {
+//            currentString += ",-" + preferences[0];
+//        } else {
+//            currentString += "-" + preferences[0];
+//        }
+//
+//        //for all preferences
+//        for(int i = 1; i < preferences.length(); i++){
+//            currentString += ",-" + preferences[i];
+//        }
+
+        return currentString;
     }
 
     private String constructUrl(String url, String keywords, String includedIngredients, String excludedIngredients){
         //If there are any ingredient preferences, add the pre-fix to the url
-        if(includedIngredients.length()+excludedIngredients.length() > 0){
+        String totalExcludes = prepareExcludesForUrl(excludedIngredients, includedIngredients.length());
+        if(includedIngredients.length()+totalExcludes.length() > 0){
             url += context.getResources().getString(R.string.ingredient);
         }
 
@@ -111,10 +143,10 @@ public class RecipePuppy extends RecipeApi {
             Log.d("ERROR", "Can't add ingredients to url");
         }
 
-        url += prepareExcludesForUrl(excludedIngredients, includedIngredients.length());
+        url += totalExcludes;
 
         //Add recipe to url
-        if(includedIngredients.length()+excludedIngredients.length()>0){
+        if(includedIngredients.length()+totalExcludes.length()>0){
             url += "&";
         }
         url += context.getResources().getString(R.string.recipe_keyword);
