@@ -8,9 +8,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.prikkie.MainActivity;
 import com.example.prikkie.R;
-import com.example.prikkie.RecipeApiActivity;
+import com.example.prikkie.RecipeFragment;
 import com.example.prikkie.ingredientDB.Ingredient;
 import com.example.prikkie.ingredientDB.IngredientDatabaseHandler;
 
@@ -23,9 +22,10 @@ import java.util.Arrays;
 
 
 public class RecipePuppy extends RecipeApi {
-
-    public RecipePuppy(Context current) {
+    RecipeFragment recipeFragment;
+    public RecipePuppy(Context current, RecipeFragment recipeFragment) {
         context = current;
+        this.recipeFragment = recipeFragment;
     }
 
     @Override
@@ -57,11 +57,7 @@ public class RecipePuppy extends RecipeApi {
                     }
 
                     // Bad code workaround for async methode
-                    Log.d("Hoi", context.toString());
-                    MainActivity recipeActivity = (MainActivity) context;
-                    Log.d("Hoi2", recipeActivity.toString());
-                    Log.d("Hoi", recipes.get(0).ingredients.get(0));
-                    //recipeActivity.updateRecipes(recipes);
+                    recipeFragment.updateRecipes(recipes);
                 }
                 catch(JSONException e){
                     e.printStackTrace();

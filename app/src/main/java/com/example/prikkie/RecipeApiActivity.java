@@ -48,7 +48,7 @@ public class RecipeApiActivity extends AppCompatActivity {
         //Get excluded ingredients
         String excludes = exclude.getText().toString();
 
-        recipeApi = new RecipePuppy(this);
+//        recipeApi = new RecipePuppy(this);
         recipeApi.getRecipeFromApi(keywords, ingredients, excludes);
     }
 

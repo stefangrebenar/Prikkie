@@ -63,7 +63,7 @@ public class RecipeFragment extends Fragment {
         //Get excluded ingredients
         String excludes = exclude.getText().toString();
 
-        recipeApi = new RecipePuppy(((MainActivity) getActivity()));
+        recipeApi = new RecipePuppy((MainActivity) getActivity(), this);
         recipeApi.getRecipeFromApi(keywords, ingredients, excludes);
     }
 
