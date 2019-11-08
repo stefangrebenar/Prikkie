@@ -20,7 +20,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_add_shopping_cart_black_24dp"
-                />
+                android:id="@+id/FirstButton" />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
