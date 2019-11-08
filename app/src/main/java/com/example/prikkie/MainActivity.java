@@ -1,5 +1,7 @@
 package com.example.prikkie;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.prikkie.ingredientDB.IngredientDatabaseHandler;
@@ -61,4 +63,5 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             };
+
 }
