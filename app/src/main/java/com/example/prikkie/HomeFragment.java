@@ -34,7 +34,7 @@ public class HomeFragment extends Fragment {
         ShoppingList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setFragment(new ShoppingFragment(), R.id.frame_container);
+                setFragment(new ShoppingListFragment(), R.id.frame_container);
 
             }
         });
