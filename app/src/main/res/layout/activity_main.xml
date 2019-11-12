@@ -34,6 +34,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:background="@color/colorPrimary"
+            app:itemTextAppearanceActive="@style/BottomNavigationView.Active"
+            app:itemTextAppearanceInactive="@style/BottomNavigationView"
+            app:itemTextColor="@color/colorWhite"
+            app:itemIconTint="@color/colorWhite"
             app:layout_constraintBottom_toBottomOf="parent"
             app:menu="@menu/bottom_navigation" />
 
