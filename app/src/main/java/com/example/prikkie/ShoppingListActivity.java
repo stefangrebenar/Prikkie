@@ -113,7 +113,7 @@ public class ShoppingListActivity extends Activity {
             final ExampleItem lastItem =  mExampleList.get(viewHolder.getAdapterPosition());
             final int pos = viewHolder.getAdapterPosition();
             mExampleList.remove(pos);
-            Snackbar mySnackbar = Snackbar.make(findViewById(R.id.coordinatorLayout), lastItem.getTopText() + " verwijderd", 5000);
+            Snackbar mySnackbar = Snackbar.make(findViewById(R.id.linearMain), lastItem.getTopText() + " verwijderd", 5000);
             mySnackbar.setAction("Ongedaan maken", new MyUndoListener(pos, lastItem));
             mySnackbar.show();
 

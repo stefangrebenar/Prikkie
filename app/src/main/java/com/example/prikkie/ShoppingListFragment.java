@@ -1,15 +1,10 @@
 package com.example.prikkie;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -35,7 +30,6 @@ public class ShoppingListFragment extends Fragment {
     private ArrayList<ExampleItem> mExampleList = new ArrayList<>();
     private FloatingActionButton addButton;
     private RecyclerView recyclerView;
-    private CoordinatorLayout coordinatorLayout;
 
 
     @Override
@@ -44,7 +38,6 @@ public class ShoppingListFragment extends Fragment {
 
         addButton = view.findViewById(R.id.addProductButton);
         recyclerView = view.findViewById(R.id.shoppingList);
-        coordinatorLayout = view.findViewById(R.id.coordinatorLayout);
 
         createExampleList();
         setupButtons(view.getContext());
@@ -130,7 +123,7 @@ public class ShoppingListFragment extends Fragment {
             final ExampleItem lastItem =  mExampleList.get(viewHolder.getAdapterPosition());
             final int pos = viewHolder.getAdapterPosition();
             mExampleList.remove(pos);
-            Snackbar mySnackbar = Snackbar.make(coordinatorLayout, lastItem.getTopText() + " verwijderd", 5000);
+            Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.constraintLayout), lastItem.getTopText() + " verwijderd", 5000);
             mySnackbar.setAction("Ongedaan maken", new MyUndoListener(pos, lastItem));
             mySnackbar.show();
 

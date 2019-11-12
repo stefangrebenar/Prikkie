@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:id="@+id/linearMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <HorizontalScrollView
+        android:id="@+id/ScrollViewHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:id="@+id/ScrollViewHome">
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -17,27 +19,28 @@
             android:orientation="horizontal">
 
             <ImageButton
+                android:id="@+id/FirstButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_add_shopping_cart_black_24dp"
-                android:id="@+id/FirstButton" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Shopping List"
-                android:id="@+id/Shopping"/>
+                android:src="@drawable/ic_add_shopping_cart_black_24dp" />
 
             <Button
+                android:id="@+id/Shopping"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Recepten"
-                android:id="@+id/Recipe"/>
+                android:text="Shopping List" />
 
             <Button
+                android:id="@+id/Recipe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Zoeken"
-                android:id="@+id/Search"/>
+                android:text="Recepten" />
+
+            <Button
+                android:id="@+id/Search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Zoeken" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -70,6 +73,6 @@
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
+        android:layout_height="match_parent"></FrameLayout>
+
 </LinearLayout>
