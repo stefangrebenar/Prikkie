@@ -12,32 +12,58 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorGrey"
 
             android:orientation="horizontal">
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_add_shopping_cart_black_24dp"
-                android:id="@+id/FirstButton" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Shopping List"
-                android:id="@+id/Shopping"/>
+            <TextView
+                android:id="@+id/FirstButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@color/colorGrey"
+                android:text="Home"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@color/colorGrey"
+                android:text="Boodschappenlijst"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:layout_marginEnd="20dp"/>
+
+            <TextView
+                android:id="@+id/Recipe"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@color/colorGrey"
                 android:text="Recepten"
-                android:id="@+id/Recipe"/>
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:layout_marginEnd="20dp"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/Search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@color/colorGrey"
                 android:text="Zoeken"
-                android:id="@+id/Search"/>
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:layout_marginEnd="20dp"/>
 
             <Button
                 android:layout_width="wrap_content"
