@@ -43,7 +43,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="12dp"
-        android:hint="Exclude: Tomato, Cheese"
+        android:hint="Exclude: Lettuce, Cole"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.529"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,34 +61,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="409dp"
-        android:layout_height="136dp"
-        android:layout_below="@+id/recipeView"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:elevation="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/recipeView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:srcCompat="@tools:sample/avatars[3]" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/recipeSubmitButton">
 
-    <TextView
-        android:id="@+id/recipeView"
-        android:layout_width="411dp"
-        android:layout_height="240dp"
-        android:layout_below="@+id/recipeSubmitButton"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="26dp"
-        android:background="#00ade6"
-        android:textColorHighlight="#00000000"
-        android:textColorLink="#00000000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recipeSubmitButton" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="176dp"
+            android:layout_height="129dp"
+            android:layout_below="@+id/recipeView"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="12dp"
+            android:elevation="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/recipeView"
+            app:layout_constraintEnd_toEndOf="@+id/recipeView"
+            app:layout_constraintTop_toTopOf="@+id/recipeView"
+            app:layout_constraintVertical_bias="0.876"
+            tools:srcCompat="@tools:sample/avatars[3]" />
+
+        <TextView
+            android:id="@+id/recipeView"
+            android:layout_width="379dp"
+            android:layout_height="259dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/layout_bg_rc"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:textColorHighlight="#00000000"
+            android:textColorLink="#00000000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
