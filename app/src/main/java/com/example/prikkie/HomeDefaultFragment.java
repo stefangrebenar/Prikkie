@@ -25,7 +25,6 @@ public class HomeDefaultFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_default, viewGroup, false);
 
-
         Button Budget = (Button) view.findViewById(R.id.showRecipesID);
         Budget.setOnClickListener(new View.OnClickListener() {
             @Override
