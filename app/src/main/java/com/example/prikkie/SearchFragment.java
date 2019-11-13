@@ -27,6 +27,7 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, viewGroup, false);
 
         productText = (TextView) view.findViewById(R.id.productText);
+            productText.setMovementMethod(new ScrollingMovementMethod());
         editText = (EditText) view.findViewById(R.id.editText);
         final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
 
@@ -43,7 +44,8 @@ public class SearchFragment extends Fragment {
 
     public void getProductsButton(View view) {
         final Product prod1;
-        productText.setMovementMethod(new ScrollingMovementMethod());
+            productText.setBackground(getResources().getDrawable(R.drawable.layout_bg_rc)); //This is the uses or overrides deprecated api line I think // Kevin
+            productText.setMovementMethod(new ScrollingMovementMethod());
         final AHAPI ahGetter = new AHAPI(){
             @Override
             public void onLoad(List<Product> products) {
