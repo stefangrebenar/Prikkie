@@ -57,7 +57,8 @@ public class ShoppingListFragment extends Fragment {
 
                         Product prod = products.get(new Random().nextInt(products.size()));
 
-                        insertItem(new Random().nextInt(mExampleList.size()), new ExampleItem(prod.imgURL, prod.name, "€" + prod.price, false));
+                        mExampleList.add(2, new ExampleItem(prod.imgURL, prod.name, "€" + prod.price, false));
+                        mAdapter.notifyItemInserted(2);
                     }
                 };
                 api.getProducts(context,"Tomaat");
