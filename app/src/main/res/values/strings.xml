@@ -10,5 +10,14 @@
     <string name="KEY_BUDGET">Vul budget in</string>
     <string name="title_activity_shopping_list_activity">ShoppingListACtivity</string>
     <string name="title_activity_shopping_list">ShoppingListActivity</string>
+    
+    <string-array name="numbers">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
 
 </resources>
