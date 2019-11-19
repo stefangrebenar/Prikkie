@@ -47,40 +47,36 @@ public class ShoppingListFragment extends Fragment {
 
     //Gives functionality to the add_buttons
     public void setupButtons(final Context context){
-       addButton.setOnClickListener(new View.OnClickListener() {
+        final  AHAPI ahGetter = new AHAPI(72, "brood", new AHAPI.onResultLoadedListener() {
             @Override
-            public void onClick(View v) {
-                 AHAPI api = new AHAPI(){
-                    @Override
-                    public void onLoad(List<Product> products) {
-                        super.onLoad(products);
-
+            public void onResultLoaded(List<Product> products) {
                         Product prod = products.get(new Random().nextInt(products.size()));
 
                         mExampleList.add(2, new ExampleItem(prod.imgURL, prod.name, "€" + prod.price, false));
                         mAdapter.notifyItemInserted(2);
-                    }
-                };
-                api.getProducts(context,"Tomaat");
             }
         });
+        ahGetter.orderBy(AHAPI.orderBy.ASC);
+//        ahGetter.setTaxonomy("");
+        ahGetter.getProducts(getContext());
+
     }
 
     //Fills the shoppinglist with random products for testing
     public void createExampleList(){
-        AHAPI api = new AHAPI(){
-            @Override
-            public void onLoad(List<Product> products) {
-                super.onLoad(products);
 
+        final  AHAPI ahGetter = new AHAPI(72, "brood", new AHAPI.onResultLoadedListener() {
+            @Override
+            public void onResultLoaded(List<Product> products) {
                 for (Product prod:products) {
                     mExampleList.add(new ExampleItem(prod.imgURL, prod.name, "€" + prod.price, false));
                 }
                 buildRecyclerView();
             }
-        };
-
-        api.getProducts((MainActivity)getContext(),"Brood");
+        });
+        ahGetter.orderBy(AHAPI.orderBy.ASC);
+//        ahGetter.setTaxonomy("");
+        ahGetter.getProducts(getContext());
     }
 
     //Builds the recylerView and sets up the adapter
@@ -147,7 +143,6 @@ public class ShoppingListFragment extends Fragment {
             mAdapter.notifyItemInserted(mPos);
         }
     }
-
 
 }
 

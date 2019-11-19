@@ -18,17 +18,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AHAPI {
+    private String urlQuery = "https://www.ah.nl/zoeken/api/products/search";
+    private onResultLoadedListener mListener;
+//    private String searchQuery = "";
 
+    public AHAPI(int resultSize, String prodQuery, onResultLoadedListener listener){
+        urlQuery += "?size=" + resultSize;
+        urlQuery += "&query=" + prodQuery;
+        mListener = listener;
+    }
+
+    public enum orderBy{
+        ASC,
+        DESC
+    }
+
+    public void orderBy(orderBy order){
+        if(order == orderBy.ASC){
+            urlQuery += "&sortBy=price";
+        }else if(order == orderBy.DESC){
+            urlQuery += "&sortBy=-price";
+        }
+    }
+
+    public void setTaxonomy(String taxonomy){
+        urlQuery += "&&taxonomySlug=" + taxonomy;
+    }
+
+   public interface onResultLoadedListener{
+        void onResultLoaded(List<Product> products);
+    }
 
     //gets the result of a query
-    public List<Product> getProducts(Context context, String query) {
+    public List<Product> getProducts(Context context) {
         final List<Product> products = new ArrayList<>();
         RequestQueue queue = Volley.newRequestQueue(context);
-
-        String url = "https://www.ah.nl/zoeken/api/products/search?size=72&&query=" + query;
+        ;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                (Request.Method.GET, urlQuery, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
@@ -56,7 +84,8 @@ public class AHAPI {
 
                                 products.add(product);
                             }
-                            onLoad(products);
+//                            onLoad(products);
+                            mListener.onResultLoaded(products);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
