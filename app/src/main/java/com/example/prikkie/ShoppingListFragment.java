@@ -47,18 +47,23 @@ public class ShoppingListFragment extends Fragment {
 
     //Gives functionality to the add_buttons
     public void setupButtons(final Context context) {
-        final AHAPI ahGetter = new AHAPI(72, new AHAPI.onResultLoadedListener() {
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResultLoaded(List<Product> products) {
-                Product prod = products.get(new Random().nextInt(products.size()));
+            public void onClick(View v) {
+                final AHAPI ahGetter = new AHAPI(72, new AHAPI.onResultLoadedListener() {
+                    @Override
+                    public void onResultLoaded(List<Product> products) {
+                        Product prod = products.get(new Random().nextInt(products.size()));
 
-                mExampleList.add(2, new ExampleItem(prod.imgURL, prod.name, "€" + prod.price, false));
-                mAdapter.notifyItemInserted(2);
+                        mExampleList.add(2, new ExampleItem(prod.imgURL, prod.name, "€" + prod.price, false));
+                        mAdapter.notifyItemInserted(2);
+                    }
+                });
+                ahGetter.setQuery("brood");
+                ahGetter.orderBy(AHAPI.orderBy.ASC);
+                ahGetter.getProducts(getContext());
             }
         });
-        ahGetter.setQuery("brood");
-        ahGetter.orderBy(AHAPI.orderBy.ASC);
-        ahGetter.getProducts(getContext());
 
     }
 
