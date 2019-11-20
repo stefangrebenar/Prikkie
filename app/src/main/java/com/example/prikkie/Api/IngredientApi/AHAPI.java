@@ -22,9 +22,8 @@ public class AHAPI {
     private onResultLoadedListener mListener;
 //    private String searchQuery = "";
 
-    public AHAPI(int resultSize, String prodQuery, onResultLoadedListener listener){
+    public AHAPI(int resultSize, onResultLoadedListener listener){
         urlQuery += "?size=" + resultSize;
-        urlQuery += "&query=" + prodQuery;
         mListener = listener;
     }
 
@@ -45,6 +44,10 @@ public class AHAPI {
         urlQuery += "&&taxonomySlug=" + taxonomy;
     }
 
+    public void setQuery(String query){
+        urlQuery += "&query=" + query;
+    }
+
    public interface onResultLoadedListener{
         void onResultLoaded(List<Product> products);
     }
@@ -53,7 +56,6 @@ public class AHAPI {
     public List<Product> getProducts(Context context) {
         final List<Product> products = new ArrayList<>();
         RequestQueue queue = Volley.newRequestQueue(context);
-        ;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, urlQuery, null, new Response.Listener<JSONObject>() {

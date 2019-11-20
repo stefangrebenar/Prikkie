@@ -59,7 +59,7 @@ public class SearchFragment extends Fragment {
     public void getProductsButton(View view) {
         final Product prod1;
 
-        final  AHAPI ahGetter = new AHAPI(72, editText.getText().toString(), new AHAPI.onResultLoadedListener() {
+        final  AHAPI ahGetter = new AHAPI(72, new AHAPI.onResultLoadedListener() {
             @Override
             public void onResultLoaded(List<Product> products) {
                 resultItems.clear();
@@ -71,6 +71,7 @@ public class SearchFragment extends Fragment {
                 mAdapter.notifyDataSetChanged();
             }
         });
+        ahGetter.setQuery(editText.getText().toString());
         ahGetter.orderBy(AHAPI.orderBy.ASC);
         ahGetter.setTaxonomy("tomaten");
         ahGetter.getProducts(getContext());
