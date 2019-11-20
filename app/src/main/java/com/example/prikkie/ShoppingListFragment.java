@@ -46,48 +46,49 @@ public class ShoppingListFragment extends Fragment {
     }
 
     //Gives functionality to the add_buttons
-    public void setupButtons(final Context context){
-       addButton.setOnClickListener(new View.OnClickListener() {
+    public void setupButtons(final Context context) {
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 AHAPI api = new AHAPI(){
+                final AHAPI ahGetter = new AHAPI(72, new AHAPI.onResultLoadedListener() {
                     @Override
-                    public void onLoad(List<Product> products) {
-                        super.onLoad(products);
-
+                    public void onResultLoaded(List<Product> products) {
                         Product prod = products.get(new Random().nextInt(products.size()));
 
                         mExampleList.add(2, new ExampleItem(prod.imgURL, prod.name, "€" + prod.price, false));
                         mAdapter.notifyItemInserted(2);
                     }
-                };
-                api.getProducts(context,"Tomaat");
+                });
+                ahGetter.setQuery("brood");
+                ahGetter.orderBy(AHAPI.orderBy.ASC);
+                ahGetter.getProducts(getContext());
             }
         });
+
     }
 
     //Fills the shoppinglist with random products for testing
-    public void createExampleList(){
-        AHAPI api = new AHAPI(){
-            @Override
-            public void onLoad(List<Product> products) {
-                super.onLoad(products);
+    public void createExampleList() {
 
-                for (Product prod:products) {
+        final AHAPI ahGetter = new AHAPI(72, new AHAPI.onResultLoadedListener() {
+            @Override
+            public void onResultLoaded(List<Product> products) {
+                for (Product prod : products) {
                     mExampleList.add(new ExampleItem(prod.imgURL, prod.name, "€" + prod.price, false));
                 }
                 buildRecyclerView();
             }
-        };
-
-        api.getProducts((MainActivity)getContext(),"Brood");
+        });
+        ahGetter.setQuery("brood");
+        ahGetter.orderBy(AHAPI.orderBy.ASC);
+        ahGetter.getProducts(getContext());
     }
 
     //Builds the recylerView and sets up the adapter
-    public void buildRecyclerView(){
+    public void buildRecyclerView() {
         mRecyclerView = recyclerView;
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager((MainActivity)getContext());
+        mLayoutManager = new LinearLayoutManager((MainActivity) getContext());
         mAdapter = new ShoppingListAdapter(mExampleList);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -102,12 +103,12 @@ public class ShoppingListFragment extends Fragment {
         });
     }
 
-    public void insertItem(int position, ExampleItem item){
+    public void insertItem(int position, ExampleItem item) {
         mExampleList.add(position, item);
         mAdapter.notifyDataSetChanged();
     }
 
-    public void flipCheckbox(int position){
+    public void flipCheckbox(int position) {
         mExampleList.get(position).flipCheckBox();
         mAdapter.notifyItemChanged(position);
     }
@@ -121,7 +122,7 @@ public class ShoppingListFragment extends Fragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            final ExampleItem lastItem =  mExampleList.get(viewHolder.getAdapterPosition());
+            final ExampleItem lastItem = mExampleList.get(viewHolder.getAdapterPosition());
             final int pos = viewHolder.getAdapterPosition();
             mExampleList.remove(pos);
             Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.constraintLayout), lastItem.getTopText() + " verwijderd", 5000);
@@ -136,7 +137,7 @@ public class ShoppingListFragment extends Fragment {
         private ExampleItem mItem;
         private int mPos;
 
-        public MyUndoListener(int position, ExampleItem item){
+        public MyUndoListener(int position, ExampleItem item) {
             mPos = position;
             mItem = item;
         }
@@ -147,7 +148,6 @@ public class ShoppingListFragment extends Fragment {
             mAdapter.notifyItemInserted(mPos);
         }
     }
-
 
 }
 
