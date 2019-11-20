@@ -15,4 +15,10 @@ public class Recipe {
     public String method;
     public int persons;
     public String href; // will be deprecated
+
+    public Recipe(String title, ArrayList<Ingredient> ingredients, String method){
+        this.title = title;
+        this.ingredients = ingredients;
+        this.method = method;
+    }
 }

@@ -1,6 +1,6 @@
 package com.example.prikkie;
 
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;

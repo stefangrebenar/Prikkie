@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.prikkie.Api.recipe_api.Recipe;
 import com.example.prikkie.Api.recipe_api.RecipeApi;
-import com.example.prikkie.Api.recipe_api.RecipePuppy;
 import com.google.android.material.textfield.TextInputEditText;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -63,7 +62,7 @@ public class RecipeFragment extends Fragment {
         //Get excluded ingredients
         String excludes = exclude.getText().toString();
 
-        recipeApi = new RecipePuppy((MainActivity) getActivity(), this);
+//        recipeApi = new RecipePuppy((MainActivity) getActivity(), this);
         recipeApi.getRecipeFromApi(keywords, ingredients, excludes);
     }
 
