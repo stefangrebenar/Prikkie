@@ -13,6 +13,12 @@ public class ExampleItem {
         this.isChecked = isChecked;
     }
 
+    public ExampleItem(String imageResource, String topText, String bottomText) {
+        mImageResource = imageResource;
+        mTopText = topText;
+        mBottomText = bottomText;
+    }
+
     public  void  flipCheckBox(){
         isChecked = !isChecked;
     }

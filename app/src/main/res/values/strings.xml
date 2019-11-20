@@ -6,7 +6,7 @@
     <string name="ingredient">i=</string>
     <string name="recipe_keyword">q=</string>
 
-    <string name="button_recipes">Toon Recepten</string>
+    <string name="button_recipes">Toon recepten</string>
     <string name="KEY_BUDGET">Vul budget in</string>
     <string name="title_activity_shopping_list_activity">ShoppingListACtivity</string>
     <string name="title_activity_shopping_list">ShoppingListActivity</string>
