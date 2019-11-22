@@ -84,9 +84,10 @@ public class PlannerFragment extends Fragment {
         do{
             ArrayList<Recipe> recipes = getRandomRecipes(excludedIngredients, checkedRecipes);
             for(Recipe recipe : recipes){
-                Log.d("TEST", "Recipe: "+ recipe.title);
                 double recipePrice = getPriceForIngredients(recipe.ingredients);
+                Log.d("TEST", "Recipe: "+ recipe.title + " = " + recipePrice);
                 if(recipePrice <= budget){
+                    Log.d("TEST", "Recipe costs less than " + budget);
                     finalRecipe = recipe;
                     break;
                 }
@@ -95,7 +96,7 @@ public class PlannerFragment extends Fragment {
                 }
                 amountOfCheckedRecipes++;
             }
-        }while(finalRecipe != null && amountOfCheckedRecipes < amountOfRecipes);
+        }while(finalRecipe == null && amountOfCheckedRecipes < amountOfRecipes-1);
 
         return finalRecipe;
     }
@@ -175,9 +176,6 @@ public class PlannerFragment extends Fragment {
 
                     price+=minPrice;
         }
-
-        Log.d("TEST", "Total recipe price = " + price);
-
         return price;
     }
 }
