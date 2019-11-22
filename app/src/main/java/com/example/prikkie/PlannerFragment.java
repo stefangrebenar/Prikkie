@@ -2,7 +2,9 @@ package com.example.prikkie;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +18,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.prikkie.Api.IngredientApi.AHAPI;
+import com.example.prikkie.Api.IngredientApi.AHAPIAsync;
+import com.example.prikkie.Api.IngredientApi.Product;
 import com.example.prikkie.Api.recipe_api.Recipe;
 import com.example.prikkie.ingredientDB.Ingredient;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class PlannerFragment extends Fragment {
 
@@ -47,14 +57,16 @@ public class PlannerFragment extends Fragment {
         Recipe recipe = getRecipesByBudget();
 
         String ingredientsListed = "";
+        if(recipe != null) {
 //        recipePicture.setImageBitmap(recipe.bitmap);
-        for(Ingredient ingredient : recipe.ingredients){
-            ingredientsListed += "+ " + ingredient.GetLanguage(1) +"\n";
-        }
+            for (Ingredient ingredient : recipe.ingredients) {
+                ingredientsListed += "+ " + ingredient.GetLanguage(1) + "\n";
+            }
 
-        recipeTitle.setText(recipe.title);
-        ingredientList.setText(ingredientsListed);
-        recipePreperations.setText(recipe.method);
+            recipeTitle.setText(recipe.title);
+            ingredientList.setText(ingredientsListed);
+            recipePreperations.setText(recipe.method);
+        }
         return view;
     }
 
@@ -63,7 +75,7 @@ public class PlannerFragment extends Fragment {
             return null; // budget not found
         }
         budget = sp.getInt(KEY_BUDGET, 0);
-        int amountOfRecipes = 0; // get from api (Maybe without the excluded recipes)
+        int amountOfRecipes = 4; // get from api (Maybe without the excluded recipes)
         int amountOfCheckedRecipes = 0;
         int[] checkedRecipes = new int[amountOfRecipes];
         Recipe finalRecipe = null;
@@ -72,12 +84,15 @@ public class PlannerFragment extends Fragment {
         do{
             ArrayList<Recipe> recipes = getRandomRecipes(excludedIngredients, checkedRecipes);
             for(Recipe recipe : recipes){
+                Log.d("TEST", "Recipe: "+ recipe.title);
                 double recipePrice = getPriceForIngredients(recipe.ingredients);
                 if(recipePrice <= budget){
                     finalRecipe = recipe;
                     break;
                 }
-                checkedRecipes[amountOfCheckedRecipes] = recipe.id;
+                if(checkedRecipes.length > 0) {
+                    checkedRecipes[amountOfCheckedRecipes] = recipe.id;
+                }
                 amountOfCheckedRecipes++;
             }
         }while(finalRecipe != null && amountOfCheckedRecipes < amountOfRecipes);
@@ -85,11 +100,9 @@ public class PlannerFragment extends Fragment {
         return finalRecipe;
     }
 
-    public ArrayList<Recipe> getRandomRecipes(ArrayList<Ingredient> excludedIngredients, int[] checkedRecipes) {
+    private ArrayList<Recipe> getTestRecipes(){
         ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
-        // Api call for recipes with preferences
-        // recipes = GetRandom(excludedIngredients, checkedRecipes);
         ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
         ingredients.add(new Ingredient(0, "tomato", "tomaat", false));
         ingredients.add(new Ingredient(0, "cheese", "kaas", false));
@@ -101,27 +114,69 @@ public class PlannerFragment extends Fragment {
         ingredients2.add(new Ingredient(0, "ham", "ham", false));
 
         ArrayList<Ingredient> ingredients3 = new ArrayList<Ingredient>();
-        ingredients2.add(new Ingredient(0, "toast", "brood", false));
+        ingredients3.add(new Ingredient(0, "toast", "brood", false));
         ingredients3.add(new Ingredient(0, "tomato", "tomaat", false));
         ingredients3.add(new Ingredient(0, "cheese", "kaas", false));
-        ingredients2.add(new Ingredient(0, "ham", "ham", false));
+        ingredients3.add(new Ingredient(0, "ham", "ham", false));
         ingredients3.add(new Ingredient(0, "pesto", "pesto", false));
 
+        ArrayList<Ingredient> ingredients4 = new ArrayList<Ingredient>();
+        ingredients4.add(new Ingredient(0, "toast", "brood", false));
 
         recipes.add(new Recipe("Ultimate sandwich", ingredients3, "Just DO IT!!!!"));
         recipes.add(new Recipe("Caprise", ingredients, "Melt da cheese"));
         recipes.add(new Recipe("Toast", ingredients2, "Toast the toast and melt da cheese"));
+        recipes.add(new Recipe("Droog brood bitch", ingredients4, "Be rich"));
 
         return recipes;
     }
 
+    public ArrayList<Recipe> getRandomRecipes(ArrayList<Ingredient> excludedIngredients, int[] checkedRecipes) {
+        ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+
+        // Api call for recipes with preferences
+        // recipes = GetRandom(excludedIngredients, checkedRecipes);
+
+        return getTestRecipes();
+    }
+
     private double getPriceForIngredients(ArrayList<Ingredient> ingredients){
         double price = 0.0;
-        AHAPI api = new AHAPI();
+        for(Ingredient ingredient : ingredients) {
+            AHAPIAsync api = new AHAPIAsync(1);
+            api.setQuery(ingredient.Dutch);
+            api.orderBy(AHAPI.orderBy.ASC);
+//            api.setTaxonomy("Groenten");                                      // Set taxonomy
 
-        for(Ingredient ingredient : ingredients){
-            price += api.getProducts((MainActivity)getContext(), ingredient.Dutch).get(0).price; // insert context fix
+            List<Product> products = null;
+            try {
+                api.execute();
+                products = api.get(10, SECONDS);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+
+            double minPrice = Double.POSITIVE_INFINITY;
+            if(products == null){
+                Log.d("TEST", "FAILED TO LOAD");
+                return minPrice;
+            }
+//                    Product cheapest = new Product();
+
+                    for(Product product : products){
+                        if(product.price < minPrice){
+                            minPrice = product.price;
+                        }
+                    }
+
+                    price+=minPrice;
         }
+
+        Log.d("TEST", "Total recipe price = " + price);
 
         return price;
     }
