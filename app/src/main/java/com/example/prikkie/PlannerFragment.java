@@ -24,9 +24,11 @@ import com.example.prikkie.Api.recipe_api.Recipe;
 import com.example.prikkie.ingredientDB.Ingredient;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -34,6 +36,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class PlannerFragment extends Fragment {
 
     private int budget;
+    private Map<String, Double> ingredientPrice = new HashMap<String, Double>();
     private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
     public static final String USER_PREF = "USER_PREF";
     public static final String KEY_BUDGET = "KEY_BUDGET";
@@ -144,6 +147,10 @@ public class PlannerFragment extends Fragment {
     private double getPriceForIngredients(ArrayList<Ingredient> ingredients){
         double price = 0.0;
         for(Ingredient ingredient : ingredients) {
+            if(ingredientPrice.containsKey(ingredient.Dutch)){
+                price += ingredientPrice.get(ingredient.Dutch);
+                continue;
+            }
             AHAPIAsync api = new AHAPIAsync(1);
             api.setQuery(ingredient.Dutch);
             api.orderBy(AHAPI.orderBy.ASC);
@@ -166,15 +173,16 @@ public class PlannerFragment extends Fragment {
                 Log.d("TEST", "FAILED TO LOAD");
                 return minPrice;
             }
-//                    Product cheapest = new Product();
 
-                    for(Product product : products){
-                        if(product.price < minPrice){
-                            minPrice = product.price;
-                        }
-                    }
+//            for(Product product : products){          // Since it is only one product and sorted by cheapest, it should be fine.
+//                if(product.price < minPrice){
+//                    minPrice = product.price;
+//                }
+//            }
 
-                    price+=minPrice;
+            minPrice = products.get(0).price;
+            ingredientPrice.put(ingredient.Dutch, minPrice);
+            price+=minPrice;
         }
         return price;
     }
