@@ -2,7 +2,6 @@ package com.example.prikkie;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.prikkie.Api.IngredientApi.AHAPI;
 import com.example.prikkie.Api.IngredientApi.AHAPIAsync;
@@ -24,7 +22,6 @@ import com.example.prikkie.Api.recipe_api.Recipe;
 import com.example.prikkie.ingredientDB.Ingredient;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,44 +32,67 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class PlannerFragment extends Fragment {
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view =  inflater.inflate(R.layout.fragment_planner,container,false);
+
+        RecipeThread rt = new RecipeThread(this, view);
+        Thread t = new Thread(rt);
+        t.start();
+        return view;
+    }
+
+}
+class RecipeThread implements Runnable {
     private int budget;
     private Map<String, Double> ingredientPrice = new HashMap<String, Double>();
     private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+
     public static final String USER_PREF = "USER_PREF";
     public static final String KEY_BUDGET = "KEY_BUDGET";
     public SharedPreferences sp;
 
+    private View view;
+
+    public Recipe recipe;
     private ImageView recipePicture;
     private TextView recipeTitle;
-    private EditText ingredientList;
-    private EditText recipePreperations;
+    private TextView ingredientList;
+    private TextView recipePreperations;
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        sp = (SharedPreferences) getContext().getSharedPreferences(USER_PREF, Context.MODE_PRIVATE);
-        View view =  inflater.inflate(R.layout.fragment_planner,container,false);
-        recipePicture = view.findViewById(R.id.generatedRecipePicture);
-        ingredientList = view.findViewById(R.id.recipeIngredientList);
-        recipePreperations = view.findViewById(R.id.recipePreparations);
-        recipeTitle = view.findViewById(R.id.recipeTitle);
-
-        Recipe recipe = getRecipesByBudget();
-
-        String ingredientsListed = "";
-        if(recipe != null) {
-//        recipePicture.setImageBitmap(recipe.bitmap);
-            for (Ingredient ingredient : recipe.ingredients) {
-                ingredientsListed += "+ " + ingredient.GetLanguage(1) + "\n";
-            }
-
-            recipeTitle.setText(recipe.title);
-            ingredientList.setText(ingredientsListed);
-            recipePreperations.setText(recipe.method);
-        }
-        return view;
+    public RecipeThread(Fragment fragment, View view){
+        sp = (SharedPreferences) fragment.getContext().getSharedPreferences(USER_PREF, Context.MODE_PRIVATE);
+        this.view = view;
     }
 
+    @Override
+    public void run() {
+        recipe = getRecipesByBudget();
+
+        if(recipe != null)
+        {
+            ((MainActivity) view.getContext()).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String ingredientsListed = "";
+                    recipePicture = view.findViewById(R.id.generatedRecipePicture);
+                    ingredientList = view.findViewById(R.id.recipeIngredientList);
+                    recipePreperations = view.findViewById(R.id.recipePreparations);
+                    recipeTitle = view.findViewById(R.id.recipeTitle);
+                    // recipePicture.setImageBitmap(recipe.bitmap);
+                    for (
+                            Ingredient ingredient : recipe.ingredients) {
+                        ingredientsListed += "+ " + ingredient.GetLanguage(1) + "\n";
+                    }
+
+                    recipeTitle.setText(recipe.title);
+                    ingredientList.setText(ingredientsListed);
+                    recipePreperations.setText(recipe.method);
+                }
+            });
+        }
+    }
     public Recipe getRecipesByBudget(){
         if (!sp.contains(KEY_BUDGET)) {
             return null; // budget not found

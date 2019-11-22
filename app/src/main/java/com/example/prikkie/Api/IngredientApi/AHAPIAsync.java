@@ -1,7 +1,11 @@
 package com.example.prikkie.Api.IngredientApi;
 
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.prikkie.App;
+import com.example.prikkie.R;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,15 +20,13 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class AHAPIAsync extends AsyncTask<String, Void, List<Product>> {
-    private String urlQuery = "https://www.ah.nl/zoeken/api/products/search";
+    private String urlQuery = App.getContext().getString(R.string.ah_api);
     private List<Product> products;
-//    private String searchQuery = "";
 
     public AHAPIAsync(int resultSize){
-        urlQuery += "?size=" + resultSize;
+        urlQuery += App.getContext().getString(R.string.ah_size) + resultSize;
     }
 
     public void orderBy(AHAPI.orderBy order){
@@ -36,11 +38,11 @@ public class AHAPIAsync extends AsyncTask<String, Void, List<Product>> {
     }
 
     public void setTaxonomy(String taxonomy){
-        urlQuery += "&&taxonomySlug=" + taxonomy;
+        urlQuery += App.getContext().getString(R.string.ah_taxonomy) + taxonomy;
     }
 
     public void setQuery(String query){
-        urlQuery += "&query=" + query;
+        urlQuery += App.getContext().getString(R.string.ah_query) + query;
     }
 
 

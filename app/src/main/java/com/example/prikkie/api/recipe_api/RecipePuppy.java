@@ -34,7 +34,7 @@
 //        recipes = new ArrayList<Recipe>();
 //        request = Volley.newRequestQueue(context);
 //        //Url to receive recipes
-//        String url = context.getResources().getString(R.string.recipe_puppy_api);
+////        String url = context.getResources().getString(R.string.recipe_puppy_api);
 //        //Construct url
 //        url = constructUrl(url, keywords, includedIngredients, excludedIngredients);
 //        Log.d("TEST", url);
