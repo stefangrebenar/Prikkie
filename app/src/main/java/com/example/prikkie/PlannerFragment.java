@@ -18,8 +18,10 @@ import androidx.fragment.app.Fragment;
 import com.example.prikkie.Api.IngredientApi.AHAPI;
 import com.example.prikkie.Api.IngredientApi.AHAPIAsync;
 import com.example.prikkie.Api.IngredientApi.Product;
+import com.example.prikkie.Api.recipe_api.PrikkieApi.PrikkieRecipeApi;
 import com.example.prikkie.Api.recipe_api.Recipe;
 import com.example.prikkie.ingredientDB.Ingredient;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,6 +88,7 @@ class RecipeThread implements Runnable {
                         ingredientsListed += "+ " + ingredient.GetLanguage(1) + "\n";
                     }
 
+                    Picasso.get().load(recipe.imagePath).resize(recipePicture.getWidth(), recipePicture.getHeight()).into(recipePicture);
                     recipeTitle.setText(recipe.title);
                     ingredientList.setText(ingredientsListed);
                     recipePreperations.setText(recipe.method);
@@ -156,12 +159,12 @@ class RecipeThread implements Runnable {
     }
 
     public ArrayList<Recipe> getRandomRecipes(ArrayList<Ingredient> excludedIngredients, int[] checkedRecipes) {
-        ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-
-        // Api call for recipes with preferences
+        ArrayList<Recipe> recipes;
+        final PrikkieRecipeApi api = new PrikkieRecipeApi();
+        recipes = api.getRandomRecipes(new int[0]);
         // recipes = GetRandom(excludedIngredients, checkedRecipes);
 
-        return getTestRecipes();
+        return recipes;
     }
 
     private double getPriceForIngredients(ArrayList<Ingredient> ingredients){
