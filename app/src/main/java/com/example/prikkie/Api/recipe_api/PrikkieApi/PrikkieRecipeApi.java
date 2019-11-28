@@ -24,6 +24,22 @@ public class PrikkieRecipeApi{
         return results;
     }
 
+    public int getAmountOfRecipes(){
+        PrikkieAmountOfRecipesAsync apiAsync = new PrikkieAmountOfRecipesAsync();
+        apiAsync.execute();
+
+        try {
+            return apiAsync.get(10, TimeUnit.SECONDS);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public ArrayList<Recipe> getRandomRecipes(int[] checkedIds){
         ArrayList<Recipe> results = new ArrayList<Recipe>();
         if(sp.contains(USER_PREF)){
@@ -33,6 +49,7 @@ public class PrikkieRecipeApi{
         else {
             // call api. query should exclude the checked recipe ids.
             PrikkieRandomRecipeAsync recipeAsync = new PrikkieRandomRecipeAsync();
+            recipeAsync.checkedIds = checkedIds;
             recipeAsync.execute();
             try {
                 results = recipeAsync.get(10, TimeUnit.SECONDS);
@@ -44,6 +61,7 @@ public class PrikkieRecipeApi{
                 e.printStackTrace();
             }
         }
+        Log.d("TEST", "Result = " + results.toString());
         //Todo Create different async calls.
         return results;
     }

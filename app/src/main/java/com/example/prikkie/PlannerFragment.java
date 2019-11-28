@@ -39,6 +39,7 @@ public class PlannerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_planner,container,false);
 
+        Log.d("TEST", "Making view...");
         RecipeThread rt = new RecipeThread(this, view);
         Thread t = new Thread(rt);
         t.start();
@@ -50,6 +51,7 @@ class RecipeThread implements Runnable {
     private int budget;
     private Map<String, Double> ingredientPrice = new HashMap<String, Double>();
     private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+    final PrikkieRecipeApi api = new PrikkieRecipeApi();
 
     public static final String USER_PREF = "USER_PREF";
     public static final String KEY_BUDGET = "KEY_BUDGET";
@@ -70,6 +72,7 @@ class RecipeThread implements Runnable {
 
     @Override
     public void run() {
+        Log.d("TEST", "Starting background tasks");
         recipe = getRecipesByBudget();
 
         if(recipe != null)
@@ -97,23 +100,28 @@ class RecipeThread implements Runnable {
         }
     }
     public Recipe getRecipesByBudget(){
+        Log.d("TEST", "Try to get recipes by budget");
         if (!sp.contains(KEY_BUDGET)) {
+            Log.d("TEST", "Budget not found");
             return null; // budget not found
         }
         budget = sp.getInt(KEY_BUDGET, 0);
-        int amountOfRecipes = 4; // get from api (Maybe without the excluded recipes)
+        int amountOfRecipes = getAmountOfRecipes(); // get from api (Maybe without the excluded recipes)
+        Log.d("TEST", "Amount of recipes = " + amountOfRecipes);
         int amountOfCheckedRecipes = 0;
         int[] checkedRecipes = new int[amountOfRecipes];
         Recipe finalRecipe = null;
         ArrayList<Ingredient> excludedIngredients = new ArrayList<Ingredient>();
         // Api get preferences?
         do{
+            Log.d("TEST", "Komt in fragment planner");
             ArrayList<Recipe> recipes = getRandomRecipes(excludedIngredients, checkedRecipes);
             for(Recipe recipe : recipes){
                 double recipePrice = getPriceForIngredients(recipe.ingredients);
                 Log.d("TEST", "Recipe: "+ recipe.title + " = " + recipePrice);
                 if(recipePrice <= budget){
                     Log.d("TEST", "Recipe costs less than " + budget);
+                    Log.d("IMAGE", recipe.imagePath);
                     finalRecipe = recipe;
                     break;
                 }
@@ -158,10 +166,14 @@ class RecipeThread implements Runnable {
         return recipes;
     }
 
+    private int getAmountOfRecipes(){
+        return api.getAmountOfRecipes();
+    }
+
     public ArrayList<Recipe> getRandomRecipes(ArrayList<Ingredient> excludedIngredients, int[] checkedRecipes) {
         ArrayList<Recipe> recipes;
-        final PrikkieRecipeApi api = new PrikkieRecipeApi();
-        recipes = api.getRandomRecipes(new int[0]);
+
+        recipes = api.getRandomRecipes(checkedRecipes);
         // recipes = GetRandom(excludedIngredients, checkedRecipes);
 
         return recipes;

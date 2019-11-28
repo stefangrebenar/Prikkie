@@ -42,6 +42,7 @@ public class AHAPIAsync extends AsyncTask<String, Void, List<Product>> {
     }
 
     public void setQuery(String query){
+        query = query.replaceAll("\\s", "%20");
         urlQuery += App.getContext().getString(R.string.ah_query) + query;
     }
 
