@@ -100,28 +100,24 @@ class RecipeThread implements Runnable {
         }
     }
     public Recipe getRecipesByBudget(){
-        Log.d("TEST", "Try to get recipes by budget");
         if (!sp.contains(KEY_BUDGET)) {
             Log.d("TEST", "Budget not found");
             return null; // budget not found
         }
         budget = sp.getInt(KEY_BUDGET, 0);
         int amountOfRecipes = getAmountOfRecipes(); // get from api (Maybe without the excluded recipes)
-        Log.d("TEST", "Amount of recipes = " + amountOfRecipes);
         int amountOfCheckedRecipes = 0;
         int[] checkedRecipes = new int[amountOfRecipes];
         Recipe finalRecipe = null;
         ArrayList<Ingredient> excludedIngredients = new ArrayList<Ingredient>();
         // Api get preferences?
         do{
-            Log.d("TEST", "Komt in fragment planner");
             ArrayList<Recipe> recipes = getRandomRecipes(excludedIngredients, checkedRecipes);
             for(Recipe recipe : recipes){
                 double recipePrice = getPriceForIngredients(recipe.ingredients);
-                Log.d("TEST", "Recipe: "+ recipe.title + " = " + recipePrice);
+//                Log.d("TEST", "Recipe: "+ recipe.title + " = " + recipePrice);
                 if(recipePrice <= budget){
-                    Log.d("TEST", "Recipe costs less than " + budget);
-                    Log.d("IMAGE", recipe.imagePath);
+//                    Log.d("TEST", "Recipe costs less than " + budget);
                     finalRecipe = recipe;
                     break;
                 }
@@ -205,7 +201,7 @@ class RecipeThread implements Runnable {
 
             double minPrice = Double.POSITIVE_INFINITY;
             if(products == null){
-                Log.d("TEST", "FAILED TO LOAD");
+                Log.d("TEST", "FAILED TO LOAD INGREDIENT PRICE");
                 return minPrice;
             }
 

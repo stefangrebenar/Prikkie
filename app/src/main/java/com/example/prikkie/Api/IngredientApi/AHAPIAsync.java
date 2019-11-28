@@ -51,7 +51,6 @@ public class AHAPIAsync extends AsyncTask<String, Void, List<Product>> {
     @Override
     protected List<Product> doInBackground(String... strings) {
         try{
-            Log.d("TEST", urlQuery);
             HttpGet httppost = new HttpGet(urlQuery);
             HttpClient httpclient = new DefaultHttpClient();
             HttpResponse response = httpclient.execute(httppost);        // StatusLine stat = response.getStatusLine();

@@ -37,8 +37,6 @@ public class PrikkieAmountOfRecipesAsync  extends AsyncTask<String, Void, Intege
                 HttpEntity entity = response.getEntity();
                 String data = EntityUtils.toString(entity);
                 return Integer.parseInt(data);
-
-
             }
         }
         catch (Exception e){

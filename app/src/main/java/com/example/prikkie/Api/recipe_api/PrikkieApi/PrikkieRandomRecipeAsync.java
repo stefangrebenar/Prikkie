@@ -38,7 +38,6 @@ public class PrikkieRandomRecipeAsync extends AsyncTask<String, Void, ArrayList<
     @Override
     protected ArrayList<Recipe> doInBackground(String... strings) {
         try{
-            Log.d("TEST", "KOMT HIER");
             String entityString = "";
             for(int i = 0; i < checkedIds.length; i++){
                 if(i == 0){
@@ -51,20 +50,17 @@ public class PrikkieRandomRecipeAsync extends AsyncTask<String, Void, ArrayList<
             HttpPost httppost = new HttpPost(urlQuery);
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 
-            Log.d("TEST", "Mystring = " + entityString);
             nameValuePairs.add((new BasicNameValuePair("stringdata", entityString)));
 
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             HttpClient httpclient = new DefaultHttpClient();
             HttpResponse response = httpclient.execute(httppost);        // StatusLine stat = response.getStatusLine();
             int status = response.getStatusLine().getStatusCode();
-            Log.d("TEST", "Response = " + status);
 
             // If response is Ok 200
             if(status == 200) {
                 HttpEntity entity = response.getEntity();
                 String data = EntityUtils.toString(entity);
-                Log.d("TEST", "data = " + data);
                 JSONArray recipeArray = new JSONArray(data);
 
                 int length = recipeArray.length();
