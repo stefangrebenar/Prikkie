@@ -109,6 +109,7 @@ public class PrikkieRandomRecipeAsync extends AsyncTask<String, Void, ArrayList<
                             if(ingredientObject.has("taxonomy")){
                                 ingredient.Taxonomy = ingredientObject.getString("taxonomy");
                             }
+                            Log.d("TEST", "Ingredient: " + ingredient.Dutch + " with taxonomy: " + ingredient.Taxonomy);
                             ingredients.add(ingredient);
                         }
                         recipe.ingredients = ingredients;
