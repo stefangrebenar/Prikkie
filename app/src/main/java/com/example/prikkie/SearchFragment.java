@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +67,7 @@ public class SearchFragment extends Fragment {
 
                 String text = "";
                 for (Product product:products) {
+                    Log.d("TEST", "Received product: " +product.name);
                     resultItems.add(new ExampleItem(product.imgURL, product.name, "€" + product.price));
                 }
                 mAdapter.notifyDataSetChanged();
@@ -75,6 +77,7 @@ public class SearchFragment extends Fragment {
         ahGetter.orderBy(AHAPI.orderBy.ASC);
         ahGetter.setTaxonomy("tomaten");
         ahGetter.getProducts(getContext());
+        Log.d("TEST", "query = " + editText.getText().toString());
 
         hideKeyboardFrom(getContext(), mView);
     }
