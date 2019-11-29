@@ -189,7 +189,7 @@ class RecipeThread implements Runnable {
             AHAPIAsync api = new AHAPIAsync(1);
             api.setQuery(ingredient.Dutch);
             api.orderBy(AHAPI.orderBy.ASC);
-//            api.setTaxonomy("Groenten");                                      // Set taxonomy
+//            api.setTaxonomy(ingredient.Taxonomy);                                      // Set taxonomy
 
             List<Product> products = null;
             try {
