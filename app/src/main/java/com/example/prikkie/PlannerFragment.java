@@ -75,15 +75,14 @@ class RecipeThread implements Runnable {
         Log.d("TEST", "Starting background tasks");
         recipe = getRecipesByBudget();
 
-        if(recipe != null)
-        {
-            ((MainActivity) view.getContext()).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+        ((MainActivity) view.getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                recipePreperations = view.findViewById(R.id.recipePreparations);
+                if (recipe != null) {
                     String ingredientsListed = "";
                     recipePicture = view.findViewById(R.id.generatedRecipePicture);
                     ingredientList = view.findViewById(R.id.recipeIngredientList);
-                    recipePreperations = view.findViewById(R.id.recipePreparations);
                     recipeTitle = view.findViewById(R.id.recipeTitle);
                     // recipePicture.setImageBitmap(recipe.bitmap);
                     for (
@@ -95,9 +94,11 @@ class RecipeThread implements Runnable {
                     recipeTitle.setText(recipe.title);
                     ingredientList.setText(ingredientsListed);
                     recipePreperations.setText(recipe.method);
+                } else {
+                    recipePreperations.setText("Failed to load recipe");
                 }
-            });
-        }
+            }
+        });
     }
     public Recipe getRecipesByBudget(){
         if (!sp.contains(KEY_BUDGET)) {
@@ -113,6 +114,9 @@ class RecipeThread implements Runnable {
         // Api get preferences?
         do{
             ArrayList<Recipe> recipes = getRandomRecipes(excludedIngredients, checkedRecipes);
+            if(recipes == null){
+                return null;
+            }
             for(Recipe recipe : recipes){
                 double recipePrice = getPriceForIngredients(recipe.ingredients);
 //                Log.d("TEST", "Recipe: "+ recipe.title + " = " + recipePrice);

@@ -61,8 +61,11 @@ public class PrikkieRecipeApi{
                 e.printStackTrace();
             }
         }
-        Log.d("TEST", "Result = " + results.toString());
-        //Todo Create different async calls.
-        return results;
+        if(results != null) {
+            Log.d("TEST", "Result = " + results.toString());
+            //Todo Create different async calls.
+            return results;
+        }
+        return null;
     }
 }
