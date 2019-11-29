@@ -3,7 +3,6 @@ package com.example.prikkie;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +11,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,8 +21,6 @@ import com.example.prikkie.Api.IngredientApi.Product;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static androidx.core.content.ContextCompat.getSystemService;
 
 public class SearchFragment extends Fragment {
 
@@ -67,7 +62,6 @@ public class SearchFragment extends Fragment {
 
                 String text = "";
                 for (Product product:products) {
-                    Log.d("TEST", "Received product: " +product.name);
                     resultItems.add(new ExampleItem(product.imgURL, product.name, "€" + product.price));
                 }
                 mAdapter.notifyDataSetChanged();
