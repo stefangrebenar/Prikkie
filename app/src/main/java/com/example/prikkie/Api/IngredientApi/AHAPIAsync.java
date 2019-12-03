@@ -38,6 +38,7 @@ public class AHAPIAsync extends AsyncTask<String, Void, List<Product>> {
     }
 
     public void setTaxonomy(String taxonomy){
+        taxonomy = taxonomy.replaceAll("\\s", "%20");
         urlQuery += App.getContext().getString(R.string.ah_taxonomy) + taxonomy;
     }
 
@@ -85,10 +86,9 @@ public class AHAPIAsync extends AsyncTask<String, Void, List<Product>> {
                         product.price = base.getJSONObject("price").getDouble("now");
                     if (base.getJSONArray("images").length() > 0 && base.getJSONArray("images").getJSONObject(0).has("url"))
                         product.imgURL = base.getJSONArray("images").getJSONObject(0).getString("url");
-//                    Log.d("TEST", "Found product: " + product.name);
+                    Log.d("TEST", "Found product: " + product.name);
                     products.add(product);
                 }
-//                Log.d("TEST", "Returning products");
                 return products;
             }
 

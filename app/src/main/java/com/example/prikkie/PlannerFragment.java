@@ -186,10 +186,11 @@ class RecipeThread implements Runnable {
                 price += ingredientPrice.get(ingredient.Dutch);
                 continue;
             }
+            Log.d("TEST", "Actual name = " + ingredient.Dutch + "; Actual taxonomy = " + ingredient.Taxonomy);
             AHAPIAsync api = new AHAPIAsync(1);
             api.setQuery(ingredient.Dutch);
             api.orderBy(AHAPI.orderBy.ASC);
-//            api.setTaxonomy("Groenten");                                      // Set taxonomy
+            api.setTaxonomy(ingredient.Taxonomy);                                      // Set taxonomy
 
             List<Product> products = null;
             try {

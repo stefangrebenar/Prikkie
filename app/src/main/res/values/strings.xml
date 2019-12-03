@@ -8,8 +8,8 @@
     <string name="recipe_keyword">q=</string>
 
     <!--PRIKKIE RECIPE-->
-<!--    <string name="prikkie_api">http://10.75.0.112:8000/</string>-->
-    <string name="prikkie_api">http://api.prikkieapp.nl/</string>
+    <string name="prikkie_api">http://10.75.0.163:8000/</string>
+<!--    <string name="prikkie_api">http://api.prikkieapp.nl/</string>-->
     <string name="prikkie_recipes">randomrecipe</string>
 
 
