@@ -2,7 +2,6 @@ package com.example.prikkie;
 
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,6 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.example.prikkie.Api.recipe_api.Recipe;
-import com.example.prikkie.Api.recipe_api.RecipeApi;
-import com.example.prikkie.Api.recipe_api.RecipePuppy;
 import com.google.android.material.textfield.TextInputEditText;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -30,7 +27,6 @@ public class RecipeFragment extends Fragment {
     private TextInputEditText searchQuery;
     private TextInputEditText include;
     private TextInputEditText exclude;
-    private RecipeApi recipeApi;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup viewGroup, Bundle savedInstanceState) {
@@ -63,8 +59,8 @@ public class RecipeFragment extends Fragment {
         //Get excluded ingredients
         String excludes = exclude.getText().toString();
 
-        recipeApi = new RecipePuppy((MainActivity) getActivity(), this);
-        recipeApi.getRecipeFromApi(keywords, ingredients, excludes);
+//        recipeApi = new RecipePuppy((MainActivity) getActivity(), this);
+//        recipeApi.getRecipeFromApi(keywords, ingredients, excludes);
     }
 
     public void updateRecipes(ArrayList<Recipe> recipes){
