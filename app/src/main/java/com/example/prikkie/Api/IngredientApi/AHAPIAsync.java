@@ -1,8 +1,6 @@
 package com.example.prikkie.Api.IngredientApi;
 
-import android.content.res.Resources;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.prikkie.App;
 import com.example.prikkie.R;
@@ -52,7 +50,6 @@ public class AHAPIAsync extends AsyncTask<String, Void, List<Product>> {
     @Override
     protected List<Product> doInBackground(String... strings) {
         try{
-            Log.d("TEST", urlQuery);
             HttpGet httppost = new HttpGet(urlQuery);
             HttpClient httpclient = new DefaultHttpClient();
             HttpResponse response = httpclient.execute(httppost);        // StatusLine stat = response.getStatusLine();
@@ -86,7 +83,6 @@ public class AHAPIAsync extends AsyncTask<String, Void, List<Product>> {
                         product.price = base.getJSONObject("price").getDouble("now");
                     if (base.getJSONArray("images").length() > 0 && base.getJSONArray("images").getJSONObject(0).has("url"))
                         product.imgURL = base.getJSONArray("images").getJSONObject(0).getString("url");
-                    Log.d("TEST", "Found product: " + product.name);
                     products.add(product);
                 }
                 return products;

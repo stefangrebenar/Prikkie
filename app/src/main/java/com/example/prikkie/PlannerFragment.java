@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,8 +37,6 @@ public class PlannerFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_planner,container,false);
-
-        Log.d("TEST", "Making view...");
         RecipeThread rt = new RecipeThread(this, view);
         Thread t = new Thread(rt);
         t.start();
@@ -72,7 +69,6 @@ class RecipeThread implements Runnable {
 
     @Override
     public void run() {
-        Log.d("TEST", "Starting background tasks");
         recipe = getRecipesByBudget();
 
         if(recipe != null)
@@ -100,28 +96,22 @@ class RecipeThread implements Runnable {
         }
     }
     public Recipe getRecipesByBudget(){
-        Log.d("TEST", "Try to get recipes by budget");
         if (!sp.contains(KEY_BUDGET)) {
-            Log.d("TEST", "Budget not found");
+            Log.e("Planner fragment", "Budget not found");
             return null; // budget not found
         }
         budget = sp.getInt(KEY_BUDGET, 0);
         int amountOfRecipes = getAmountOfRecipes(); // get from api (Maybe without the excluded recipes)
-        Log.d("TEST", "Amount of recipes = " + amountOfRecipes);
         int amountOfCheckedRecipes = 0;
         int[] checkedRecipes = new int[amountOfRecipes];
         Recipe finalRecipe = null;
         ArrayList<Ingredient> excludedIngredients = new ArrayList<Ingredient>();
         // Api get preferences?
         do{
-            Log.d("TEST", "Komt in fragment planner");
             ArrayList<Recipe> recipes = getRandomRecipes(excludedIngredients, checkedRecipes);
             for(Recipe recipe : recipes){
                 double recipePrice = getPriceForIngredients(recipe.ingredients);
-                Log.d("TEST", "Recipe: "+ recipe.title + " = " + recipePrice);
                 if(recipePrice <= budget){
-                    Log.d("TEST", "Recipe costs less than " + budget);
-                    Log.d("IMAGE", recipe.imagePath);
                     finalRecipe = recipe;
                     break;
                 }
@@ -135,37 +125,6 @@ class RecipeThread implements Runnable {
         return finalRecipe;
     }
 
-    private ArrayList<Recipe> getTestRecipes(){
-        ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-
-        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
-        ingredients.add(new Ingredient(0, "tomato", "tomaat", false));
-        ingredients.add(new Ingredient(0, "cheese", "kaas", false));
-        ingredients.add(new Ingredient(0, "pesto", "pesto", false));
-
-        ArrayList<Ingredient> ingredients2 = new ArrayList<Ingredient>();
-        ingredients2.add(new Ingredient(0, "toast", "brood", false));
-        ingredients2.add(new Ingredient(0, "cheese", "kaas", false));
-        ingredients2.add(new Ingredient(0, "ham", "ham", false));
-
-        ArrayList<Ingredient> ingredients3 = new ArrayList<Ingredient>();
-        ingredients3.add(new Ingredient(0, "toast", "brood", false));
-        ingredients3.add(new Ingredient(0, "tomato", "tomaat", false));
-        ingredients3.add(new Ingredient(0, "cheese", "kaas", false));
-        ingredients3.add(new Ingredient(0, "ham", "ham", false));
-        ingredients3.add(new Ingredient(0, "pesto", "pesto", false));
-
-        ArrayList<Ingredient> ingredients4 = new ArrayList<Ingredient>();
-        ingredients4.add(new Ingredient(0, "toast", "brood", false));
-
-        recipes.add(new Recipe("Ultimate sandwich", ingredients3, "Just DO IT!!!!"));
-        recipes.add(new Recipe("Caprise", ingredients, "Melt da cheese"));
-        recipes.add(new Recipe("Toast", ingredients2, "Toast the toast and melt da cheese"));
-        recipes.add(new Recipe("Droog brood bitch", ingredients4, "Be rich"));
-
-        return recipes;
-    }
-
     private int getAmountOfRecipes(){
         return api.getAmountOfRecipes();
     }
@@ -174,6 +133,7 @@ class RecipeThread implements Runnable {
         ArrayList<Recipe> recipes;
 
         recipes = api.getRandomRecipes(checkedRecipes);
+        // Todo when implementing filters
         // recipes = GetRandom(excludedIngredients, checkedRecipes);
 
         return recipes;
@@ -186,11 +146,11 @@ class RecipeThread implements Runnable {
                 price += ingredientPrice.get(ingredient.Dutch);
                 continue;
             }
-            Log.d("TEST", "Actual name = " + ingredient.Dutch + "; Actual taxonomy = " + ingredient.Taxonomy);
+
             AHAPIAsync api = new AHAPIAsync(1);
             api.setQuery(ingredient.Dutch);
             api.orderBy(AHAPI.orderBy.ASC);
-            api.setTaxonomy(ingredient.Taxonomy);                                      // Set taxonomy
+            api.setTaxonomy(ingredient.Taxonomy);
 
             List<Product> products = null;
             try {
@@ -206,7 +166,7 @@ class RecipeThread implements Runnable {
 
             double minPrice = Double.POSITIVE_INFINITY;
             if(products == null){
-                Log.d("TEST", "FAILED TO LOAD");
+                Log.e("Planner fragment", "FAILED TO LOAD");
                 return minPrice;
             }
 

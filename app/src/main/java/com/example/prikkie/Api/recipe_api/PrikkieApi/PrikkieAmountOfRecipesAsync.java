@@ -1,9 +1,7 @@
 package com.example.prikkie.Api.recipe_api.PrikkieApi;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.example.prikkie.Api.recipe_api.Recipe;
 import com.example.prikkie.App;
 import com.example.prikkie.R;
 
@@ -11,13 +9,8 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-
-import java.util.ArrayList;
 
 public class PrikkieAmountOfRecipesAsync  extends AsyncTask<String, Void, Integer> {
     private final String urlQuery = App.getContext().getString(R.string.prikkie_api) + "totalrecipeamount";
@@ -37,8 +30,6 @@ public class PrikkieAmountOfRecipesAsync  extends AsyncTask<String, Void, Intege
                 HttpEntity entity = response.getEntity();
                 String data = EntityUtils.toString(entity);
                 return Integer.parseInt(data);
-
-
             }
         }
         catch (Exception e){

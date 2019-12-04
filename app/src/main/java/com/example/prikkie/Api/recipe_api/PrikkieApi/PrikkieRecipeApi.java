@@ -44,7 +44,7 @@ public class PrikkieRecipeApi{
         ArrayList<Recipe> results = new ArrayList<Recipe>();
         if(sp.contains(USER_PREF)){
             // call api. query should exclude ingredient ids and checked recipe ids
-            Log.d("TEST", "Contains USER PREFERENCES");
+            Log.e("PrikkieRecipeApi", "Contains USER PREFERENCES");
         }
         else {
             // call api. query should exclude the checked recipe ids.
@@ -61,7 +61,6 @@ public class PrikkieRecipeApi{
                 e.printStackTrace();
             }
         }
-        Log.d("TEST", "Result = " + results.toString());
         //Todo Create different async calls.
         return results;
     }

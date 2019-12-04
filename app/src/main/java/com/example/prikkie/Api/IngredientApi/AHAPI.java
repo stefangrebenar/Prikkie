@@ -2,26 +2,19 @@ package com.example.prikkie.Api.IngredientApi;
 
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.Volley;
-import com.example.prikkie.Api.VolleyCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -64,7 +57,6 @@ public class AHAPI {
 
     //gets the result of a query
     public List<Product> getProducts(Context context) {
-        Log.d("TEST", "STARTING CALL: "+urlQuery);
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, urlQuery, null, future, future);
@@ -93,10 +85,8 @@ public class AHAPI {
                     product.price = base.getJSONObject("price").getDouble("now");
                 if (base.getJSONArray("images").length() > 0 && base.getJSONArray("images").getJSONObject(0).has("url"))
                     product.imgURL = base.getJSONArray("images").getJSONObject(0).getString("url");
-                Log.d("TEST", "Found product: " + product.name);
                 products.add(product);
             }
-            Log.d("TEST", "Returning products");
             return products;
         }
         catch(InterruptedException | TimeoutException | ExecutionException e) {
@@ -109,29 +99,7 @@ public class AHAPI {
     }
 
     public void onFail() {
-        Log.d("TEST", "FAILED LOADING");
     }
-
-    public void getResponse(int method, Context context, JSONObject jsonValue, final VolleyCallback callback) {
-
-        RequestQueue queue = Volley.newRequestQueue(context);
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, urlQuery, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject Response) {
-                        callback.onSuccessResponse(Response);
-                    }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError e) {
-                e.printStackTrace();
-            }
-        });
-        queue.add(jsonObjectRequest);
-    }
-
 }
 
 

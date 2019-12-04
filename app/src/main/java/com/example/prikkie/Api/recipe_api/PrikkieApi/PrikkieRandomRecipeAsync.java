@@ -1,9 +1,7 @@
 package com.example.prikkie.Api.recipe_api.PrikkieApi;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.android.volley.toolbox.BasicNetwork;
 import com.example.prikkie.Api.recipe_api.Recipe;
 import com.example.prikkie.App;
 import com.example.prikkie.R;
@@ -14,18 +12,14 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.HttpCookie;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,7 +32,6 @@ public class PrikkieRandomRecipeAsync extends AsyncTask<String, Void, ArrayList<
     @Override
     protected ArrayList<Recipe> doInBackground(String... strings) {
         try{
-            Log.d("TEST", "KOMT HIER");
             String entityString = "";
             for(int i = 0; i < checkedIds.length; i++){
                 if(i == 0){
@@ -51,20 +44,17 @@ public class PrikkieRandomRecipeAsync extends AsyncTask<String, Void, ArrayList<
             HttpPost httppost = new HttpPost(urlQuery);
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 
-            Log.d("TEST", "Mystring = " + entityString);
             nameValuePairs.add((new BasicNameValuePair("stringdata", entityString)));
 
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             HttpClient httpclient = new DefaultHttpClient();
             HttpResponse response = httpclient.execute(httppost);        // StatusLine stat = response.getStatusLine();
             int status = response.getStatusLine().getStatusCode();
-            Log.d("TEST", "Response = " + status);
 
             // If response is Ok 200
             if(status == 200) {
                 HttpEntity entity = response.getEntity();
                 String data = EntityUtils.toString(entity);
-                Log.d("TEST", "data = " + data);
                 JSONArray recipeArray = new JSONArray(data);
 
                 int length = recipeArray.length();
@@ -110,11 +100,8 @@ public class PrikkieRandomRecipeAsync extends AsyncTask<String, Void, ArrayList<
                             if(ingredientObject.has("name")){
                                 ingredient.Dutch = ingredientObject.getString("name");
                             }
-                            if(ingredientObject.has("taxonomy")){
+                            if(ingredientObject.has("taxonomy")) {
                                 ingredient.Taxonomy = ingredientObject.getString("taxonomy");
-                                Log.d("TEST", ingredient.Dutch + " has taxonomy: " + ingredient.Taxonomy);
-                            }else{
-                                Log.d("TEST", ingredient.Dutch +" does not contain object 'taxonomy'");
                             }
                             ingredients.add(ingredient);
                         }
