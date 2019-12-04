@@ -63,3 +63,15 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+
+# others
+/.idea/modules.xml
+/.idea/navEditor.xml
+.DS_Store
+/captures
+.cxx
+
+.idea/vcs.xml
+app/.idea/vcs.xml
+app/.idea/vcs.xml
+app/.idea
