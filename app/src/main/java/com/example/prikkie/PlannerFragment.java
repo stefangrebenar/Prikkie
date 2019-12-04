@@ -109,6 +109,9 @@ class RecipeThread implements Runnable {
         // Api get preferences?
         do{
             ArrayList<Recipe> recipes = getRandomRecipes(excludedIngredients, checkedRecipes);
+            if(recipes == null){
+                return null;
+            }
             for(Recipe recipe : recipes){
                 double recipePrice = getPriceForIngredients(recipe.ingredients);
                 if(recipePrice <= budget){
