@@ -10,6 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class AccountFragment extends Fragment {
+    private static AccountFragment m_fragment;
+    public static AccountFragment getFragment(){
+        if(m_fragment == null){
+            m_fragment = new AccountFragment();
+        }
+        return m_fragment;
+    }
+    private AccountFragment(){}
 
     @Nullable
     @Override

@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.example.prikkie.Api.IngredientApi.AHAPI;
@@ -32,6 +34,15 @@ import java.util.concurrent.TimeoutException;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class PlannerFragment extends Fragment {
+
+    private static PlannerFragment m_fragment;
+    public static PlannerFragment getFragment(){
+        if(m_fragment == null){
+            m_fragment = new PlannerFragment();
+        }
+        return m_fragment;
+    }
+    private PlannerFragment(){}
 
     @Nullable
     @Override
@@ -81,6 +92,7 @@ class RecipeThread implements Runnable {
                     ingredientList = view.findViewById(R.id.recipeIngredientList);
                     recipePreperations = view.findViewById(R.id.recipePreparations);
                     recipeTitle = view.findViewById(R.id.recipeTitle);
+                    ConstraintLayout innerConstraintLayout = view.findViewById(R.id.innerConstraintLayout);
                     // recipePicture.setImageBitmap(recipe.bitmap);
                     for (
                             Ingredient ingredient : recipe.ingredients) {
@@ -91,6 +103,9 @@ class RecipeThread implements Runnable {
                     recipeTitle.setText(recipe.title);
                     ingredientList.setText(ingredientsListed);
                     recipePreperations.setText(recipe.method);
+//                    RelativeLayout.LayoutParams params = innerConstraintLayout;
+//                    params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16);
+//                    innerConstraintLayout.setLayoutParams(params);
                 }
             });
         }

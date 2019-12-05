@@ -1,9 +1,12 @@
 package com.example.prikkie;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,14 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class HomeDefaultFragment extends Fragment {
+    private static HomeDefaultFragment m_fragment;
+    public static HomeDefaultFragment getFragment(){
+        if(m_fragment == null){
+            m_fragment = new HomeDefaultFragment();
+        }
+        return m_fragment;
+    }
+    private HomeDefaultFragment(){}
 
     public EditText budgetID;
     public static final String USER_PREF = "USER_PREF";
@@ -45,5 +56,11 @@ public class HomeDefaultFragment extends Fragment {
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(KEY_BUDGET, budget);
         editor.apply();
+
+        setFragment(PlannerFragment.getFragment(), R.id.frame_container);
+    }
+    public void setFragment(Fragment fragment, int frame){
+        MainActivity ma = (MainActivity) getContext();
+        ma.getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.fragment_container, fragment).commit();
     }
 }

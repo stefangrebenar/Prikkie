@@ -20,6 +20,14 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class RecipeFragment extends Fragment {
+    private static RecipeFragment m_fragment;
+    public static RecipeFragment getFragment(){
+        if(m_fragment == null){
+            m_fragment = new RecipeFragment();
+        }
+        return m_fragment;
+    }
+    private RecipeFragment(){}
 
     private TextView recipeView;
     private Button searchButton;

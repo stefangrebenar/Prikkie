@@ -1,6 +1,7 @@
 package com.example.prikkie.Api.recipe_api.PrikkieApi;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.prikkie.App;
 import com.example.prikkie.R;

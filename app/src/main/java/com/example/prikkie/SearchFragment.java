@@ -27,6 +27,14 @@ import java.util.List;
 import static androidx.core.content.ContextCompat.getSystemService;
 
 public class SearchFragment extends Fragment {
+    private static SearchFragment m_fragment;
+    public static SearchFragment getFragment(){
+        if(m_fragment == null){
+            m_fragment = new SearchFragment();
+        }
+        return m_fragment;
+    }
+    private SearchFragment(){}
 
     private RecyclerView resultRecycler;
     private EditText editText;

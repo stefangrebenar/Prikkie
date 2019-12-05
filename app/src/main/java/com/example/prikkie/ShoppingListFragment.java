@@ -23,6 +23,14 @@ import java.util.List;
 import java.util.Random;
 
 public class ShoppingListFragment extends Fragment {
+    private static ShoppingListFragment m_fragment;
+    public static ShoppingListFragment getFragment(){
+        if(m_fragment == null){
+            m_fragment = new ShoppingListFragment();
+        }
+        return m_fragment;
+    }
+    private ShoppingListFragment(){}
 
     private RecyclerView mRecyclerView;
     private ShoppingListAdapter mAdapter;

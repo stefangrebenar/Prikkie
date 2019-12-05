@@ -1,12 +1,7 @@
 package com.example.prikkie;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
 
-import com.example.prikkie.ingredientDB.IngredientDatabaseHandler;
-import com.example.prikkie.Api.recipe_api.Recipe;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.os.Bundle;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,18 +9,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
-import android.view.View;
-import android.view.MenuItem;
-
-import java.util.ArrayList;
+import com.example.prikkie.ingredientDB.IngredientDatabaseHandler;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -37,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,HomeFragment.getFragment()).commit();
 
     }
 
@@ -49,13 +40,13 @@ public class MainActivity extends AppCompatActivity {
 
                     switch(menuItem.getItemId()){
                         case R.id.nav_home:
-                            selectedFragment = new HomeFragment();
+                            selectedFragment = HomeFragment.getFragment();
                             break;
                         case R.id.nav_planner:
-                            selectedFragment = new PlannerFragment();
+                            selectedFragment = PlannerFragment.getFragment();
                             break;
                         case R.id.nav_account:
-                            selectedFragment = new AccountFragment();
+                            selectedFragment = AccountFragment.getFragment();
                             break;
                     }
 
