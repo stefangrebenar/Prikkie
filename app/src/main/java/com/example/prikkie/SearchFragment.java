@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static androidx.core.content.ContextCompat.getSystemService;
+import static com.example.prikkie.App.hideKeyboardFrom;
 
 public class SearchFragment extends Fragment {
     private static SearchFragment m_fragment;
@@ -85,11 +86,6 @@ public class SearchFragment extends Fragment {
         ahGetter.getProducts(getContext());
 
         hideKeyboardFrom(getContext(), mView);
-    }
-
-    public static void hideKeyboardFrom(Context context, View view) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     //Builds the recylerView and sets up the adapter

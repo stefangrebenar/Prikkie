@@ -86,7 +86,6 @@ public class HomeFragment extends Fragment {
             test += fr.getClass().getName();
             test += "\n";
         }
-        Log.d("TEST", "fragment = " + test);
         return view;
     }
 
@@ -95,7 +94,6 @@ public class HomeFragment extends Fragment {
         if (getActivity().getSupportFragmentManager().getFragments().contains(fragment)) {
             fragmentTransaction.remove(fragment);
             fragmentTransaction.add(frame, fragment);
-            Log.d("TEST", "Already contains fragment: "+fragment.getClass().getName());
         }
         else {
             fragmentTransaction.replace(frame, fragment);

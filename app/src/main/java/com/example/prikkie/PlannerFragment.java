@@ -56,7 +56,7 @@ public class PlannerFragment extends Fragment {
 
 }
 class RecipeThread implements Runnable {
-    private int budget;
+    private float budget;
     private Map<String, Double> ingredientPrice = new HashMap<String, Double>();
     private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
     final PrikkieRecipeApi api = new PrikkieRecipeApi();
@@ -115,7 +115,7 @@ class RecipeThread implements Runnable {
             Log.e("Planner fragment", "Budget not found");
             return null; // budget not found
         }
-        budget = sp.getInt(KEY_BUDGET, 0);
+        budget = sp.getFloat(KEY_BUDGET, 0);
         int amountOfRecipes = getAmountOfRecipes(); // get from api (Maybe without the excluded recipes)
         int amountOfCheckedRecipes = 0;
         int[] checkedRecipes = new int[amountOfRecipes];
@@ -125,10 +125,12 @@ class RecipeThread implements Runnable {
         do{
             ArrayList<Recipe> recipes = getRandomRecipes(excludedIngredients, checkedRecipes);
             if(recipes == null){
+                Log.d("TEST", "didn't get any recipes");
                 return null;
             }
             for(Recipe recipe : recipes){
                 double recipePrice = getPriceForIngredients(recipe.ingredients);
+                Log.d("TEST", recipe.title + " = " + recipePrice);
                 if(recipePrice <= budget){
                     finalRecipe = recipe;
                     break;

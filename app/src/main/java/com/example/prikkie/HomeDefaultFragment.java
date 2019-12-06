@@ -6,12 +6,21 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import java.text.DecimalFormat;
+
+import static com.example.prikkie.App.hideKeyboardFrom;
 
 public class HomeDefaultFragment extends Fragment {
     private static HomeDefaultFragment m_fragment;
@@ -23,43 +32,62 @@ public class HomeDefaultFragment extends Fragment {
     }
     private HomeDefaultFragment(){}
 
-    public EditText budgetID;
+    public EditText budgetText;
     public static final String USER_PREF = "USER_PREF";
     public static final String KEY_BUDGET = "KEY_BUDGET";
     public SharedPreferences sp;
+    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+    private View m_view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home_default, viewGroup, false);
+        m_view = inflater.inflate(R.layout.fragment_home_default, viewGroup, false);
 
-        Button Budget = (Button) view.findViewById(R.id.showRecipesID);
-        Budget.setOnClickListener(new View.OnClickListener() {
+        Button search = (Button) m_view.findViewById(R.id.budgetSearchButton);
+        search.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                sendBudget(view);
+            public void onClick(View v) {
+                sendBudget();
+            }
+        });
+        budgetText = (EditText) m_view.findViewById(R.id.budgetID);
+        sp = (SharedPreferences) getContext().getSharedPreferences(USER_PREF, Context.MODE_PRIVATE);
+        budgetText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    budgetFilledIn();
+                    return true;
+                }
+                return false;
             }
         });
 
-        budgetID = (EditText) view.findViewById(R.id.budgetID);
-        sp = (SharedPreferences) getContext().getSharedPreferences(USER_PREF, Context.MODE_PRIVATE);
-
         if (sp.contains(KEY_BUDGET)) {
-            budgetID.setText(String.valueOf(sp.getInt(KEY_BUDGET, 0)));
+            budgetText.setText(String.valueOf(sp.getFloat(KEY_BUDGET, 0)));
         }
 
-        return view;
+        return m_view;
     }
 
-    public void sendBudget(View view) {
+    public void budgetFilledIn(){
+        sendBudget();
+    }
 
-        int budget = Integer.valueOf(budgetID.getText().toString());
+    public void sendBudget() {
+
+        float budget = Float.parseFloat(budgetText.getText().toString());
+        budget = Float.parseFloat(decimalFormat.format(budget));
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(KEY_BUDGET, budget);
+        Log.d("TEST", "final float = " + budget);
+        editor.putFloat(KEY_BUDGET, budget);
         editor.apply();
 
-        setFragment(PlannerFragment.getFragment(), R.id.frame_container);
+        hideKeyboardFrom(getContext(), m_view);
+        setFragment(PlannerFragment.getFragment());
     }
-    public void setFragment(Fragment fragment, int frame){
+    public void setFragment(Fragment fragment){
         MainActivity ma = (MainActivity) getContext();
         ma.getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.fragment_container, fragment).commit();
     }
