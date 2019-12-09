@@ -19,9 +19,26 @@ public class Recipe {
     public Recipe(){
     }
 
-    public Recipe(String title, ArrayList<Ingredient> ingredients, String method){
+    public Recipe(String title, String imagePath, ArrayList<Ingredient> ingredients, String method){
         this.title = title;
+        this.imagePath = imagePath;
         this.ingredients = ingredients;
         this.method = method;
+    }
+
+    public Recipe(String title, String imagePath, ArrayList<Ingredient> ingredients){
+        this.title = title;
+        this.imagePath = imagePath;
+        this.ingredients = ingredients;
+    }
+
+    public String ingredientsToString(){
+        String result = "";
+
+        for(Ingredient ingredient : ingredients){
+            result += "- " + ingredient.Dutch + " " + ingredient.amount + "\n";
+        }
+
+        return result;
     }
 }

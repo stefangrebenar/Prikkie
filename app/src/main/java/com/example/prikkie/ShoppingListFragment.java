@@ -2,6 +2,7 @@ package com.example.prikkie;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,8 @@ public class ShoppingListFragment extends Fragment {
         final AHAPI ahGetter = new AHAPI(72, new AHAPI.onResultLoadedListener() {
             @Override
             public void onResultLoaded(List<Product> products) {
+                Log.d("TEST", "results loaded");
+                Log.d("TEST", "got "+products.size()+" products");
                 for (Product prod : products) {
                     mExampleList.add(new ExampleItem(prod.imgURL, prod.name, "€" + prod.price, false));
                 }

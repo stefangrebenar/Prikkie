@@ -103,9 +103,6 @@ class RecipeThread implements Runnable {
                     recipeTitle.setText(recipe.title);
                     ingredientList.setText(ingredientsListed);
                     recipePreperations.setText(recipe.method);
-//                    RelativeLayout.LayoutParams params = innerConstraintLayout;
-//                    params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 16);
-//                    innerConstraintLayout.setLayoutParams(params);
                 }
             });
         }

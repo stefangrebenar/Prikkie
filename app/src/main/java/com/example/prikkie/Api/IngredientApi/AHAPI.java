@@ -2,6 +2,7 @@ package com.example.prikkie.Api.IngredientApi;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -64,7 +65,9 @@ public class AHAPI {
         requestQueue.add(request);
 
         try {
+            Log.d("TEST", "url = " + urlQuery);
             JSONArray productsArray = future.get(10, TimeUnit.SECONDS).getJSONArray("cards");
+            Log.d("TEST", "not timed out");
             for (int i = 0; i < productsArray.length(); i++) {
                 if (products == null) {
                     products = new ArrayList<Product>();
