@@ -12,15 +12,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.prikkie.Api.IngredientApi.AHAPI;
 import com.example.prikkie.Api.IngredientApi.Product;
+import com.example.prikkie.Helpers.ImageManager;
+import com.example.prikkie.RoomShoppingList.ShoppingListItem;
+import com.example.prikkie.RoomShoppingList.ShoppingListViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +41,7 @@ public class SearchFragment extends Fragment {
     private ProductListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private View mView;
+    private ShoppingListViewModel shoppingListViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
@@ -53,6 +61,8 @@ public class SearchFragment extends Fragment {
                 getProductsButton(v);
             }
         });
+
+        shoppingListViewModel = ViewModelProviders.of(getActivity()).get(ShoppingListViewModel.class);
         return view;
     }
 
@@ -66,14 +76,13 @@ public class SearchFragment extends Fragment {
 
                 String text = "";
                 for (Product product:products) {
-                    resultItems.add(new ExampleItem(product.imgURL, product.name, "€" + product.price));
+                    resultItems.add(new ExampleItem(product.imgURL, product.name, Double.toString(product.price)));
                 }
                 mAdapter.notifyDataSetChanged();
             }
         });
         ahGetter.setQuery(editText.getText().toString());
         ahGetter.orderBy(AHAPI.orderBy.ASC);
-        ahGetter.setTaxonomy("tomaten");
         ahGetter.getProducts(getContext());
 
         hideKeyboardFrom(getContext(), mView);
@@ -96,6 +105,18 @@ public class SearchFragment extends Fragment {
         mAdapter.setOnItemClickListener(new ProductListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
+                ExampleItem mItem = resultItems.get(position);
+
+                ShoppingListItem item = new ShoppingListItem(mItem.getTopText(), Double.parseDouble(mItem.getBottomText()), mItem.getImageResource(), false);
+
+                ImageManager.imageDownload(getActivity(), item.getImageUrl(), Integer.toString(item.getId()));
+
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(getContext(), mItem.getTopText() + "toegevoegd aan de boodschappenlijst", duration);
+                toast.show();
+
+                shoppingListViewModel.insert(item);
             }
         });
     }
