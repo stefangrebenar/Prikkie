@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.UiThread;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,7 +73,8 @@ public class RecipeFragment extends Fragment {
         thread.name = keywords;
         thread.includes = ingredients;
         thread.excludes = excludes;
-        thread.run();
+        Thread t = new Thread(thread);
+        t.start();
     }
 
     //Builds the recylerView and sets up the adapter
@@ -109,7 +111,12 @@ public class RecipeFragment extends Fragment {
                 return;
             }
 
-            m_adapter.setRecipes(recipes);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    m_adapter.setRecipes(recipes);
+                }
+            });
         }
 
         private ArrayList<Recipe> getRecipesFromApi(){
