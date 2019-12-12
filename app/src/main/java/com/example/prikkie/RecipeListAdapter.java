@@ -1,5 +1,6 @@
 package com.example.prikkie;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,11 @@ import java.util.ArrayList;
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeListViewHolder> {
     private ArrayList<Recipe> m_recipes;
     private OnItemClickListener m_Listener;
+
+    public void setRecipes(ArrayList<Recipe> recipes){
+        m_recipes = recipes;
+        this.notifyDataSetChanged();
+    }
 
     public interface OnItemClickListener{
         void onItemClick(int position);
@@ -67,7 +73,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     public void onBindViewHolder(RecipeListViewHolder holder, int position) {
         Recipe currentItem = m_recipes.get(position);
 
-//        Picasso.get().load(currentItem.imagePath).resize(holder.m_imageView.getWidth(),holder.m_imageView.getHeight()).into(holder.m_imageView);
         Picasso.get().load(currentItem.imagePath).into(holder.m_imageView);
         holder.m_title.setText(currentItem.title);
         holder.m_ingredients.setText(currentItem.ingredientsToString());
