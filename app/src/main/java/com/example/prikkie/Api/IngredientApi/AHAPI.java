@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.Volley;
@@ -57,45 +59,58 @@ public class AHAPI {
 
     //gets the result of a query
     public List<Product> getProducts(Context context) {
-        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        final List<Product> products = new ArrayList<>();
+        RequestQueue queue = Volley.newRequestQueue(context);
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, urlQuery, null, future, future);
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(request);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, urlQuery, null, new Response.Listener<JSONObject>() {
 
-        try {
-            JSONArray productsArray = future.get(10, TimeUnit.SECONDS).getJSONArray("cards");
-            for (int i = 0; i < productsArray.length(); i++) {
-                if (products == null) {
-                    products = new ArrayList<Product>();
-                }
-                JSONObject base = productsArray.getJSONObject(i).getJSONArray("products").getJSONObject(0);
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
 
-                Product product = new Product();
+                            JSONArray productsArray = response.getJSONArray("cards");
 
-                if (base.has("title"))
-                    product.name = base.getString("title");
-                if (base.has("summary"))
-                    product.description = base.getString("summary");
-                if (base.getJSONObject("price").has("unitSize"))
-                    product.weight = base.getJSONObject("price").getString("unitSize");
-                if (base.getJSONObject("price").has("unitInfo"))
-                    product.kgPrice = base.getJSONObject("price").getJSONObject("unitInfo").getDouble("price");
-                if (base.getJSONObject("price").has("now"))
-                    product.price = base.getJSONObject("price").getDouble("now");
-                if (base.getJSONArray("images").length() > 0 && base.getJSONArray("images").getJSONObject(0).has("url"))
-                    product.imgURL = base.getJSONArray("images").getJSONObject(0).getString("url");
-                products.add(product);
-            }
-            return products;
-        }
-        catch(InterruptedException | TimeoutException | ExecutionException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+                            for (int i = 0; i < productsArray.length(); i++) {
+                                JSONObject base = response.getJSONArray("cards").getJSONObject(i).getJSONArray("products").getJSONObject(0);
 
-        return null;
+                                Product product = new Product();
+
+                                if(base.has("title"))
+                                    product.name = base.getString("title");
+                                if(base.has("summary"))
+                                    product.description = base.getString("summary");
+                                if(base.getJSONObject("price").has("unitSize"))
+                                    product.weight = base.getJSONObject("price").getString("unitSize");
+                                if(base.getJSONObject("price").has("unitInfo"))
+                                    product.kgPrice = base.getJSONObject("price").getJSONObject("unitInfo").getDouble("price");
+                                if(base.getJSONObject("price").has("now"))
+                                    product.price = base.getJSONObject("price").getDouble("now");
+                                if(base.getJSONArray("images").length() > 0 && base.getJSONArray("images").getJSONObject(0).has("url"))
+                                    product.imgURL = base.getJSONArray("images").getJSONObject(0).getString("url");
+
+                                products.add(product);
+                            }
+//                            onLoad(products);
+                            mListener.onResultLoaded(products);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            onFail();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+
+                    }
+                });
+
+        queue.add(jsonObjectRequest);
+
+        return products;
     }
 
     public void onFail() {
