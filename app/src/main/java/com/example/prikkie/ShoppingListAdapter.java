@@ -1,5 +1,6 @@
 package com.example.prikkie;
 
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,13 +9,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.prikkie.Helpers.ImageManager;
+import com.example.prikkie.RoomShoppingList.ShoppingListItem;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder> {
-    private ArrayList<ExampleItem> mExampleList;
+    private ArrayList<ShoppingListItem> mExampleList;
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener{
@@ -52,7 +57,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         }
     }
 
-    public ShoppingListAdapter(ArrayList<ExampleItem> exampleList) {
+    public ShoppingListAdapter(ArrayList<ShoppingListItem> exampleList) {
         mExampleList = exampleList;
     }
 
@@ -65,12 +70,15 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
     @Override
     public void onBindViewHolder(ShoppingListViewHolder holder, int position) {
-        ExampleItem currentItem = mExampleList.get(position);
+        ShoppingListItem currentItem = mExampleList.get(position);
 
-        Picasso.get().load(currentItem.getImageResource()).resize(50,50).into(holder.mImageView);
-        holder.mTopText.setText(currentItem.getTopText());
-        holder.mBottomText.setText(currentItem.getBottomText());
-        holder.mCheckBox.setChecked(currentItem.getChecked());
+
+        Picasso.get()
+                .load(currentItem.getImageUrl())
+                .into(holder.mImageView);
+        holder.mTopText.setText(currentItem.getTitle());
+        holder.mBottomText.setText("€" + currentItem.getPrice());
+        holder.mCheckBox.setChecked(currentItem.getIsChecked());
     }
 
     @Override
