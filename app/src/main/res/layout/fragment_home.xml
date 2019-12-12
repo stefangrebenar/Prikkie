@@ -28,7 +28,7 @@
                 android:gravity="center"
                 android:text="Home"
                 android:textAlignment="center"
-                android:textColor="@color/colorBlack"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
 
             <TextView
