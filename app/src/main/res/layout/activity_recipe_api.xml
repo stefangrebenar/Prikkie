@@ -72,7 +72,7 @@
         app:layout_constraintVertical_bias="0.891" />
 
     <ImageView
-        android:id="@+id/recipeImage"
+        android:id="@+id/imageView"
         android:layout_width="306dp"
         android:layout_height="134dp"
         app:layout_constraintBottom_toBottomOf="@+id/recipeView"

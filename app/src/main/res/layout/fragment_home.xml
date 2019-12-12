@@ -13,30 +13,30 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@color/colorGrey"
-
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
+            android:scrollbars="none"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/FirstButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:background="@color/colorGrey"
-                android:text="Home"
-                android:textColor="@color/colorBlack"
-                android:textSize="16sp"
-                android:textAlignment="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp" />
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:text="Home"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/TextButton"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="20dp"
-                android:background="@color/colorGrey"
+                android:background="@color/colorWhite"
                 android:gravity="center"
                 android:text="Boodschappenlijst"
                 android:textAlignment="center"
@@ -45,33 +45,40 @@
 
             <TextView
                 android:id="@+id/Recipe"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="20dp"
+                android:background="@color/colorWhite"
                 android:gravity="center"
-                android:background="@color/colorGrey"
                 android:text="Recepten"
-                android:textColor="@color/colorBlack"
-                android:textSize="16sp"
                 android:textAlignment="center"
-                android:layout_marginEnd="20dp"/>
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/Search"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:background="@color/colorGrey"
-                android:text="Zoeken"
-                android:textColor="@color/colorBlack"
-                android:textSize="16sp"
-                android:textAlignment="center"
-                android:layout_marginEnd="20dp"/>
-
-            <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/colorGrey"
-                android:text="Coming soon" />
+                android:layout_height="match_parent"
+                android:layout_marginEnd="20dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:text="Zoeken"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/Favorites"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="20dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:text="Favorieten"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -79,6 +86,7 @@
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"></FrameLayout>
 
 </LinearLayout>
