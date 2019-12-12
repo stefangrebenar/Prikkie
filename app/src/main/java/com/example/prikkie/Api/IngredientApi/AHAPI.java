@@ -2,6 +2,7 @@ package com.example.prikkie.Api.IngredientApi;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -59,6 +60,7 @@ public class AHAPI {
 
     //gets the result of a query
     public List<Product> getProducts(Context context) {
+
         final List<Product> products = new ArrayList<>();
         RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -111,6 +113,8 @@ public class AHAPI {
         queue.add(jsonObjectRequest);
 
         return products;
+
+       
     }
 
     public void onFail() {

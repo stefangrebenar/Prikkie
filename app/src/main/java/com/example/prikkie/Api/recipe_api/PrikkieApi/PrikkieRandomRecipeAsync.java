@@ -1,6 +1,7 @@
 package com.example.prikkie.Api.recipe_api.PrikkieApi;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.prikkie.Api.recipe_api.Recipe;
 import com.example.prikkie.App;
@@ -106,7 +107,7 @@ public class PrikkieRandomRecipeAsync extends AsyncTask<String, Void, ArrayList<
                             ingredients.add(ingredient);
                         }
                         recipe.ingredients = ingredients;
-                    }
+                }
                     recipes.add(recipe);
                     Collections.shuffle(recipes);
                 }

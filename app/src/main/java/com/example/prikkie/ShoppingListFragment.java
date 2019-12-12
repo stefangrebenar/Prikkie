@@ -2,6 +2,7 @@ package com.example.prikkie;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,14 @@ import java.util.List;
 import java.util.Random;
 
 public class ShoppingListFragment extends Fragment {
+    private static ShoppingListFragment m_fragment;
+    public static ShoppingListFragment getFragment(){
+        if(m_fragment == null){
+            m_fragment = new ShoppingListFragment();
+        }
+        return m_fragment;
+    }
+    private ShoppingListFragment(){}
 
     private RecyclerView mRecyclerView;
     private ShoppingListAdapter mAdapter;
@@ -101,7 +110,6 @@ public class ShoppingListFragment extends Fragment {
 
     //Fills the shoppinglist with random products for testing
     public void createExampleList() {
-
 //        final AHAPI ahGetter = new AHAPI(72, new AHAPI.onResultLoadedListener() {
 //            @Override
 //            public void onResultLoaded(List<Product> products) {
