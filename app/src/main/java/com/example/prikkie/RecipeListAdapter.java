@@ -3,7 +3,6 @@ package com.example.prikkie;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,7 +33,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
         public RecipeListViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
-            m_imageView = itemView.findViewById(R.id.recipeImage);
+            m_imageView = itemView.findViewById(R.id.imageView);
             m_title = itemView.findViewById(R.id.recipeTitle);
             m_ingredients = itemView.findViewById(R.id.recipeIngredients);
 
