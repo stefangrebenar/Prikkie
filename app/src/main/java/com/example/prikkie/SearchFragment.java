@@ -1,22 +1,16 @@
 package com.example.prikkie;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,13 +19,10 @@ import com.example.prikkie.Api.IngredientApi.Product;
 import com.example.prikkie.Helpers.ImageManager;
 import com.example.prikkie.RoomShoppingList.ShoppingListItem;
 import com.example.prikkie.RoomShoppingList.ShoppingListViewModel;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 
-import static androidx.core.content.ContextCompat.getSystemService;
 import static com.example.prikkie.App.hideKeyboardFrom;
 
 public class SearchFragment extends Fragment {

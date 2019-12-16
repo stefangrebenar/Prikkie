@@ -93,7 +93,6 @@ class RecipeThread implements Runnable {
                     recipePreperations = view.findViewById(R.id.recipePreparations);
                     recipeTitle = view.findViewById(R.id.recipeTitle);
                     ConstraintLayout innerConstraintLayout = view.findViewById(R.id.innerConstraintLayout);
-                    // recipePicture.setImageBitmap(recipe.bitmap);
                     for (
                             Ingredient ingredient : recipe.ingredients) {
                         ingredientsListed += "+ " + ingredient.GetLanguage(1) + "\n";
@@ -127,7 +126,6 @@ class RecipeThread implements Runnable {
             }
             for(Recipe recipe : recipes){
                 double recipePrice = getPriceForIngredients(recipe.ingredients);
-                Log.d("TEST", recipe.title + " = " + recipePrice);
                 if(recipePrice <= budget){
                     finalRecipe = recipe;
                     break;

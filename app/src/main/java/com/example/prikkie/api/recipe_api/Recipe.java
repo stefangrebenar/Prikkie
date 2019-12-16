@@ -9,12 +9,10 @@ public class Recipe {
     public int id;
     public String title;
     public String imagePath; // will probably be deprecated
-    public Bitmap bitmap; // probably the type of image
     public ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
     public String description;
     public String method;
     public int persons;
-    public String href; // will be deprecated
 
     public Recipe(){
     }
@@ -36,7 +34,7 @@ public class Recipe {
         String result = "";
 
         for(Ingredient ingredient : ingredients){
-            result += "- " + ingredient.Dutch + " " + ingredient.amount + "\n";
+            result += "- " + ingredient.Dutch + " " + ingredient.amount + " " + ingredient.unit + "\n";
         }
 
         return result;
