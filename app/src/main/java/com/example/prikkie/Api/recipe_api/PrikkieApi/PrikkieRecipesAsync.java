@@ -17,7 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class PrikkieRecipesAsync extends AsyncTask<String, Void, ArrayList<Recipe>> {
     private String urlQuery = App.getContext().getString(R.string.prikkie_api) + App.getContext().getString(R.string.prikkie_recipes);
@@ -32,6 +31,8 @@ public class PrikkieRecipesAsync extends AsyncTask<String, Void, ArrayList<Recip
         // Remove extra spaces
         includes = includes.replaceAll(",\\s+", ",");
         excludes = excludes.replaceAll(",\\s+", ",-");
+        includes = includes.replaceAll("\\s+", "%20");
+        excludes = excludes.replaceAll("\\s+", "%20");
         // Add ,- before excludes if nessecairy
         if(excludes.length() > 0) {
             excludes = "-" + excludes;
@@ -56,7 +57,6 @@ public class PrikkieRecipesAsync extends AsyncTask<String, Void, ArrayList<Recip
 
             // Preform request
             HttpGet httpGet = new HttpGet(urlQuery);
-
             HttpClient httpclient = new DefaultHttpClient();
             HttpResponse response = httpclient.execute(httpGet);
             int status = response.getStatusLine().getStatusCode();
@@ -123,7 +123,7 @@ public class PrikkieRecipesAsync extends AsyncTask<String, Void, ArrayList<Recip
                             recipe.ingredients = recipeIngredients;
                         }
                         this.recipes.add(recipe);
-                        Collections.shuffle(this.recipes);
+//                        Collections.shuffle(this.recipes);
                     }
                 }
                 return recipes;
