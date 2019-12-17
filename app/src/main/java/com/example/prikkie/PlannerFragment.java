@@ -1,59 +1,34 @@
 package com.example.prikkie;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-
-import com.example.prikkie.Api.IngredientApi.AHAPI;
-import com.example.prikkie.Api.IngredientApi.AHAPIAsync;
-import com.example.prikkie.Api.IngredientApi.Product;
-import com.example.prikkie.Api.recipe_api.PrikkieApi.PrikkieRecipeApi;
-import com.example.prikkie.Api.recipe_api.Recipe;
-import com.example.prikkie.ingredientDB.Ingredient;
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class PlannerFragment extends Fragment {
 
     private static PlannerFragment m_fragment;
-    public static PlannerFragment getFragment(){
-        if(m_fragment == null){
+
+    public static PlannerFragment getFragment() {
+        if (m_fragment == null) {
             m_fragment = new PlannerFragment();
         }
         return m_fragment;
     }
-    private PlannerFragment(){}
+
+    private PlannerFragment() {
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_planner,container,false);
-        RecipeThread rt = new RecipeThread(this, view);
-        Thread t = new Thread(rt);
-        t.start();
+        View view = inflater.inflate(R.layout.fragment_planner, container, false);
         return view;
     }
-
 }
 class RecipeThread implements Runnable {
     private float budget;

@@ -1,13 +1,12 @@
 package com.example.prikkie;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,21 +15,41 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.example.prikkie.Api.IngredientApi.AHAPI;
+import com.example.prikkie.Api.IngredientApi.AHAPIAsync;
+import com.example.prikkie.Api.IngredientApi.Product;
+import com.example.prikkie.Api.recipe_api.PrikkieApi.PrikkieRecipeApi;
+import com.example.prikkie.Api.recipe_api.Recipe;
+import com.example.prikkie.ingredientDB.Ingredient;
+import com.squareup.picasso.Picasso;
+
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import static com.example.prikkie.App.hideKeyboardFrom;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class HomeDefaultFragment extends Fragment {
     private static HomeDefaultFragment m_fragment;
-    public static HomeDefaultFragment getFragment(){
-        if(m_fragment == null){
+
+    public static HomeDefaultFragment getFragment() {
+        if (m_fragment == null) {
             m_fragment = new HomeDefaultFragment();
         }
         return m_fragment;
     }
-    private HomeDefaultFragment(){}
+
+    private HomeDefaultFragment() {
+    }
 
     public EditText budgetText;
     public static final String USER_PREF = "USER_PREF";
@@ -49,6 +68,10 @@ public class HomeDefaultFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 sendBudget();
+                m_view.findViewById(R.id.RecipeScrollView).setVisibility(View.VISIBLE);
+                RecipeThread rt = new RecipeThread();
+                Thread t = new Thread(rt);
+                t.start();
             }
         });
         budgetText = (EditText) m_view.findViewById(R.id.budgetID);
@@ -71,7 +94,7 @@ public class HomeDefaultFragment extends Fragment {
         return m_view;
     }
 
-    public void budgetFilledIn(){
+    public void budgetFilledIn() {
         sendBudget();
     }
 
@@ -80,15 +103,159 @@ public class HomeDefaultFragment extends Fragment {
         float budget = Float.parseFloat(budgetText.getText().toString());
         budget = Float.parseFloat(decimalFormat.format(budget));
         SharedPreferences.Editor editor = sp.edit();
-        Log.d("TEST", "final float = " + budget);
         editor.putFloat(KEY_BUDGET, budget);
         editor.apply();
 
         hideKeyboardFrom(getContext(), m_view);
-        setFragment(PlannerFragment.getFragment());
     }
-    public void setFragment(Fragment fragment){
+
+    public void setFragment(Fragment fragment) {
         MainActivity ma = (MainActivity) getContext();
         ma.getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.fragment_container, fragment).commit();
+    }
+
+
+    // Seperate thread to keep the ui responsive while loading a recipe.
+    class RecipeThread implements Runnable {
+        private float budget;
+        private Map<String, Double> ingredientPrice = new HashMap<String, Double>();
+        private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+        final PrikkieRecipeApi api = new PrikkieRecipeApi();
+
+
+        public Recipe recipe;
+        private ImageView recipePicture;
+        private TextView recipeDescription;
+        private TextView recipeTitle;
+        private TextView ingredientList;
+        private TextView recipePreperations;
+
+        public RecipeThread() {
+        }
+
+        @Override
+        public void run() {
+            recipe = getRecipesByBudget();
+
+            if (recipe != null) {
+                ((MainActivity) m_view.getContext()).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String ingredientsListed = "";
+                        recipePicture = m_view.findViewById(R.id.generatedRecipePicture);
+                        ingredientList = m_view.findViewById(R.id.recipeIngredientList);
+                        recipePreperations = m_view.findViewById(R.id.recipePreparations);
+                        recipeDescription = m_view.findViewById(R.id.recipe_description);
+                        recipeTitle = m_view.findViewById(R.id.recipeTitle);
+                        ConstraintLayout innerConstraintLayout = m_view.findViewById(R.id.innerConstraintLayout);
+                        // recipePicture.setImageBitmap(recipe.bitmap);
+                        for (
+                                Ingredient ingredient : recipe.ingredients) {
+                            ingredientsListed += "+ " + ingredient.GetLanguage(1) + "\n";
+                        }
+
+                        Picasso.get().load(recipe.imagePath).resize(recipePicture.getWidth(), recipePicture.getHeight()).into(recipePicture);
+                        recipeTitle.setText(recipe.title);
+                        recipeDescription.setText(recipe.description);
+                        ingredientList.setText(ingredientsListed);
+                        recipePreperations.setText(recipe.method);
+                    }
+                });
+            }
+        }
+
+        public Recipe getRecipesByBudget() {
+            if (!sp.contains(KEY_BUDGET)) {
+                Log.e("Planner fragment", "Budget not found");
+                return null; // budget not found
+            }
+            budget = sp.getFloat(KEY_BUDGET, 0);
+            int amountOfRecipes = getAmountOfRecipes(); // get from api (Maybe without the excluded recipes)
+            int amountOfCheckedRecipes = 0;
+            int[] checkedRecipes = new int[amountOfRecipes];
+            Recipe finalRecipe = null;
+            ArrayList<Ingredient> excludedIngredients = new ArrayList<Ingredient>();
+            // Api get preferences?
+            do {
+                ArrayList<Recipe> recipes = getRandomRecipes(excludedIngredients, checkedRecipes);
+                if (recipes == null) {
+                    Log.d("TEST", "didn't get any recipes");
+                    return null;
+                }
+                for (Recipe recipe : recipes) {
+                    double recipePrice = getPriceForIngredients(recipe.ingredients);
+                    Log.d("TEST", recipe.title + " = " + recipePrice);
+                    if (recipePrice <= budget) {
+                        finalRecipe = recipe;
+                        break;
+                    }
+                    if (checkedRecipes.length > 0) {
+                        checkedRecipes[amountOfCheckedRecipes] = recipe.id;
+                    }
+                    amountOfCheckedRecipes++;
+                }
+            } while (finalRecipe == null && amountOfCheckedRecipes < amountOfRecipes - 1);
+
+            return finalRecipe;
+        }
+
+        private int getAmountOfRecipes() {
+            return api.getAmountOfRecipes();
+        }
+
+        public ArrayList<Recipe> getRandomRecipes(ArrayList<Ingredient> excludedIngredients, int[] checkedRecipes) {
+            ArrayList<Recipe> recipes;
+
+            recipes = api.getRandomRecipes(checkedRecipes);
+            // Todo when implementing filters
+            // recipes = GetRandom(excludedIngredients, checkedRecipes);
+
+            return recipes;
+        }
+
+        private double getPriceForIngredients(ArrayList<Ingredient> ingredients) {
+            double price = 0.0;
+            for (Ingredient ingredient : ingredients) {
+                if (ingredientPrice.containsKey(ingredient.Dutch)) {
+                    price += ingredientPrice.get(ingredient.Dutch);
+                    continue;
+                }
+
+                AHAPIAsync api = new AHAPIAsync(1);
+                api.setQuery(ingredient.Dutch);
+                api.orderBy(AHAPI.orderBy.ASC);
+                api.setTaxonomy(ingredient.Taxonomy);
+
+                List<Product> products = null;
+                try {
+                    api.execute();
+                    products = api.get(10, SECONDS);
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
+                }
+
+                double minPrice = Double.POSITIVE_INFINITY;
+                if (products == null) {
+                    Log.e("Planner fragment", "FAILED TO LOAD");
+                    return minPrice;
+                }
+
+//            for(Product product : products){          // Since it is only one product and sorted by cheapest, it should be fine.
+//                if(product.price < minPrice){
+//                    minPrice = product.price;
+//                }
+//            }
+
+                minPrice = products.get(0).price;
+                ingredientPrice.put(ingredient.Dutch, minPrice);
+                price += minPrice;
+            }
+            return price;
+        }
+
     }
 }
