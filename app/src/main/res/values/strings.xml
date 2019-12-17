@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">Prikkie</string>
+    <string name="tag">Eten voor een prikkie</string>
+    <string name="e_mail">E-mail</string>
+    <string name="password">Wachtwoord</string>
+    <string name="login">Login</string>
+    <string name="swipe_right_for_register">Swipe naar rechts om te registreren</string>
+
     <string name="action_settings">Settings</string>
 
     <!--RECIPE PUPPY-->
