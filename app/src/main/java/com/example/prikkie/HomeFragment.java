@@ -104,13 +104,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-//        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        String test = "";
-        for(Fragment fr : getActivity().getSupportFragmentManager().getFragments()){
-            test += fr.getClass().getName();
-            test += "\n";
-        }
         mview = view;
         return view;
     }

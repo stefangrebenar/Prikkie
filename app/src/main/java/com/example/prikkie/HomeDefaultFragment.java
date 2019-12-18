@@ -109,12 +109,6 @@ public class HomeDefaultFragment extends Fragment {
         hideKeyboardFrom(getContext(), m_view);
     }
 
-    public void setFragment(Fragment fragment) {
-        MainActivity ma = (MainActivity) getContext();
-        ma.getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.fragment_container, fragment).commit();
-    }
-
-
     // Seperate thread to keep the ui responsive while loading a recipe.
     class RecipeThread implements Runnable {
         private float budget;
