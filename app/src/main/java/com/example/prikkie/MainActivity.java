@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        toolbar.setLogo(R.drawable.prikkie_logo);
+        //toolbar.setLogo(R.drawable.prikkie_logo);
+
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
@@ -46,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.nav_planner:
                             selectedFragment = PlannerFragment.getFragment();
                             break;
-                        case R.id.nav_account:
-                            selectedFragment = AccountFragment.getFragment();
+                        case R.id.nav_shoppinglist:
+                            selectedFragment = ShoppingListFragment.getFragment();
                             break;
                     }
 

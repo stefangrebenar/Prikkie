@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 public class HomeFragment extends Fragment {
     private static HomeFragment m_fragment;
     private static Fragment m_currentFragment;
+    public String Tab = "Home";
 
     private View mview;
     public static HomeFragment getFragment(){
@@ -39,31 +40,18 @@ public class HomeFragment extends Fragment {
 
         final TextView DefaultView = (TextView) view.findViewById(R.id.FirstButton);
 
+
         DefaultView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
                 if(m_currentFragment != HomeDefaultFragment.getFragment()) {
                     m_currentFragment = HomeDefaultFragment.getFragment();
-                    setBackground();
-                    DefaultView.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    Tab = "Home";
+                    setBackground(Tab);
                     setFragment(m_currentFragment, R.id.frame_container);
                 }
             }
         });
-
-        final TextView ShoppingButton = (TextView) view.findViewById(R.id.TextButton);
-        ShoppingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(m_currentFragment != ShoppingListFragment.getFragment()) {
-                    m_currentFragment = ShoppingListFragment.getFragment();
-                    setBackground();
-                    ShoppingButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-                    setFragment(m_currentFragment, R.id.frame_container);
-                }
-            }
-        });
-
 
         final TextView Recipe = (TextView) view.findViewById(R.id.Recipe);
         Recipe.setOnClickListener(new View.OnClickListener() {
@@ -71,8 +59,8 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 if(m_currentFragment != RecipeFragment.getFragment()) {
                     m_currentFragment = RecipeFragment.getFragment();
-                    setBackground();
-                    Recipe.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    Tab = "Recipe";
+                    setBackground(Tab);
                     setFragment(m_currentFragment, R.id.frame_container);
                 }
             }
@@ -84,9 +72,10 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 if(m_currentFragment != SearchFragment.getFragment()) {
                     m_currentFragment = SearchFragment.getFragment();
-                    setBackground();
-                    Search.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    Tab = "Search";
+                    setBackground(Tab);
                     setFragment(m_currentFragment, R.id.frame_container);
+
                 }
             }
         });
@@ -97,14 +86,15 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 if(m_currentFragment != FavoritesFragment.getFragment()){
                     m_currentFragment = FavoritesFragment.getFragment();
-                    setBackground();
-                    Favorites.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    Tab="Favorites";
+                    setBackground(Tab);
                     setFragment(m_currentFragment, R.id.frame_container);
                 }
             }
         });
 
         mview = view;
+        setBackground(Tab);
         return view;
     }
 
@@ -121,22 +111,45 @@ public class HomeFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
-    public void setBackground(){
-
+    public void setBackground(String tab){
         TextView home =  mview.findViewById(R.id.FirstButton);
-        home.setTextColor(Color.BLACK);
-
-        TextView shopping =  mview.findViewById(R.id.TextButton);
-        shopping.setTextColor(Color.BLACK);
-
         TextView recipe = mview.findViewById(R.id.Recipe);
-        recipe.setTextColor(Color.BLACK);
-
         TextView search = mview.findViewById(R.id.Search);
-        search.setTextColor(Color.BLACK);
-
         TextView Favorites =  mview.findViewById(R.id.Favorites);
-        Favorites.setTextColor(Color.BLACK);
+        if(Tab != "Home")
+        {
+            home.setTextColor(Color.BLACK);
+        }
 
+        if(Tab != "Recipe"){
+            recipe.setTextColor(Color.BLACK);
+        }
+
+        if(Tab != "Search")
+        {
+            search.setTextColor(Color.BLACK);
+        }
+
+        if(Tab != "Favorites")
+        {
+            Favorites.setTextColor(Color.BLACK);
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////
+        if(Tab == "Home"){
+            home.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
+
+        if(Tab == "Recipe") {
+
+            recipe.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
+
+        if(Tab=="Search"){
+            search.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
+
+        if(Tab=="Favorites"){
+            Favorites.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
     }
 }
