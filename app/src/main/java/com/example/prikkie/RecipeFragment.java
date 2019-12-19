@@ -81,7 +81,10 @@ public class RecipeFragment extends Fragment {
     public void buildRecyclerView(){
         m_recipeListView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager((MainActivity) getContext());
-        m_adapter = new RecipeListAdapter(recipes);
+
+        if(m_adapter == null) {
+            m_adapter = new RecipeListAdapter(recipes, getActivity());
+        }
 
         m_recipeListView.setLayoutManager(layoutManager);
         m_recipeListView.setAdapter(m_adapter);
