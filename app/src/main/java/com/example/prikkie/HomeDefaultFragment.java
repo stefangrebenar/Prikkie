@@ -88,7 +88,14 @@ public class HomeDefaultFragment extends Fragment {
         });
 
         if (sp.contains(KEY_BUDGET)) {
-            budgetText.setText(String.valueOf(sp.getFloat(KEY_BUDGET, 0)));
+            float budget;
+            try {
+                budget = sp.getFloat(KEY_BUDGET, 0);
+            }
+            catch(ClassCastException e){
+                budget = sp.getInt(KEY_BUDGET, 0);
+            }
+            budgetText.setText(String.valueOf(budget));
         }
 
         return m_view;
@@ -163,7 +170,12 @@ public class HomeDefaultFragment extends Fragment {
                 Log.e("Planner fragment", "Budget not found");
                 return null; // budget not found
             }
-            budget = sp.getFloat(KEY_BUDGET, 0);
+            try {
+                budget = sp.getFloat(KEY_BUDGET, 0);
+            }
+            catch(ClassCastException e){
+                budget = sp.getInt(KEY_BUDGET, 0);
+            }
             int amountOfRecipes = getAmountOfRecipes(); // get from api (Maybe without the excluded recipes)
             int amountOfCheckedRecipes = 0;
             int[] checkedRecipes = new int[amountOfRecipes];
