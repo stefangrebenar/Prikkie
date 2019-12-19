@@ -120,6 +120,6 @@ public class PrikkieRandomRecipeAsync extends AsyncTask<String, Void, ArrayList<
             e.printStackTrace();
         }
 
-        return null;
+        return recipes;
     }
 }

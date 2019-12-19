@@ -14,6 +14,7 @@ public class Recipe {
     public String description;
     public String method;
     public int persons;
+    public double price;
     public String href; // will be deprecated
 
     public Recipe(){

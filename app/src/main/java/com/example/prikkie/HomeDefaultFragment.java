@@ -6,8 +6,6 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -44,14 +42,14 @@ public class HomeDefaultFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         m_view = inflater.inflate(R.layout.fragment_home_default, viewGroup, false);
 
-        Button search = (Button) m_view.findViewById(R.id.budgetSearchButton);
+        Button search = (Button) m_view.findViewById(R.id.submitBudgetButton);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendBudget();
             }
         });
-        budgetText = (EditText) m_view.findViewById(R.id.budgetID);
+        budgetText = (EditText) m_view.findViewById(R.id.budgetHolder);
         sp = (SharedPreferences) getContext().getSharedPreferences(USER_PREF, Context.MODE_PRIVATE);
         budgetText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override

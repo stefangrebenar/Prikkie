@@ -34,7 +34,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         public RecipeListViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
             m_imageView = itemView.findViewById(R.id.imageView);
-            m_title = itemView.findViewById(R.id.recipeTitle);
+            m_title = itemView.findViewById(R.id.topText);
             m_ingredients = itemView.findViewById(R.id.recipeIngredients);
 
             itemView.setOnClickListener(new View.OnClickListener() {

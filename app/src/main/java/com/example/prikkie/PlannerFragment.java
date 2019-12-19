@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -91,7 +90,7 @@ class RecipeThread implements Runnable {
                     recipePicture = view.findViewById(R.id.generatedRecipePicture);
                     ingredientList = view.findViewById(R.id.recipeIngredientList);
                     recipePreperations = view.findViewById(R.id.recipePreparations);
-                    recipeTitle = view.findViewById(R.id.recipeTitle);
+                    recipeTitle = view.findViewById(R.id.topText);
                     ConstraintLayout innerConstraintLayout = view.findViewById(R.id.innerConstraintLayout);
                     // recipePicture.setImageBitmap(recipe.bitmap);
                     for (
@@ -113,6 +112,44 @@ class RecipeThread implements Runnable {
             return null; // budget not found
         }
         budget = sp.getFloat(KEY_BUDGET, 0);
+        int amountOfRecipes = getAmountOfRecipes(); // get from api (Maybe without the excluded recipes)
+        int amountOfCheckedRecipes = 0;
+        int[] checkedRecipes = new int[amountOfRecipes];
+        Recipe finalRecipe = null;
+        ArrayList<Ingredient> excludedIngredients = new ArrayList<Ingredient>();
+        // Api get preferences?
+        do{
+            ArrayList<Recipe> recipes = getRandomRecipes(excludedIngredients, checkedRecipes);
+            if(recipes == null){
+                Log.d("TEST", "didn't get any recipes");
+                return null;
+            }
+            for(Recipe recipe : recipes){
+                double recipePrice = getPriceForIngredients(recipe.ingredients);
+                Log.d("TEST", recipe.title + " = " + recipePrice);
+                if(recipePrice <= budget){
+                    finalRecipe = recipe;
+                    break;
+                }
+                if(checkedRecipes.length > 0) {
+                    checkedRecipes[amountOfCheckedRecipes] = recipe.id;
+                }
+                amountOfCheckedRecipes++;
+            }
+        }while(finalRecipe == null && amountOfCheckedRecipes < amountOfRecipes-1);
+
+        return finalRecipe;
+    }
+
+    public Recipe getRecipesByBudgetForWeek(){
+        if (!sp.contains(KEY_BUDGET)) {
+            Log.e("Planner fragment", "Budget not found");
+            return null; // budget not found
+        }
+
+        //Divide budget by days
+        budget = sp.getFloat(KEY_BUDGET, 0)/7;
+
         int amountOfRecipes = getAmountOfRecipes(); // get from api (Maybe without the excluded recipes)
         int amountOfCheckedRecipes = 0;
         int[] checkedRecipes = new int[amountOfRecipes];
