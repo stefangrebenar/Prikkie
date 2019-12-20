@@ -6,16 +6,11 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="planner123" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d46bd61a-a033-450a-9416-5c6d2a5bd269" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/refresh_button.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/prikkie/RecipeAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/prikkie/RecipeAdapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/prikkie/WeeklyPlannerFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/prikkie/WeeklyPlannerFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/weeklyrecipe_item.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/weeklyrecipe_item.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -36,25 +31,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/prikkie/WeeklyPlannerFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="393" column="40" lean-forward="true" selection-start-line="393" selection-start-column="40" selection-end-line="393" selection-end-column="40" />
+            <state relative-caret-position="204">
+              <caret line="127" column="45" lean-forward="true" selection-start-line="127" selection-start-column="45" selection-end-line="127" selection-end-column="45" />
               <folding>
-                <element signature="e#3570#3871#0" expanded="true" />
-                <element signature="e#3870#3871#0" expanded="true" />
-                <element signature="e#4325#4601#0" expanded="true" />
-                <element signature="e#4600#4601#0" expanded="true" />
+                <element signature="e#3570#4298#0" expanded="true" />
+                <element signature="e#4297#4298#0" expanded="true" />
+                <element signature="e#4740#5307#0" expanded="true" />
+                <element signature="e#5306#5307#0" expanded="true" />
                 <element signature="class#ProductAsync#0;class#WeeklyPlannerFragment#0" />
                 <element signature="e#5319#5327#0" expanded="true" />
-                <element signature="e#9046#9094#0" expanded="true" />
-                <element signature="e#9975#10023#0" expanded="true" />
-                <element signature="e#10026#10078#0" expanded="true" />
+                <element signature="e#9911#9959#0" expanded="true" />
+                <element signature="e#10840#10888#0" expanded="true" />
+                <element signature="e#10891#10943#0" expanded="true" />
                 <element signature="e#10465#10473#0" expanded="true" />
-                <element signature="e#19034#19082#0" expanded="true" />
-                <element signature="e#19963#20011#0" expanded="true" />
-                <element signature="e#20014#20066#0" expanded="true" />
+                <element signature="e#20118#20166#0" expanded="true" />
+                <element signature="e#21047#21095#0" expanded="true" />
+                <element signature="e#21098#21150#0" expanded="true" />
                 <element signature="e#20125#20133#0" expanded="true" />
               </folding>
             </state>
@@ -116,15 +111,16 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/prikkie/RecipeAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="269">
-              <caret line="65" column="77" lean-forward="true" selection-start-line="65" selection-start-column="77" selection-end-line="65" selection-end-column="77" />
+            <state>
+              <caret column="28" lean-forward="true" selection-start-column="28" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#650#651#0" expanded="true" />
                 <element signature="e#686#687#0" expanded="true" />
+                <element signature="e#2248#2405#0" expanded="true" />
                 <element signature="e#2404#2405#0" expanded="true" />
                 <element signature="e#2509#2510#0" expanded="true" />
               </folding>
@@ -223,9 +219,9 @@
         <option value="$PROJECT_DIR$/src/main/res/layout/fragment_weekly_planner.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/prikkie/HomeDefaultFragment.java" />
         <option value="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/refresh_button.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/example/prikkie/WeeklyPlannerFragment.java" />
         <option value="$PROJECT_DIR$/src/main/res/layout/weeklyrecipe_item.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/prikkie/RecipeAdapter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/prikkie/WeeklyPlannerFragment.java" />
       </list>
     </option>
   </component>
@@ -743,44 +739,10 @@
       <provider editor-type-id="text-editor" />
       <provider selected="true" editor-type-id="android-designer2" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/prikkie/AccountActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1003">
-          <caret line="79" column="35" selection-start-line="79" selection-start-column="35" selection-end-line="79" selection-end-column="35" />
-          <folding>
-            <element signature="e#2900#3236#0" expanded="true" />
-            <element signature="e#3235#3236#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/prikkie/RecipeFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-226">
           <caret line="31" column="32" lean-forward="true" selection-start-line="31" selection-start-column="32" selection-end-line="31" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/prikkie/WeeklyPlannerFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="393" column="40" lean-forward="true" selection-start-line="393" selection-start-column="40" selection-end-line="393" selection-end-column="40" />
-          <folding>
-            <element signature="e#3570#3871#0" expanded="true" />
-            <element signature="e#3870#3871#0" expanded="true" />
-            <element signature="e#4325#4601#0" expanded="true" />
-            <element signature="e#4600#4601#0" expanded="true" />
-            <element signature="class#ProductAsync#0;class#WeeklyPlannerFragment#0" />
-            <element signature="e#5319#5327#0" expanded="true" />
-            <element signature="e#9046#9094#0" expanded="true" />
-            <element signature="e#9975#10023#0" expanded="true" />
-            <element signature="e#10026#10078#0" expanded="true" />
-            <element signature="e#10465#10473#0" expanded="true" />
-            <element signature="e#19034#19082#0" expanded="true" />
-            <element signature="e#19963#20011#0" expanded="true" />
-            <element signature="e#20014#20066#0" expanded="true" />
-            <element signature="e#20125#20133#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -815,14 +777,49 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/prikkie/RecipeAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="65" column="77" lean-forward="true" selection-start-line="65" selection-start-column="77" selection-end-line="65" selection-end-column="77" />
+        <state>
+          <caret column="28" lean-forward="true" selection-start-column="28" selection-end-column="28" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#650#651#0" expanded="true" />
             <element signature="e#686#687#0" expanded="true" />
+            <element signature="e#2248#2405#0" expanded="true" />
             <element signature="e#2404#2405#0" expanded="true" />
             <element signature="e#2509#2510#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/prikkie/AccountActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1003">
+          <caret line="79" column="35" selection-start-line="79" selection-start-column="35" selection-end-line="79" selection-end-column="35" />
+          <folding>
+            <element signature="e#2900#3236#0" expanded="true" />
+            <element signature="e#3235#3236#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/prikkie/WeeklyPlannerFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="127" column="45" lean-forward="true" selection-start-line="127" selection-start-column="45" selection-end-line="127" selection-end-column="45" />
+          <folding>
+            <element signature="e#3570#4298#0" expanded="true" />
+            <element signature="e#4297#4298#0" expanded="true" />
+            <element signature="e#4740#5307#0" expanded="true" />
+            <element signature="e#5306#5307#0" expanded="true" />
+            <element signature="class#ProductAsync#0;class#WeeklyPlannerFragment#0" />
+            <element signature="e#5319#5327#0" expanded="true" />
+            <element signature="e#9911#9959#0" expanded="true" />
+            <element signature="e#10840#10888#0" expanded="true" />
+            <element signature="e#10891#10943#0" expanded="true" />
+            <element signature="e#10465#10473#0" expanded="true" />
+            <element signature="e#20118#20166#0" expanded="true" />
+            <element signature="e#21047#21095#0" expanded="true" />
+            <element signature="e#21098#21150#0" expanded="true" />
+            <element signature="e#20125#20133#0" expanded="true" />
           </folding>
         </state>
       </provider>

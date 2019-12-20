@@ -72,6 +72,7 @@ public class WeeklyPlannerFragment extends Fragment {
     private Button submitButton;
     private EditText budgetHolder;
     private EditText daysHolder;
+    private ProductAsync lastTask;
 
     public static WeeklyPlannerFragment getFragment() {
         if (m_fragment == null) {
@@ -96,8 +97,21 @@ public class WeeklyPlannerFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resultItems.clear();
-                new ProductAsync(Float.parseFloat(budgetHolder.getText().toString()), Integer.parseInt(daysHolder.getText().toString())).execute();
+
+                if (!budgetHolder.getText().toString().isEmpty() && !daysHolder.getText().toString().isEmpty()) {
+                    resultItems.clear();
+                    if(lastTask != null){
+                        lastTask.cancel(true);
+                    }
+                    lastTask = new ProductAsync(Float.parseFloat(budgetHolder.getText().toString()), Integer.parseInt(daysHolder.getText().toString()));
+                    lastTask.execute();
+                    Toast msg = Toast.makeText(getContext(), "Recepten worden opgehaald", Toast.LENGTH_SHORT);
+                    msg.show();
+                } else {
+                    Toast msg = Toast.makeText(getContext(), "Vul een budget en aantal dagen in", Toast.LENGTH_LONG);
+                    msg.show();
+                }
+
             }
         });
 
@@ -105,7 +119,6 @@ public class WeeklyPlannerFragment extends Fragment {
 
 
         int[] i = new int[0];
-
 
 
         return view;
@@ -122,12 +135,13 @@ public class WeeklyPlannerFragment extends Fragment {
         mAdapter.setOnItemClickListener(new RecipeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
+                String title = resultItems.get(position).getTopText();
+                Toast msg = Toast.makeText(getContext(), title + " wordt vervangen voor een ander recept", Toast.LENGTH_SHORT);
+                msg.show();
                 new RefreshAsync(Float.parseFloat(budgetHolder.getText().toString()), Integer.parseInt(daysHolder.getText().toString()), position, new int[0]).execute();
             }
         });
     }
-
-
 
 
     ///
@@ -157,8 +171,8 @@ public class WeeklyPlannerFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<Recipe> recipes) {
-            for (Recipe recipe: recipes) {
-                resultItems.add(new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN,"%.2f", recipe.price)));
+            for (Recipe recipe : recipes) {
+                resultItems.add(new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN, "%.2f", recipe.price)));
             }
             mAdapter.notifyDataSetChanged();
 
@@ -186,7 +200,7 @@ public class WeeklyPlannerFragment extends Fragment {
                 for (Recipe recipe : recipes) {
                     double recipePrice = getPriceForIngredients(recipe.ingredients);
                     Log.d("planner123", recipe.title + " = " + recipePrice + " id:" + recipe.id);
-                    if (recipePrice <= budget/amountOfDays) {
+                    if (recipePrice <= budget / amountOfDays) {
                         recipe.price = recipePrice;
                         finalRecipes.add(recipe);
                         checkedRecipes[amountOfCheckedRecipes] = recipe.id;
@@ -264,7 +278,7 @@ public class WeeklyPlannerFragment extends Fragment {
             return 0;
         }
 
-        public ArrayList<Recipe> getRandomRecipes2( int[] checkedIds) {
+        public ArrayList<Recipe> getRandomRecipes2(int[] checkedIds) {
             String urlQuery = App.getContext().getString(R.string.prikkie_api) + App.getContext().getString(R.string.prikkie_recipes);
             ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
@@ -388,7 +402,7 @@ public class WeeklyPlannerFragment extends Fragment {
 //            for (Recipe recipe: recipes) {
 //                resultItems.add(new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN,"%.2f", recipe.price)));
 //            }
-            resultItems.set(index, new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN,"%.2f", recipe.price)));
+            resultItems.set(index, new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN, "%.2f", recipe.price)));
             mAdapter.notifyDataSetChanged();
 
             super.onPostExecute(recipe);
@@ -415,7 +429,7 @@ public class WeeklyPlannerFragment extends Fragment {
                 for (Recipe recipe : recipes) {
                     double recipePrice = getPriceForIngredients(recipe.ingredients);
                     Log.d("planner123", recipe.title + " = " + recipePrice + " id:" + recipe.id);
-                    if (recipePrice <= budget/amountOfDays) {
+                    if (recipePrice <= budget / amountOfDays) {
                         recipe.price = recipePrice;
                         checkedRecipes[amountOfCheckedRecipes] = recipe.id;
                         finalRecipe = recipe;
@@ -493,7 +507,7 @@ public class WeeklyPlannerFragment extends Fragment {
             return 0;
         }
 
-        public ArrayList<Recipe> getRandomRecipes2( int[] checkedIds) {
+        public ArrayList<Recipe> getRandomRecipes2(int[] checkedIds) {
             String urlQuery = App.getContext().getString(R.string.prikkie_api) + App.getContext().getString(R.string.prikkie_recipes);
             ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
