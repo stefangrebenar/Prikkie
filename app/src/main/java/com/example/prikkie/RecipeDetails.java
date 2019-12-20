@@ -37,7 +37,7 @@ public class RecipeDetails extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup viewGroup, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recipe_details_fragment, viewGroup, false);
-        FloatingActionButton back = (FloatingActionButton) view.findViewById(R.id.back_button);
+        ImageView back = (ImageView) view.findViewById(R.id.back_button);
         if(back != null) {
             back.setOnClickListener(new View.OnClickListener() {
                 @Override
