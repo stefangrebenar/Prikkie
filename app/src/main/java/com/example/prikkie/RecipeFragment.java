@@ -47,7 +47,7 @@ public class RecipeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup viewGroup, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recipe, viewGroup, false);
+        View view = inflater.inflate(R.layout.test_layout, viewGroup, false);
 
         searchButton = view.findViewById(R.id.recipeSubmitButton);
         searchQuery = view.findViewById(R.id.recipeSearch);
