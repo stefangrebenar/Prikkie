@@ -2,20 +2,18 @@
     <string name="app_name">Prikkie</string>
     <string name="action_settings">Settings</string>
 
-    <!--RECIPE PUPPY-->
-    <string name="recipe_puppy_api">http://www.recipepuppy.com/api/?</string>
-    <string name="ingredient">i=</string>
-    <string name="recipe_keyword">q=</string>
-
     <!--PRIKKIE RECIPE-->
     <string name="prikkie_api">http://api.prikkieapp.nl/</string>
-    <string name="prikkie_recipes">randomrecipe</string>
-
+    <string name="prikkie_randomRecipes">randomrecipe</string>
+    <string name="prikkie_recipes">recipes</string>
+    <string name="prikkie_recipe_name">name=</string>
+    <string name="prikkie_ingredient">ingredients=</string>
+    <string name="prikkie_page">page=</string>
 
     <!--AH API-->
     <string name="ah_api">https://www.ah.nl/zoeken/api/products/search</string>
     <string name="ah_size">"?size="</string>
-    <string name="ah_taxonomy">"&amp;taxonomySlug="</string>
+    <string name="ah_taxonomy">"&amp;taxonomyslug="</string>
     <string name="ah_query">"&amp;query="</string>
 
 

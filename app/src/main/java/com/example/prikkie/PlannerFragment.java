@@ -35,24 +35,23 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class PlannerFragment extends Fragment {
 
     private static PlannerFragment m_fragment;
-    public static PlannerFragment getFragment(){
-        if(m_fragment == null){
+
+    public static PlannerFragment getFragment() {
+        if (m_fragment == null) {
             m_fragment = new PlannerFragment();
         }
         return m_fragment;
     }
-    private PlannerFragment(){}
+
+    private PlannerFragment() {
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_planner,container,false);
-        RecipeThread rt = new RecipeThread(this, view);
-        Thread t = new Thread(rt);
-        t.start();
+        View view = inflater.inflate(R.layout.fragment_planner, container, false);
         return view;
     }
-
 }
 class RecipeThread implements Runnable {
     private float budget;

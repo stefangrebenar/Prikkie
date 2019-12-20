@@ -51,7 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="De boodschappenlijst is leeg. Ga naar de zoekpagina om producten toetevoegen"
+                android:text="De boodschappenlijst is leeg. Ga naar de zoekpagina om producten toe te voegen"
                 android:textAlignment="center" />
 
         </LinearLayout>

@@ -1,38 +1,23 @@
 package com.example.prikkie;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.prikkie.Api.IngredientApi.AHAPI;
-import com.example.prikkie.Api.IngredientApi.AHAPIAsync;
 import com.example.prikkie.Api.IngredientApi.Product;
-import com.example.prikkie.Api.recipe_api.PrikkieApi.PrikkieRandomRecipeAsync;
 import com.example.prikkie.Api.recipe_api.PrikkieApi.PrikkieRecipeApi;
 import com.example.prikkie.Api.recipe_api.Recipe;
-import com.example.prikkie.Helpers.ImageManager;
-import com.example.prikkie.RoomShoppingList.ShoppingListItem;
-import com.example.prikkie.RoomShoppingList.ShoppingListViewModel;
 import com.example.prikkie.ingredientDB.Ingredient;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -47,7 +32,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -55,12 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
-
-import static androidx.core.content.ContextCompat.getSystemService;
-import static com.example.prikkie.App.hideKeyboardFrom;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class WeeklyPlannerFragment extends Fragment {
 
@@ -187,19 +165,14 @@ public class WeeklyPlannerFragment extends Fragment {
             ArrayList<Ingredient> excludedIngredients = new ArrayList<Ingredient>();
             // Api get preferences?
 
-            Log.d("planner123", "Amount of recipes" + amountOfRecipes);
             do {
-                Log.i("planner123", "ignored recipeIds" + Arrays.toString(checkedRecipes));
                 ArrayList<Recipe> recipes = getRandomRecipes2(checkedRecipes);
                 if (recipes == null) {
-                    Log.d("planner123", "didn't get any recipes");
                     return null;
                 }
-                Log.d("planner123", "Amount of recipes found" + recipes.size());
 
                 for (Recipe recipe : recipes) {
                     double recipePrice = getPriceForIngredients(recipe.ingredients);
-                    Log.d("planner123", recipe.title + " = " + recipePrice + " id:" + recipe.id);
                     if (recipePrice <= budget / amountOfDays) {
                         recipe.price = recipePrice;
                         finalRecipes.add(recipe);
@@ -214,7 +187,6 @@ public class WeeklyPlannerFragment extends Fragment {
                 }
             } while (finalRecipes.size() < amountOfDays && amountOfCheckedRecipes < amountOfRecipes - 1);
 
-            Log.i("planner123", "returning final recipe");
             return finalRecipes;
         }
 
@@ -279,7 +251,7 @@ public class WeeklyPlannerFragment extends Fragment {
         }
 
         public ArrayList<Recipe> getRandomRecipes2(int[] checkedIds) {
-            String urlQuery = App.getContext().getString(R.string.prikkie_api) + App.getContext().getString(R.string.prikkie_recipes);
+            String urlQuery = App.getContext().getString(R.string.prikkie_api) + App.getContext().getString(R.string.prikkie_randomRecipes);
             ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
             try {
@@ -361,7 +333,6 @@ public class WeeklyPlannerFragment extends Fragment {
                         recipes.add(recipe);
                         Collections.shuffle(recipes);
                     }
-
                     return recipes;
                 }
                 // no OK response from server
@@ -416,19 +387,14 @@ public class WeeklyPlannerFragment extends Fragment {
             ArrayList<Ingredient> excludedIngredients = new ArrayList<Ingredient>();
             // Api get preferences?
 
-            Log.d("planner123", "Amount of recipes" + amountOfRecipes);
             do {
-                Log.i("planner123", "ignored recipeIds" + Arrays.toString(checkedRecipes));
                 ArrayList<Recipe> recipes = getRandomRecipes2(this.checkedRecipes);
                 if (recipes == null) {
-                    Log.d("planner123", "didn't get any recipes");
                     return null;
                 }
-                Log.d("planner123", "Amount of recipes found" + recipes.size());
 
                 for (Recipe recipe : recipes) {
                     double recipePrice = getPriceForIngredients(recipe.ingredients);
-                    Log.d("planner123", recipe.title + " = " + recipePrice + " id:" + recipe.id);
                     if (recipePrice <= budget / amountOfDays) {
                         recipe.price = recipePrice;
                         checkedRecipes[amountOfCheckedRecipes] = recipe.id;
@@ -443,7 +409,6 @@ public class WeeklyPlannerFragment extends Fragment {
                 }
             } while (finalRecipe == null && amountOfCheckedRecipes < amountOfRecipes - 1);
 
-            Log.i("planner123", "returning final recipe");
             return finalRecipe;
         }
 
@@ -508,7 +473,7 @@ public class WeeklyPlannerFragment extends Fragment {
         }
 
         public ArrayList<Recipe> getRandomRecipes2(int[] checkedIds) {
-            String urlQuery = App.getContext().getString(R.string.prikkie_api) + App.getContext().getString(R.string.prikkie_recipes);
+            String urlQuery = App.getContext().getString(R.string.prikkie_api) + App.getContext().getString(R.string.prikkie_randomRecipes);
             ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
             try {

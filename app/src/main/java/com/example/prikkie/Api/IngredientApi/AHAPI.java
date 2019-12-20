@@ -69,6 +69,7 @@ public class AHAPI {
     //gets the result of a query
     public List<Product> getProducts(Context context) {
         try{
+            Log.d("TEST", urlQuery);
             HttpGet httppost = new HttpGet(urlQuery);
             HttpClient httpclient = new DefaultHttpClient();
             HttpResponse response = httpclient.execute(httppost);        // StatusLine stat = response.getStatusLine();
