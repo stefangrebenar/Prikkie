@@ -10,19 +10,29 @@
         android:layout_width="match_parent"
         android:layout_height="254dp">
 
+        <Button
+            android:id="@+id/refreshButton"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/refresh_button"
+            android:backgroundTint="#FFFFFF"
+            android:elevation="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/recipeImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars"
-            /><![CDATA[
-
-        />
-
-        ]]>
+            app:layout_constraintVertical_bias="0.0"
+            tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
             android:id="@+id/topText"

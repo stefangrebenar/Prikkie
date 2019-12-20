@@ -3,6 +3,7 @@ package com.example.prikkie;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,12 +30,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         public ImageView mImageView;
         public TextView mTopText;
         public TextView mBottomText;
+        public Button mRefreshButton;
 
         public RecipeViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.recipeImage);
             mTopText = itemView.findViewById(R.id.topText);
             mBottomText = itemView.findViewById(R.id.bottomText);
+            mRefreshButton = itemView.findViewById(R.id.refreshButton);
         }
     }
 
@@ -60,6 +63,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                 .into(holder.mImageView);
         holder.mTopText.setText(currentItem.getTopText());
         holder.mBottomText.setText("€" + currentItem.getBottomText());
+        holder.mRefreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onItemClick(position);
+            }
+        });
     }
 
     @Override
