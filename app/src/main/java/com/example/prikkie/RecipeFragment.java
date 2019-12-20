@@ -7,9 +7,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.annotation.UiThread;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.AutoTransition;
+import androidx.transition.TransitionManager;
 
 import com.example.prikkie.Api.recipe_api.PrikkieApi.PrikkieRecipeApi;
 import com.example.prikkie.Api.recipe_api.Recipe;
@@ -37,6 +41,10 @@ public class RecipeFragment extends Fragment {
     private RecipeListAdapter m_adapter;
     private ArrayList<Recipe> recipes;
 
+    ConstraintLayout expandableView;
+    Button arrowBtn;
+    CardView cardView;
+
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup viewGroup, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe, viewGroup, false);
@@ -55,6 +63,26 @@ public class RecipeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showRecipe(v);
+            }
+        });
+
+
+        expandableView = view.findViewById(R.id.expandableView);
+        arrowBtn = view.findViewById(R.id.arrowBtn);
+        cardView = view.findViewById(R.id.cardView);
+
+        arrowBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (expandableView.getVisibility()==View.GONE){
+                    TransitionManager.beginDelayedTransition(cardView, new AutoTransition());
+                    expandableView.setVisibility(View.VISIBLE);
+                    arrowBtn.setBackgroundResource(R.drawable.ic_keyboard_arrow_up_white_24dp);
+                } else {
+                    TransitionManager.beginDelayedTransition(cardView, new AutoTransition());
+                    expandableView.setVisibility(View.GONE);
+                    arrowBtn.setBackgroundResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+                }
             }
         });
 
