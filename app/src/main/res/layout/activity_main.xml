@@ -25,12 +25,9 @@
                 android:background="?attr/colorPrimary"
                 android:gravity="center"
                 android:label=""
-                android:scaleX="2"
-                android:scaleY="2"
-                android:translationY="4dp"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:contentInsetLeft="0dp"
-                app:contentInsetStart="0dp"
-                app:popupTheme="@style/AppTheme.PopupOverlay">
+                app:contentInsetStart="0dp">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -40,7 +37,7 @@
                     android:contentDescription="Logo"
                     android:cropToPadding="false"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/prikkie_logo3" />
+                    android:src="@drawable/ic_logo" />
 
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>

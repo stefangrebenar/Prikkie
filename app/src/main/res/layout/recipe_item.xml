@@ -42,7 +42,7 @@
             android:layout_marginEnd="8dp"
             android:text="Recipe title"
             android:textAlignment="center"
-            android:textIsSelectable="false"
+            android:textIsSelectable="true"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
