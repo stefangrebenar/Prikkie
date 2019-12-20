@@ -1,23 +1,36 @@
 package com.example.prikkie;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 
+import com.example.prikkie.Api.IngredientApi.AHAPI;
+import com.example.prikkie.Api.IngredientApi.AHAPIAsync;
+import com.example.prikkie.Api.IngredientApi.Product;
 import com.example.prikkie.Api.recipe_api.Recipe;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.prikkie.RoomShoppingList.ShoppingListItem;
+import com.example.prikkie.RoomShoppingList.ShoppingListViewModel;
+import com.example.prikkie.ingredientDB.Ingredient;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class RecipeDetails extends Fragment {
     private static RecipeDetails m_fragment;
@@ -33,10 +46,12 @@ public class RecipeDetails extends Fragment {
     private static boolean newRecipe = true;
     private ImageView image;
     private static ScrollView sv;
+    private ShoppingListViewModel shoppingListViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup viewGroup, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recipe_details_fragment, viewGroup, false);
+        shoppingListViewModel = ViewModelProviders.of(getActivity()).get(ShoppingListViewModel.class);
         ImageView back = (ImageView) view.findViewById(R.id.back_button);
         if(back != null) {
             back.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +61,13 @@ public class RecipeDetails extends Fragment {
                 }
             });
         }
+        View addShoppingList = view.findViewById(R.id.addToShoppingList);
+        addShoppingList.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                addIngredientsToShoppingList();
+            }
+        });
         if(recipe != null){
             image = (ImageView) view.findViewById(R.id.generatedRecipePicture);
             TextView title = (TextView) view.findViewById(R.id.recipeTitle);
@@ -53,7 +75,7 @@ public class RecipeDetails extends Fragment {
             TextView ingredients = (TextView) view.findViewById(R.id.recipeIngredientList);
             TextView method = (TextView) view.findViewById(R.id.recipePreparations);
 
-            RequestCreator recipeImage = Picasso.get().load(recipe.imagePath);//.into(image);//.resize(image.getWidth(), image.getHeight())
+            RequestCreator recipeImage = Picasso.get().load(recipe.imagePath);
             recipeImage.resize(256, 128).centerInside();
             recipeImage.into(image);
             title.setText(recipe.title);
@@ -76,6 +98,32 @@ public class RecipeDetails extends Fragment {
             });
             sv.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void addIngredientsToShoppingList(){
+        int duration = Toast.LENGTH_SHORT;
+
+        for(Ingredient ingredient : recipe.ingredients) {
+            AHAPIAsync api = new AHAPIAsync(1);
+            api.setQuery(ingredient.Dutch);
+            api.setTaxonomy(ingredient.Taxonomy);
+            api.orderBy(AHAPI.orderBy.ASC);
+            api.execute();
+
+            try {
+                Product product = api.get(10, TimeUnit.SECONDS).get(0);
+                ShoppingListItem item = new ShoppingListItem(product.name, product.price, product.imgURL, false);
+                shoppingListViewModel.insert(item);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+        }
+        Toast toast = Toast.makeText(getContext(), "Ingredienten voor " + recipe.title + " zijn toegevoegd aan de boodschappenlijst", duration);
+        toast.show();
     }
 
     public static void setRecipe(Recipe recipe){

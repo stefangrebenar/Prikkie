@@ -3,6 +3,7 @@ package com.example.prikkie;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,12 +19,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.prikkie.Api.IngredientApi.AHAPI;
 import com.example.prikkie.Api.IngredientApi.AHAPIAsync;
 import com.example.prikkie.Api.IngredientApi.Product;
 import com.example.prikkie.Api.recipe_api.PrikkieApi.PrikkieRecipeApi;
 import com.example.prikkie.Api.recipe_api.Recipe;
+import com.example.prikkie.RoomShoppingList.ShoppingListItem;
+import com.example.prikkie.RoomShoppingList.ShoppingListViewModel;
 import com.example.prikkie.ingredientDB.Ingredient;
 import com.squareup.picasso.Picasso;
 
@@ -33,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static com.example.prikkie.App.hideKeyboardFrom;
@@ -55,14 +60,24 @@ public class HomeDefaultFragment extends Fragment {
     public static final String USER_PREF = "USER_PREF";
     public static final String KEY_BUDGET = "KEY_BUDGET";
     public SharedPreferences sp;
+    public Recipe recipe;
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
     private View m_view;
+    private ShoppingListViewModel shoppingListViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         m_view = inflater.inflate(R.layout.fragment_home_default, viewGroup, false);
+        shoppingListViewModel = ViewModelProviders.of(getActivity()).get(ShoppingListViewModel.class);
 
+        View addShoppingList = m_view.findViewById(R.id.addToShoppingList);
+        addShoppingList.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                addIngredientsToShoppingList();
+            }
+        });
         Button search = (Button) m_view.findViewById(R.id.budgetSearchButton);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +131,32 @@ public class HomeDefaultFragment extends Fragment {
         hideKeyboardFrom(getContext(), m_view);
     }
 
+    private void addIngredientsToShoppingList(){
+        int duration = Toast.LENGTH_SHORT;
+
+        for(Ingredient ingredient : recipe.ingredients) {
+            AHAPIAsync api = new AHAPIAsync(1);
+            api.setQuery(ingredient.Dutch);
+            api.setTaxonomy(ingredient.Taxonomy);
+            api.orderBy(AHAPI.orderBy.ASC);
+            api.execute();
+
+            try {
+                Product product = api.get(10, TimeUnit.SECONDS).get(0);
+                ShoppingListItem item = new ShoppingListItem(product.name, product.price, product.imgURL, false);
+                shoppingListViewModel.insert(item);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+        }
+        Toast toast = Toast.makeText(getContext(), "Ingredienten voor " + recipe.title + " zijn toegevoegd aan de boodschappenlijst", duration);
+        toast.show();
+    }
+
     // Seperate thread to keep the ui responsive while loading a recipe.
     class RecipeThread implements Runnable {
         private float budget;
@@ -123,8 +164,6 @@ public class HomeDefaultFragment extends Fragment {
         private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
         final PrikkieRecipeApi api = new PrikkieRecipeApi();
 
-
-        public Recipe recipe;
         private ImageView recipePicture;
         private TextView recipeDescription;
         private TextView recipeTitle;
@@ -262,6 +301,5 @@ public class HomeDefaultFragment extends Fragment {
             }
             return price;
         }
-
     }
 }

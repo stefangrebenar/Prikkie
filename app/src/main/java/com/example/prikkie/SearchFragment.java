@@ -108,7 +108,7 @@ public class SearchFragment extends Fragment {
 
                 int duration = Toast.LENGTH_SHORT;
 
-                Toast toast = Toast.makeText(getContext(), mItem.getTopText() + "toegevoegd aan de boodschappenlijst", duration);
+                Toast toast = Toast.makeText(getContext(), mItem.getTopText() + " toegevoegd aan de boodschappenlijst", duration);
                 toast.show();
 
                 shoppingListViewModel.insert(item);
