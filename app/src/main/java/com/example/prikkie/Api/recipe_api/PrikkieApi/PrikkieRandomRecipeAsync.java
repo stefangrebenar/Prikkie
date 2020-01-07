@@ -1,6 +1,7 @@
 package com.example.prikkie.Api.recipe_api.PrikkieApi;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.prikkie.Api.recipe_api.Recipe;
 import com.example.prikkie.App;
@@ -24,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class PrikkieRandomRecipeAsync extends AsyncTask<String, Void, ArrayList<Recipe>> {
-    private final String urlQuery = App.getContext().getString(R.string.prikkie_api) + App.getContext().getString(R.string.prikkie_randomRecipes);
+    private final String urlQuery = App.getContext().getString(R.string.prikkie_api) + App.getContext().getString(R.string.prikkie_recipes);
     private ArrayList<Recipe> recipes;
     public int[] checkedIds;
 
@@ -119,6 +120,6 @@ public class PrikkieRandomRecipeAsync extends AsyncTask<String, Void, ArrayList<
             e.printStackTrace();
         }
 
-        return null;
+        return recipes;
     }
 }

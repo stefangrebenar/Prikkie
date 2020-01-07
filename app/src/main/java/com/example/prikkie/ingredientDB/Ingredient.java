@@ -5,7 +5,6 @@ public class Ingredient {
     public String English;
     public String Dutch;
     public String amount;
-    public String unit;
     public String Taxonomy;
     public boolean Checked;
 

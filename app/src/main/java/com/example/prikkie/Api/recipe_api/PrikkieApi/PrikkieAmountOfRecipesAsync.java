@@ -20,11 +20,12 @@ public class PrikkieAmountOfRecipesAsync  extends AsyncTask<String, Void, Intege
     protected Integer doInBackground(String... strings) {
 
         // Preform request
-        HttpGet httpGet = new HttpGet(urlQuery);
+        HttpGet httppost = new HttpGet(urlQuery);
         HttpClient httpclient = new DefaultHttpClient();
         try {
-            HttpResponse response = httpclient.execute(httpGet);        // StatusLine stat = response.getStatusLine();
+            HttpResponse response = httpclient.execute(httppost);        // StatusLine stat = response.getStatusLine();
             int status = response.getStatusLine().getStatusCode();
+
             // If response is Ok 200
             if (status == 200) {
                 HttpEntity entity = response.getEntity();

@@ -1,26 +1,23 @@
 package com.example.prikkie;
 
 import android.os.Bundle;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import androidx.annotation.UiThread;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.transition.AutoTransition;
-import androidx.transition.TransitionManager;
 
-import com.example.prikkie.Api.recipe_api.PrikkieApi.PrikkieRecipeApi;
 import com.example.prikkie.Api.recipe_api.Recipe;
 import com.example.prikkie.ingredientDB.Ingredient;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeFragment extends Fragment {
     private static RecipeFragment m_fragment;
@@ -41,10 +38,6 @@ public class RecipeFragment extends Fragment {
     private RecipeListAdapter m_adapter;
     private ArrayList<Recipe> recipes;
 
-    ConstraintLayout expandableView;
-    Button arrowBtn;
-    CardView cardView;
-
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup viewGroup, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe, viewGroup, false);
@@ -55,8 +48,8 @@ public class RecipeFragment extends Fragment {
         exclude = view.findViewById(R.id.excludeIngredient);
         m_recipeListView = view.findViewById(R.id.recipeList);
 
+        createExampleList();
         buildRecyclerView();
-        showRecipe(view);
 
         Button search = (Button) view.findViewById(R.id.recipeSubmitButton);
         search.setOnClickListener(new View.OnClickListener() {
@@ -66,27 +59,45 @@ public class RecipeFragment extends Fragment {
             }
         });
 
-
-        expandableView = view.findViewById(R.id.expandableView);
-        arrowBtn = view.findViewById(R.id.arrowBtn);
-        cardView = view.findViewById(R.id.cardView);
-
-        arrowBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (expandableView.getVisibility()==View.GONE){
-                    TransitionManager.beginDelayedTransition(cardView, new AutoTransition());
-                    expandableView.setVisibility(View.VISIBLE);
-                    arrowBtn.setBackgroundResource(R.drawable.ic_keyboard_arrow_up_white_24dp);
-                } else {
-                    TransitionManager.beginDelayedTransition(cardView, new AutoTransition());
-                    expandableView.setVisibility(View.GONE);
-                    arrowBtn.setBackgroundResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
-                }
-            }
-        });
-
         return view;
+    }
+
+    private void createExampleList(){
+        recipes = new ArrayList<Recipe>();
+
+        ArrayList<Ingredient> chocoIngredients = new ArrayList<>();
+        chocoIngredients.add(new Ingredient("Melk", "1 liter"));
+        chocoIngredients.add(new Ingredient("Chocosticks", "4 stucks"));
+        chocoIngredients.add(new Ingredient("Slagroom", "1 spuitbus"));
+        chocoIngredients.add(new Ingredient("kruidnoten", "100 gram"));
+        chocoIngredients.add(new Ingredient("fudge caramel", "100 gram"));
+        Recipe choco = new Recipe("Warme chocolademelk met karamel-zeezoutkruidnoten", "https://ish-images-static.prod.cloud.jumbo.com/product_images/Recipe_502613-01_560x560.jpg", chocoIngredients);
+
+        ArrayList<Ingredient> cheeseIngredients = new ArrayList<>();
+        cheeseIngredients.add(new Ingredient("zongedroogde tomaat", "150 gram"));
+        cheeseIngredients.add(new Ingredient("sjalot", "1 stuk"));
+        cheeseIngredients.add(new Ingredient("augurkenblokjes", "3 eetlepels"));
+        cheeseIngredients.add(new Ingredient("beefburgers", "8 stuks"));
+        cheeseIngredients.add(new Ingredient("hamburgerbroodjes", "4 stuks"));
+        Recipe cheese = new Recipe("Dubbele cheeseburger met tomaat-ui-augurkrelish", "https://static.ah.nl/static/recepten/img_080632_220x162_JPG.jpg", cheeseIngredients);
+
+        ArrayList<Ingredient> pizzaIngredients = new ArrayList<>();
+        pizzaIngredients.add(new Ingredient("barbecuesaus", "2 eetlepels"));
+        pizzaIngredients.add(new Ingredient("kipdijfiletreepjes", "400 gram"));
+        pizzaIngredients.add(new Ingredient("crème fraîse light", "125 gram"));
+        pizzaIngredients.add(new Ingredient("gerapste kaas", "125 gram"));
+        pizzaIngredients.add(new Ingredient("pizzabodems tomaat", "4 stuks"));
+        Recipe pizza = new Recipe("BBQ-chicken pizza", "https://static.ah.nl/static/recepten/img_109519_890x594_JPG.jpg", pizzaIngredients);
+
+        recipes.add(choco);
+        recipes.add(cheese);
+        recipes.add(pizza);
+        recipes.add(choco);
+        recipes.add(cheese);
+        recipes.add(pizza);
+        recipes.add(choco);
+        recipes.add(cheese);
+        recipes.add(pizza);
     }
 
     public void showRecipe(View view){
@@ -97,22 +108,15 @@ public class RecipeFragment extends Fragment {
         //Get excluded ingredients
         String excludes = exclude.getText().toString();
 
-        RecipeThread thread = new RecipeThread();
-        thread.name = keywords;
-        thread.includes = ingredients;
-        thread.excludes = excludes;
-        Thread t = new Thread(thread);
-        t.start();
+//        recipeApi = new RecipePuppy((MainActivity) getActivity(), this);
+//        recipeApi.getRecipeFromApi(keywords, ingredients, excludes);
     }
 
     //Builds the recylerView and sets up the adapter
     public void buildRecyclerView(){
         m_recipeListView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager((MainActivity) getContext());
-
-        if(m_adapter == null) {
-            m_adapter = new RecipeListAdapter(recipes, getActivity());
-        }
+        m_adapter = new RecipeListAdapter(recipes);
 
         m_recipeListView.setLayoutManager(layoutManager);
         m_recipeListView.setAdapter(m_adapter);
@@ -125,37 +129,31 @@ public class RecipeFragment extends Fragment {
         });
     }
 
-    class RecipeThread implements Runnable{
-        public String name;
-        public String includes;
-        public String excludes;
-        public int page;
-
-        private ArrayList<Recipe> recipes;
-        private PrikkieRecipeApi api = new PrikkieRecipeApi();
 
 
-        @Override
-        public void run() {
-            recipes = getRecipesFromApi();
-            if(recipes == null){
-                return;
-            }
-
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    m_adapter.setRecipes(recipes);
-                }
-            });
+    public void updateRecipes(ArrayList<Recipe> recipes){
+        // Don't continue if there were no recipes found.
+        if(recipes == null){
+            return;
         }
+        // Clear old recipes
+        this.recipes.clear();
+        // Add all new recipes to list
+        this.recipes.addAll(recipes);
 
-        private ArrayList<Recipe> getRecipesFromApi(){
-            ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-            recipes = api.getRecipeFromApi(name, includes, excludes, page);
 
-
-            return recipes;
-        }
+//        // If there were any recipes found
+//        if(recipes.size() > 0) {
+//            Recipe recipe = recipes.get(0);
+//            // Show recipe
+//            recipeView.setText(recipe.title + "\n" + recipe.href + "\n\n");
+//            for(int i = 0; i < recipe.ingredients.size(); i++){
+//                recipeView.append(recipe.ingredients.get(i)+ ", ");
+//            }
+//            if (!recipe.imagePath.isEmpty()) //An image exists
+//            {
+//                Picasso.get().load(recipe.imagePath).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).into(imageView);
+//            }
+//        }
     }
 }
