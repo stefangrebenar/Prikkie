@@ -508,7 +508,7 @@ public class WeeklyPlannerFragment extends Fragment {
         }
 
         public ArrayList<Recipe> getRandomRecipes2(int[] checkedIds) {
-            String urlQuery = App.getContext().getString(R.string.prikkie_api) + App.getContext().getString(R.string.prikkie_recipes);
+            String urlQuery = App.getContext().getString(R.string.prikkie_api) + "randomrecipe";//App.getContext().getString(R.string.prikkie_recipes);
             ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
             try {
