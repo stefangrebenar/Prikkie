@@ -1,11 +1,15 @@
 package com.example.prikkie;
 
+import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.prikkie.Api.recipe_api.Recipe;
@@ -17,6 +21,12 @@ import java.util.ArrayList;
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeListViewHolder> {
     private ArrayList<Recipe> m_recipes;
     private OnItemClickListener m_Listener;
+    private MainActivity mainActivity;
+
+    public void setRecipes(ArrayList<Recipe> recipes){
+        m_recipes = recipes;
+        this.notifyDataSetChanged();
+    }
 
     public interface OnItemClickListener{
         void onItemClick(int position);
@@ -26,7 +36,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         m_Listener = listener;
     }
 
-    public static class RecipeListViewHolder extends RecyclerView.ViewHolder {
+    public class RecipeListViewHolder extends RecyclerView.ViewHolder {
         public ImageView m_imageView;
         public TextView m_title;
         public TextView m_ingredients;
@@ -40,10 +50,12 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(listener != null){
+                    if (listener != null) {
                         int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION){
+                        if (position != RecyclerView.NO_POSITION) {
                             listener.onItemClick(position);
+                            RecipeDetails.setRecipe(m_recipes.get(position));
+                            setFragment(RecipeDetails.getFragment());
                         }
                     }
                 }
@@ -51,7 +63,12 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         }
     }
 
-    public RecipeListAdapter(ArrayList<Recipe> recipes) {
+    public void setFragment(Fragment fragment) {
+        mainActivity.getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.frame_container, fragment).commit();
+    }
+
+    public RecipeListAdapter(ArrayList<Recipe> recipes, Activity activity) {
+        mainActivity = (MainActivity) activity;
         m_recipes = recipes;
     }
 
@@ -66,7 +83,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     public void onBindViewHolder(RecipeListViewHolder holder, int position) {
         Recipe currentItem = m_recipes.get(position);
 
-//        Picasso.get().load(currentItem.imagePath).resize(holder.m_imageView.getWidth(),holder.m_imageView.getHeight()).into(holder.m_imageView);
         Picasso.get().load(currentItem.imagePath).into(holder.m_imageView);
         holder.m_title.setText(currentItem.title);
         holder.m_ingredients.setText(currentItem.ingredientsToString());
@@ -74,6 +90,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
     @Override
     public int getItemCount() {
-        return m_recipes.size();
+        if(m_recipes != null) {
+            return m_recipes.size();
+        }
+        return 0;
     }
 }

@@ -1,7 +1,6 @@
 package com.example.prikkie.Api.IngredientApi;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.prikkie.App;
 import com.example.prikkie.R;
@@ -51,11 +50,10 @@ public class AHAPIAsync extends AsyncTask<String, Void, List<Product>> {
     @Override
     protected List<Product> doInBackground(String... strings) {
         try{
-            HttpGet httppost = new HttpGet(urlQuery);
+            HttpGet httpGet = new HttpGet(urlQuery);
             HttpClient httpclient = new DefaultHttpClient();
-            HttpResponse response = httpclient.execute(httppost);        // StatusLine stat = response.getStatusLine();
+            HttpResponse response = httpclient.execute(httpGet);        // StatusLine stat = response.getStatusLine();
             int status = response.getStatusLine().getStatusCode();
-
             if (status == 200) {
                 HttpEntity entity = response.getEntity();
                 String data = EntityUtils.toString(entity);

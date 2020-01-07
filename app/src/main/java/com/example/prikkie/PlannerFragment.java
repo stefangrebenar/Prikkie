@@ -52,7 +52,6 @@ public class PlannerFragment extends Fragment {
         t.start();
         return view;
     }
-
 }
 class RecipeThread implements Runnable {
     private float budget;
