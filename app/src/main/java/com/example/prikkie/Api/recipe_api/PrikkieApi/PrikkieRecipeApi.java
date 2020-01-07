@@ -52,7 +52,7 @@ public class PrikkieRecipeApi{
             recipeAsync.checkedIds = checkedIds;
             recipeAsync.execute();
             try {
-                results = recipeAsync.get(1, TimeUnit.SECONDS);
+                results = recipeAsync.get(10, TimeUnit.SECONDS);
             } catch (ExecutionException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {

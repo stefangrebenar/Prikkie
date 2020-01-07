@@ -33,8 +33,12 @@ import java.util.concurrent.TimeoutException;
 
 public class AHAPI {
     private String urlQuery = App.getContext().getString(R.string.ah_api);
+    private onResultLoadedListener mListener;
     private List<Product> products;
-
+    public AHAPI(int resultSize, onResultLoadedListener listener){
+        urlQuery += "?size=" + resultSize;
+        mListener = listener;
+    }
     public enum orderBy{
         ASC,
         DESC
@@ -68,52 +72,56 @@ public class AHAPI {
 
     //gets the result of a query
     public List<Product> getProducts(Context context) {
-        try{
-            HttpGet httppost = new HttpGet(urlQuery);
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpResponse response = httpclient.execute(httppost);        // StatusLine stat = response.getStatusLine();
-            int status = response.getStatusLine().getStatusCode();
+        final List<Product> products = new ArrayList<>();
+        RequestQueue queue = Volley.newRequestQueue(context);
 
-            if (status == 200) {
-                HttpEntity entity = response.getEntity();
-                String data = EntityUtils.toString(entity);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, urlQuery, null, new Response.Listener<JSONObject>() {
 
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
 
-                JSONObject json = new JSONObject(data);
+                            JSONArray productsArray = response.getJSONArray("cards");
 
-                JSONArray productsArray = json.getJSONArray("cards");
-                for (int i = 0; i < productsArray.length(); i++) {
-                    if (products == null) {
-                        products = new ArrayList<Product>();
+                            for (int i = 0; i < productsArray.length(); i++) {
+                                JSONObject base = response.getJSONArray("cards").getJSONObject(i).getJSONArray("products").getJSONObject(0);
+
+                                Product product = new Product();
+
+                                if(base.has("title"))
+                                    product.name = base.getString("title");
+                                if(base.has("summary"))
+                                    product.description = base.getString("summary");
+                                if(base.getJSONObject("price").has("unitSize"))
+                                    product.weight = base.getJSONObject("price").getString("unitSize");
+                                if(base.getJSONObject("price").has("unitInfo"))
+                                    product.kgPrice = base.getJSONObject("price").getJSONObject("unitInfo").getDouble("price");
+                                if(base.getJSONObject("price").has("now"))
+                                    product.price = base.getJSONObject("price").getDouble("now");
+                                if(base.getJSONArray("images").length() > 0 && base.getJSONArray("images").getJSONObject(0).has("url"))
+                                    product.imgURL = base.getJSONArray("images").getJSONObject(0).getString("url");
+
+                                products.add(product);
+                            }
+//                            onLoad(products);
+                            mListener.onResultLoaded(products);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            onFail();
+                        }
                     }
-                    JSONObject base = productsArray.getJSONObject(i).getJSONArray("products").getJSONObject(0);
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                    }
+                });
 
-                    Product product = new Product();
+        queue.add(jsonObjectRequest);
 
-                    if (base.has("title"))
-                        product.name = base.getString("title");
-                    if (base.has("summary"))
-                        product.description = base.getString("summary");
-                    if (base.getJSONObject("price").has("unitSize"))
-                        product.weight = base.getJSONObject("price").getString("unitSize");
-                    if (base.getJSONObject("price").has("unitInfo"))
-                        product.kgPrice = base.getJSONObject("price").getJSONObject("unitInfo").getDouble("price");
-                    if (base.getJSONObject("price").has("now"))
-                        product.price = base.getJSONObject("price").getDouble("now");
-                    if (base.getJSONArray("images").length() > 0 && base.getJSONArray("images").getJSONObject(0).has("url"))
-                        product.imgURL = base.getJSONArray("images").getJSONObject(0).getString("url");
-                    products.add(product);
-                }
-                return products;
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-
-            e.printStackTrace();
-        }
-        return null;
+        return products;
     }
 
     public void onFail() {
