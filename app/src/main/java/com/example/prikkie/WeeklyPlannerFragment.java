@@ -100,7 +100,7 @@ public class WeeklyPlannerFragment extends Fragment {
 
                 if (!budgetHolder.getText().toString().isEmpty() && !daysHolder.getText().toString().isEmpty()) {
                     resultItems.clear();
-                    if(lastTask != null){
+                    if (lastTask != null) {
                         lastTask.cancel(true);
                     }
                     lastTask = new ProductAsync(Float.parseFloat(budgetHolder.getText().toString()), Integer.parseInt(daysHolder.getText().toString()));
@@ -245,13 +245,18 @@ public class WeeklyPlannerFragment extends Fragment {
 
                 double minPrice = Double.POSITIVE_INFINITY;
                 if (products == null) {
+
+                    Log.i("planner123", ingredient.Dutch + ", " + ingredient.Taxonomy);
                     return minPrice;
                 }
 
                 minPrice = products.get(0).price;
                 ingredientPrice.put(ingredient.Dutch, minPrice);
                 price += minPrice;
+
+
             }
+
             return price;
         }
 
@@ -508,7 +513,7 @@ public class WeeklyPlannerFragment extends Fragment {
         }
 
         public ArrayList<Recipe> getRandomRecipes2(int[] checkedIds) {
-            String urlQuery = App.getContext().getString(R.string.prikkie_api) + App.getContext().getString(R.string.prikkie_recipes);
+            String urlQuery = App.getContext().getString(R.string.prikkie_api) + "randomrecipe";//App.getContext().getString(R.string.prikkie_recipes);
             ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
             try {
