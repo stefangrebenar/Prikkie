@@ -17,9 +17,6 @@ import androidx.fragment.app.FragmentTransaction;
 public class HomeFragment extends Fragment {
     private static HomeFragment m_fragment;
     private static Fragment m_currentFragment;
-    public String Tab = "Home";
-
-    private View mview;
     public static HomeFragment getFragment(){
         if(m_fragment == null){
             m_fragment = new HomeFragment();
@@ -40,18 +37,27 @@ public class HomeFragment extends Fragment {
 
         final TextView DefaultView = (TextView) view.findViewById(R.id.FirstButton);
 
-
         DefaultView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
                 if(m_currentFragment != HomeDefaultFragment.getFragment()) {
                     m_currentFragment = HomeDefaultFragment.getFragment();
-                    Tab = "Home";
-                    setBackground(Tab);
                     setFragment(m_currentFragment, R.id.frame_container);
                 }
             }
         });
+
+        TextView textButton = (TextView) view.findViewById(R.id.TextButton);
+        textButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(m_currentFragment != ShoppingListFragment.getFragment()) {
+                    m_currentFragment = ShoppingListFragment.getFragment();
+                    setFragment(m_currentFragment, R.id.frame_container);
+                }
+            }
+        });
+
 
         final TextView Recipe = (TextView) view.findViewById(R.id.Recipe);
         Recipe.setOnClickListener(new View.OnClickListener() {
@@ -59,8 +65,6 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 if(m_currentFragment != RecipeFragment.getFragment()) {
                     m_currentFragment = RecipeFragment.getFragment();
-                    Tab = "Recipe";
-                    setBackground(Tab);
                     setFragment(m_currentFragment, R.id.frame_container);
                 }
             }
@@ -72,29 +76,16 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 if(m_currentFragment != SearchFragment.getFragment()) {
                     m_currentFragment = SearchFragment.getFragment();
-                    Tab = "Search";
-                    setBackground(Tab);
-                    setFragment(m_currentFragment, R.id.frame_container);
-
+                    setFragment(SearchFragment.getFragment(), R.id.frame_container);
                 }
             }
         });
-
-        final TextView Favorites = (TextView) view.findViewById(R.id.Favorites);
-        Favorites.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(m_currentFragment != FavoritesFragment.getFragment()){
-                    m_currentFragment = FavoritesFragment.getFragment();
-                    Tab="Favorites";
-                    setBackground(Tab);
-                    setFragment(m_currentFragment, R.id.frame_container);
-                }
-            }
-        });
-
-        mview = view;
-        setBackground(Tab);
+//        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        String test = "";
+        for(Fragment fr : getActivity().getSupportFragmentManager().getFragments()){
+            test += fr.getClass().getName();
+            test += "\n";
+        }
         return view;
     }
 
@@ -111,45 +102,7 @@ public class HomeFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
-    public void setBackground(String tab){
-        TextView home =  mview.findViewById(R.id.FirstButton);
-        TextView recipe = mview.findViewById(R.id.Recipe);
-        TextView search = mview.findViewById(R.id.Search);
-        TextView Favorites =  mview.findViewById(R.id.Favorites);
-        if(Tab != "Home")
-        {
-            home.setTextColor(Color.BLACK);
-        }
-
-        if(Tab != "Recipe"){
-            recipe.setTextColor(Color.BLACK);
-        }
-
-        if(Tab != "Search")
-        {
-            search.setTextColor(Color.BLACK);
-        }
-
-        if(Tab != "Favorites")
-        {
-            Favorites.setTextColor(Color.BLACK);
-        }
-///////////////////////////////////////////////////////////////////////////////////////////////
-        if(Tab == "Home"){
-            home.setTextColor(getResources().getColor(R.color.colorPrimary));
-        }
-
-        if(Tab == "Recipe") {
-
-            recipe.setTextColor(getResources().getColor(R.color.colorPrimary));
-        }
-
-        if(Tab=="Search"){
-            search.setTextColor(getResources().getColor(R.color.colorPrimary));
-        }
-
-        if(Tab=="Favorites"){
-            Favorites.setTextColor(getResources().getColor(R.color.colorPrimary));
-        }
+    public void setWhiteBackground(Button button){
+        button.setBackgroundColor(Color.BLUE);
     }
 }
