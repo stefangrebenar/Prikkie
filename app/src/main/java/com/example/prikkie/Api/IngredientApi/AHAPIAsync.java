@@ -1,6 +1,7 @@
 package com.example.prikkie.Api.IngredientApi;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.prikkie.App;
 import com.example.prikkie.R;
@@ -21,11 +22,21 @@ import java.util.List;
 
 public class AHAPIAsync extends AsyncTask<String, Void, List<Product>> {
     private String urlQuery = App.getContext().getString(R.string.ah_api);
+    private onResultLoadedListener listener;
     private List<Product> products;
 
     public AHAPIAsync(int resultSize){
         urlQuery += App.getContext().getString(R.string.ah_size) + resultSize;
     }
+
+    public void setListener(onResultLoadedListener listener) {
+        this.listener = listener;
+    }
+
+    public interface onResultLoadedListener{
+        void onResultLoaded(List<Product> products);
+    }
+
 
     public void orderBy(AHAPI.orderBy order){
         if(order == AHAPI.orderBy.ASC){

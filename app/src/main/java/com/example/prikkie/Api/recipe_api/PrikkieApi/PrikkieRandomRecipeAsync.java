@@ -100,6 +100,12 @@ public class PrikkieRandomRecipeAsync extends AsyncTask<String, Void, ArrayList<
                             if(ingredientObject.has("name")){
                                 ingredient.Dutch = ingredientObject.getString("name");
                             }
+                            if (ingredientObject.has("amount")) {
+                                ingredient.amount = ingredientObject.getString("amount");
+                            }
+                            if (ingredientObject.has("unit")) {
+                                ingredient.unit = ingredientObject.getString("unit");
+                            }
                             if(ingredientObject.has("taxonomy")) {
                                 ingredient.Taxonomy = ingredientObject.getString("taxonomy");
                             }

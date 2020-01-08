@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = HomeFragment.getFragment();
                             break;
                         case R.id.nav_planner:
-                            selectedFragment = PlannerFragment.getFragment();
+                            selectedFragment = WeeklyPlannerFragment.getFragment();
                             break;
                         case R.id.nav_shoppinglist:
                             selectedFragment = ShoppingListFragment.getFragment();
