@@ -33,6 +33,7 @@ import java.util.concurrent.TimeoutException;
 
 public class AHAPI {
     private String urlQuery = App.getContext().getString(R.string.ah_api);
+    private onResultLoadedListener mListener;
     private List<Product> products;
 
     public enum orderBy{
@@ -40,8 +41,9 @@ public class AHAPI {
         DESC
     }
 
-    public AHAPI(int resultSize){
-        urlQuery += App.getContext().getString(R.string.ah_size) + resultSize;
+    public AHAPI(int resultSize, onResultLoadedListener listener){
+        urlQuery += "?size=" + resultSize;
+        mListener = listener;
     }
 
     public void orderBy(AHAPI.orderBy order){

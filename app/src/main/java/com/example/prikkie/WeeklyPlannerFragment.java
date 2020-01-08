@@ -185,12 +185,6 @@ public class WeeklyPlannerFragment extends Fragment {
                     Log.d("planner123", "didn't get any recipes");
                     return null;
                 }
-                for(int i = 0; i < recipes.size(); i++){
-                    Log.d("TEST", "Recipe found: " + recipes.get(i).title);
-                    for(int j = 0; j < recipes.get(i).ingredients.size(); j++){
-                        Log.d("TEST", "ingredient = " + recipes.get(i).ingredients.get(j).Dutch);
-                    }
-                }
                 Log.d("planner123", "Amount of recipes found" + recipes.size());
 
                 for (Recipe recipe : recipes) {
@@ -232,7 +226,7 @@ public class WeeklyPlannerFragment extends Fragment {
                     continue;
                 }
 
-                AHAPI api = new AHAPI(72);
+                AHAPI api = new AHAPI(1, listener);
                 api.setQuery(ingredient.Dutch);
                 api.setTaxonomy(ingredient.Taxonomy);
                 api.orderBy(AHAPI.orderBy.ASC);
@@ -415,7 +409,6 @@ public class WeeklyPlannerFragment extends Fragment {
 
             Log.d("planner123", "Amount of recipes" + amountOfRecipes);
             do {
-                Log.d("TEST", "Goede method");
                 Log.i("planner123", "ignored recipeIds" + Arrays.toString(checkedRecipes));
                 ArrayList<Recipe> recipes = getRandomRecipes2(this.checkedRecipes);
                 if (recipes == null) {
@@ -463,7 +456,7 @@ public class WeeklyPlannerFragment extends Fragment {
                     continue;
                 }
 
-                AHAPI api = new AHAPI(1);
+                AHAPI api = new AHAPI(1, listener);
                 api.setQuery(ingredient.Dutch);
                 api.setTaxonomy(ingredient.Taxonomy);
                 api.orderBy(AHAPI.orderBy.ASC);
@@ -510,10 +503,8 @@ public class WeeklyPlannerFragment extends Fragment {
         }
 
         public ArrayList<Recipe> getRandomRecipes2(int[] checkedIds) {
-            Log.d("TEST", "First things first");
             String urlQuery = App.getContext().getString(R.string.prikkie_api) + "randomrecipe";//App.getContext().getString(R.string.prikkie_recipes);
             ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-            Log.d("TEST", "komt hier");
             try {
                 String entityString = "";
                 for (int i = 0; i < checkedIds.length; i++) {
@@ -523,7 +514,6 @@ public class WeeklyPlannerFragment extends Fragment {
                         entityString += (", " + checkedIds[i]);
                     }
                 }
-                Log.d("TEST", "created entityString");
                 // Preform request
                 HttpPost httppost = new HttpPost(urlQuery);
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -534,7 +524,6 @@ public class WeeklyPlannerFragment extends Fragment {
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpResponse response = httpclient.execute(httppost);        // StatusLine stat = response.getStatusLine();
                 int status = response.getStatusLine().getStatusCode();
-                Log.d("TEST", "status = " + status);
                 // If response is Ok 200
                 if (status == 200) {
                     HttpEntity entity = response.getEntity();
@@ -605,4 +594,16 @@ public class WeeklyPlannerFragment extends Fragment {
             return recipes;
         }
     }
+    AHAPI.onResultLoadedListener listener = new AHAPI.onResultLoadedListener() {
+        @Override
+        public void onResultLoaded(List<Product> products) {
+//            resultItems.clear();
+//
+//            String text = "";
+//            for (Product product:products) {
+//                resultItems.add(new ExampleItem(product.imgURL, product.name, Double.toString(product.price)));
+//            }
+//            mAdapter.notifyDataSetChanged();
+        }
+    };
 }

@@ -13,7 +13,7 @@
     <!--AH API-->
     <string name="ah_api">https://www.ah.nl/zoeken/api/products/search</string>
     <string name="ah_size">"?size="</string>
-    <string name="ah_taxonomy">"&amp;taxonomySlug="</string>
+    <string name="ah_taxonomy">"&amp;taxonomyslug="</string>
     <string name="ah_query">"&amp;query="</string>
 
 
