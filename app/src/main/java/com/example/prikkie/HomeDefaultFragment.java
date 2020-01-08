@@ -82,11 +82,17 @@ public class HomeDefaultFragment extends Fragment {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendBudget();
-                m_view.findViewById(R.id.RecipeScrollView).setVisibility(View.VISIBLE);
-                RecipeThread rt = new RecipeThread();
-                Thread t = new Thread(rt);
-                t.start();
+                if(!budgetText.getText().toString().isEmpty()) {
+                    sendBudget();
+                    m_view.findViewById(R.id.RecipeScrollView).setVisibility(View.VISIBLE);
+                    RecipeThread rt = new RecipeThread();
+                    Thread t = new Thread(rt);
+                    t.start();
+                }
+                else{
+                    Toast msg = Toast.makeText(getContext(), "Vul een budget in", Toast.LENGTH_LONG);
+                    msg.show();
+                }
             }
         });
         budgetText = (EditText) m_view.findViewById(R.id.budgetID);
