@@ -12,6 +12,7 @@ public class Recipe {
     public ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
     public String description;
     public String method;
+    public double price;
     public int persons;
 
     public Recipe(){
