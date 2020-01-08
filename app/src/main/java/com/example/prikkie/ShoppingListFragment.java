@@ -59,7 +59,7 @@ public class ShoppingListFragment extends Fragment {
         emptyText = view.findViewById(R.id.EmptyListMessage);
 
         createExampleList();
-        setupButtons(view.getContext());
+        //setupButtons(view.getContext());
 
         buildRecyclerView();
         checkIfEmpty();
