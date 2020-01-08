@@ -3,12 +3,14 @@ package com.example.prikkie;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.prikkie.RoomShoppingList.ShoppingListViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -30,24 +32,14 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         public ImageView mImageView;
         public TextView mTopText;
         public TextView mBottomText;
+        public Button addButton;
 
         public ShoppingListViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             mTopText = itemView.findViewById(R.id.topText);
             mBottomText = itemView.findViewById(R.id.bottomText);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(listener != null){
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION){
-                            listener.onItemClick(position);
-                        }
-                    }
-                }
-            });
+            addButton = itemView.findViewById(R.id.addProduct);
         }
     }
 
@@ -63,13 +55,18 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ShoppingListViewHolder holder, int position) {
+    public void onBindViewHolder(ShoppingListViewHolder holder, final int position) {
         ExampleItem currentItem = mExampleList.get(position);
 
         Picasso.get().load(currentItem.getImageResource()).resize(50,50).into(holder.mImageView);
         holder.mTopText.setText(currentItem.getTopText());
-        holder.mBottomText.setText(currentItem.getBottomText());
-
+        holder.mBottomText.setText("€" + currentItem.getBottomText());
+        holder.addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onItemClick(position);
+            }
+        });
     }
 
     @Override

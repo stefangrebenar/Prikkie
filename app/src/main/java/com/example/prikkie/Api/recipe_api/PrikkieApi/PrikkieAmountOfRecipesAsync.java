@@ -1,6 +1,7 @@
 package com.example.prikkie.Api.recipe_api.PrikkieApi;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.prikkie.App;
 import com.example.prikkie.R;
@@ -19,12 +20,11 @@ public class PrikkieAmountOfRecipesAsync  extends AsyncTask<String, Void, Intege
     protected Integer doInBackground(String... strings) {
 
         // Preform request
-        HttpGet httppost = new HttpGet(urlQuery);
+        HttpGet httpGet = new HttpGet(urlQuery);
         HttpClient httpclient = new DefaultHttpClient();
         try {
-            HttpResponse response = httpclient.execute(httppost);        // StatusLine stat = response.getStatusLine();
+            HttpResponse response = httpclient.execute(httpGet);        // StatusLine stat = response.getStatusLine();
             int status = response.getStatusLine().getStatusCode();
-
             // If response is Ok 200
             if (status == 200) {
                 HttpEntity entity = response.getEntity();

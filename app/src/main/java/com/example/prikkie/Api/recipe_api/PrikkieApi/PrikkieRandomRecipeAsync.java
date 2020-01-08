@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class PrikkieRandomRecipeAsync extends AsyncTask<String, Void, ArrayList<Recipe>> {
-    private final String urlQuery = App.getContext().getString(R.string.prikkie_api) + App.getContext().getString(R.string.prikkie_recipes);
+    private final String urlQuery = App.getContext().getString(R.string.prikkie_api) + App.getContext().getString(R.string.prikkie_randomRecipes);
     private ArrayList<Recipe> recipes;
     public int[] checkedIds;
 
@@ -100,13 +100,19 @@ public class PrikkieRandomRecipeAsync extends AsyncTask<String, Void, ArrayList<
                             if(ingredientObject.has("name")){
                                 ingredient.Dutch = ingredientObject.getString("name");
                             }
+                            if (ingredientObject.has("amount")) {
+                                ingredient.amount = ingredientObject.getString("amount");
+                            }
+                            if (ingredientObject.has("unit")) {
+                                ingredient.unit = ingredientObject.getString("unit");
+                            }
                             if(ingredientObject.has("taxonomy")) {
                                 ingredient.Taxonomy = ingredientObject.getString("taxonomy");
                             }
                             ingredients.add(ingredient);
                         }
                         recipe.ingredients = ingredients;
-                    }
+                }
                     recipes.add(recipe);
                     Collections.shuffle(recipes);
                 }

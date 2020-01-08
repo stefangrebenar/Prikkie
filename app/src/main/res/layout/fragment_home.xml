@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
 
     <HorizontalScrollView
         android:id="@+id/ScrollViewHome"
@@ -12,73 +15,73 @@
         android:fillViewport="true">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@color/colorGrey"
-
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
+            android:orientation="horizontal"
+            android:scrollbars="none"
+            android:layout_marginTop="5dp">
 
             <TextView
                 android:id="@+id/FirstButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="0.2"
+                android:background="@color/colorWhite"
                 android:gravity="center"
-                android:background="@color/colorGrey"
                 android:text="Home"
-                android:textColor="@color/colorBlack"
-                android:textSize="16sp"
-                android:textAlignment="center"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp" />
-
-            <TextView
-                android:id="@+id/TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="20dp"
-                android:background="@color/colorGrey"
-                android:gravity="center"
-                android:text="Boodschappenlijst"
                 android:textAlignment="center"
                 android:textColor="@color/colorBlack"
-                android:textSize="16sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/Recipe"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_weight="0.2"
+                android:background="@color/colorWhite"
                 android:gravity="center"
-                android:background="@color/colorGrey"
                 android:text="Recepten"
-                android:textColor="@color/colorBlack"
-                android:textSize="16sp"
                 android:textAlignment="center"
-                android:layout_marginEnd="20dp"/>
+                android:textColor="@color/colorBlack"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/Search"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:background="@color/colorGrey"
-                android:text="Zoeken"
-                android:textColor="@color/colorBlack"
-                android:textSize="16sp"
-                android:textAlignment="center"
-                android:layout_marginEnd="20dp"/>
-
-            <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/colorGrey"
-                android:text="Coming soon" />
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_weight="0.2"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:text="Zoeken"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/Favorites"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="0.2"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:text="Favorieten"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="20sp" />
+
         </LinearLayout>
     </HorizontalScrollView>
-
 
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"></FrameLayout>
 
 </LinearLayout>

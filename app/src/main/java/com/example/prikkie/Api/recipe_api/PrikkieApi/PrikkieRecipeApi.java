@@ -64,4 +64,31 @@ public class PrikkieRecipeApi{
         //Todo Create different async calls.
         return results;
     }
+
+    public ArrayList<Recipe> getRecipeFromApi(String recipe, String includes, String excludes, int page){
+        ArrayList<Recipe> results = new ArrayList<Recipe>();
+        if(sp.contains(USER_PREF)){
+            // call api. query should exclude ingredient ids and checked recipe ids
+            Log.e("PrikkieRecipeApi", "Contains USER PREFERENCES");
+        }
+        else {
+            PrikkieRecipesAsync recipeAsync = new PrikkieRecipesAsync();
+            recipeAsync.name = recipe;
+            recipeAsync.includes = includes;
+            recipeAsync.excludes = excludes;
+            recipeAsync.page = page;
+            recipeAsync.execute();
+
+            try {
+                results = recipeAsync.get(1, TimeUnit.SECONDS);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+        }
+        return results;
+    }
 }

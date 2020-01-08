@@ -18,6 +18,7 @@
         android:focusable="true"
         android:foreground="@android:drawable/ic_menu_add"
         android:foregroundTint="#00FFFFFF"
+        android:visibility="gone"
         app:backgroundTint="#2196F3"
         app:layout_anchor="@+id/scrollView2"
         app:layout_anchorGravity="end|bottom"
@@ -33,12 +34,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/shoppingList"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        </androidx.recyclerview.widget.RecyclerView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/shoppingList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/EmptyListMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="De boodschappenlijst is leeg. Ga naar de zoekpagina om producten toe te voegen"
+                android:textAlignment="center" />
+
+        </LinearLayout>
     </ScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
