@@ -50,10 +50,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.example.prikkie.App.hideKeyboardFrom;
 
 
 public class WeeklyPlannerFragment extends Fragment {
 
+    public View m_view;
     private static WeeklyPlannerFragment m_fragment;
     private RecyclerView resultRecycler;
     private ArrayList<ExampleItem> resultItems = new ArrayList<>();
@@ -77,12 +79,12 @@ public class WeeklyPlannerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_planner, viewGroup, false);
+        m_view = inflater.inflate(R.layout.fragment_planner, viewGroup, false);
 
-        resultRecycler = (RecyclerView) view.findViewById(R.id.recipeList);
-        submitButton = view.findViewById(R.id.submitBudgetButton);
-        budgetHolder = view.findViewById(R.id.budgetHolder);
-        daysHolder = view.findViewById(R.id.daysHolder);
+        resultRecycler = (RecyclerView) m_view.findViewById(R.id.recipeList);
+        submitButton = m_view.findViewById(R.id.submitBudgetButton);
+        budgetHolder = m_view.findViewById(R.id.budgetHolder);
+        daysHolder = m_view.findViewById(R.id.daysHolder);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +98,7 @@ public class WeeklyPlannerFragment extends Fragment {
                     lastTask = new ProductAsync(Float.parseFloat(budgetHolder.getText().toString()), Integer.parseInt(daysHolder.getText().toString()));
                     lastTask.execute();
                     Toast msg = Toast.makeText(getContext(), "Recepten worden opgehaald", Toast.LENGTH_SHORT);
+                    hideKeyboardFrom(getContext(), m_view);
                     msg.show();
                 } else {
                     Toast msg = Toast.makeText(getContext(), "Vul een budget en aantal dagen in", Toast.LENGTH_LONG);
@@ -111,7 +114,7 @@ public class WeeklyPlannerFragment extends Fragment {
         int[] i = new int[0];
 
 
-        return view;
+        return m_view;
     }
 
     public void buildRecyclerView() {

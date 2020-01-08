@@ -91,12 +91,14 @@ public class SearchFragment extends Fragment {
 //        });
         ahGetter.execute();
         try {
-            List<Product> products = ahGetter.get(10, TimeUnit.SECONDS);
+            List<Product> products = ahGetter.get(1, TimeUnit.SECONDS);
             resultItems.clear();
 
             String text = "";
-            for (Product product:products) {
-                resultItems.add(new ExampleItem(product.imgURL, product.name, Double.toString(product.price)));
+            if(products != null) {
+                for (Product product : products) {
+                    resultItems.add(new ExampleItem(product.imgURL, product.name, Double.toString(product.price)));
+                }
             }
             mAdapter.notifyDataSetChanged();
         } catch (ExecutionException e) {

@@ -123,7 +123,7 @@ public class HomeDefaultFragment extends Fragment {
     public void sendBudget() {
 
         float budget = Float.parseFloat(budgetText.getText().toString());
-        budget = Float.parseFloat(decimalFormat.format(budget));
+        budget = Float.parseFloat(decimalFormat.format(budget).replace(",", "."));
         SharedPreferences.Editor editor = sp.edit();
         editor.putFloat(KEY_BUDGET, budget);
         editor.apply();
@@ -142,7 +142,7 @@ public class HomeDefaultFragment extends Fragment {
             api.execute();
 
             try {
-                Product product = api.get(10, TimeUnit.SECONDS).get(0);
+                Product product = api.get(1, TimeUnit.SECONDS).get(0);
                 ShoppingListItem item = new ShoppingListItem(product.name, product.price, product.imgURL, false);
                 shoppingListViewModel.insert(item);
             } catch (ExecutionException e) {
@@ -189,10 +189,8 @@ public class HomeDefaultFragment extends Fragment {
                         recipeTitle = m_view.findViewById(R.id.recipeTitle);
                         ConstraintLayout innerConstraintLayout = m_view.findViewById(R.id.innerConstraintLayout);
                         // recipePicture.setImageBitmap(recipe.bitmap);
-                        for (
-                                Ingredient ingredient : recipe.ingredients) {
-                            ingredientsListed += "+ " + ingredient.GetLanguage(1) + "\n";
-                        }
+
+                        ingredientsListed = recipe.ingredientsToString();
 
                         Picasso.get().load(recipe.imagePath).resize(recipePicture.getWidth(), recipePicture.getHeight()).into(recipePicture);
                         recipeTitle.setText(recipe.title);
