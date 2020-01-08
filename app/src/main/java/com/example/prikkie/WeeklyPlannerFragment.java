@@ -263,7 +263,6 @@ public class WeeklyPlannerFragment extends Fragment {
         public int getAmountofRecipes() {
             String urlQuery = App.getContext().getString(R.string.prikkie_api) + "totalrecipeamount";
 
-
             // Preform request
             HttpGet httppost = new HttpGet(urlQuery);
             HttpClient httpclient = new DefaultHttpClient();
@@ -286,6 +285,7 @@ public class WeeklyPlannerFragment extends Fragment {
         public ArrayList<Recipe> getRandomRecipes2(int[] checkedIds) {
             String urlQuery = App.getContext().getString(R.string.prikkie_api) + App.getContext().getString(R.string.prikkie_recipes);
             ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+            Log.i("planner123", "randomReached");
 
             try {
                 String entityString = "";
