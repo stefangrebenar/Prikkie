@@ -88,40 +88,12 @@ public class ShoppingListFragment extends Fragment {
 
     //Gives functionality to the add_buttons
     public void setupButtons(final Context context) {
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final AHAPI ahGetter = new AHAPI(72, new AHAPI.onResultLoadedListener() {
-                    @Override
-                    public void onResultLoaded(List<Product> products) {
-                        Product prod = products.get(new Random().nextInt(products.size()));
-                        ShoppingListItem item = new ShoppingListItem(prod.name, prod.price, prod.imgURL, false);
-
-                        shoppingListViewModel.insert(item);
-                    }
-                });
-                ahGetter.setQuery("brood");
-                ahGetter.orderBy(AHAPI.orderBy.ASC);
-                ahGetter.getProducts(getContext());
-            }
-        });
 
     }
 
     //Fills the shoppinglist with random products for testing
     public void createExampleList() {
-//        final AHAPI ahGetter = new AHAPI(72, new AHAPI.onResultLoadedListener() {
-//            @Override
-//            public void onResultLoaded(List<Product> products) {
-//                for (Product prod : products) {
-////                    mExampleList.add(new ExampleItem(prod.imgURL, prod.name, "€" + prod.price, false));
-//                }
-//                buildRecyclerView();
-//            }
-//        });
-//        ahGetter.setQuery("brood");
-//        ahGetter.orderBy(AHAPI.orderBy.ASC);
-//        ahGetter.getProducts(getContext());
+
     }
 
     //Builds the recylerView and sets up the adapter

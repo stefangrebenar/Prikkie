@@ -25,14 +25,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.prikkie.Api.IngredientApi.AHAPI;
 import com.example.prikkie.Api.IngredientApi.AHAPIAsync;
 import com.example.prikkie.Api.IngredientApi.Product;
-import com.example.prikkie.Api.recipe_api.PrikkieApi.PrikkieRandomRecipeAsync;
 import com.example.prikkie.Api.recipe_api.PrikkieApi.PrikkieRecipeApi;
 import com.example.prikkie.Api.recipe_api.Recipe;
-import com.example.prikkie.Helpers.ImageManager;
-import com.example.prikkie.RoomShoppingList.ShoppingListItem;
-import com.example.prikkie.RoomShoppingList.ShoppingListViewModel;
 import com.example.prikkie.ingredientDB.Ingredient;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -47,7 +42,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -55,13 +49,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-import static com.example.prikkie.App.hideKeyboardFrom;
-import static java.util.concurrent.TimeUnit.SECONDS;
+
 
 public class WeeklyPlannerFragment extends Fragment {
 
@@ -243,24 +232,21 @@ public class WeeklyPlannerFragment extends Fragment {
                     continue;
                 }
 
-                AHAPIAsync api = new AHAPIAsync(1);
+                AHAPI api = new AHAPI(72);
                 api.setQuery(ingredient.Dutch);
                 api.setTaxonomy(ingredient.Taxonomy);
                 api.orderBy(AHAPI.orderBy.ASC);
-                api.execute();
+                List<Product> products = api.getProducts(getContext());
 
-                try {
-                    Product product = api.get(2, TimeUnit.SECONDS).get(0);
-                    double minPrice = product.price;
-                    ingredientPrice.put(ingredient.Dutch, minPrice);
-                    price += minPrice;
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (TimeoutException e) {
-                    e.printStackTrace();
+                double minPrice = Double.POSITIVE_INFINITY;
+                if (products == null) {
+
+                    Log.i("planner123", ingredient.Dutch + ", " + ingredient.Taxonomy);
+                    return minPrice;
                 }
+                minPrice = products.get(0).price;
+                ingredientPrice.put(ingredient.Dutch, minPrice);
+                price += minPrice;
             }
 
             return price;
@@ -477,24 +463,25 @@ public class WeeklyPlannerFragment extends Fragment {
                     continue;
                 }
 
-                AHAPIAsync api = new AHAPIAsync(1);
+                AHAPI api = new AHAPI(1);
                 api.setQuery(ingredient.Dutch);
                 api.setTaxonomy(ingredient.Taxonomy);
                 api.orderBy(AHAPI.orderBy.ASC);
-                api.execute();
+                List<Product> results = api.getProducts(getContext());
 
-                try {
-                    Product product = api.get(2, TimeUnit.SECONDS).get(0);
-                    double minPrice = product.price;
-                    ingredientPrice.put(ingredient.Dutch, minPrice);
-                    price += minPrice;
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (TimeoutException e) {
-                    e.printStackTrace();
+
+                double minPrice = Double.POSITIVE_INFINITY;
+                if (results == null) {
+
+                    Log.i("planner123", ingredient.Dutch + ", " + ingredient.Taxonomy);
+                    return minPrice;
                 }
+                minPrice = results.get(0).price;
+                Product product = results.get(0);
+                 minPrice = product.price;
+                ingredientPrice.put(ingredient.Dutch, minPrice);
+                price += minPrice;
+
             }
             return price;
         }
