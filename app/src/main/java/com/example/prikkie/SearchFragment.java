@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.prikkie.Api.IngredientApi.AHAPI;
+import com.example.prikkie.Api.IngredientApi.AHAPIAsync;
 import com.example.prikkie.Api.IngredientApi.Product;
 import com.example.prikkie.Helpers.ImageManager;
 import com.example.prikkie.RoomShoppingList.ShoppingListItem;
@@ -78,21 +79,22 @@ public class SearchFragment extends Fragment {
     public void getProductsButton(View view) {
         final Product prod1;
 
-//        final  AHAPI ahGetter = new AHAPI(72, new AHAPI.onResultLoadedListener() {
-//            @Override
-//            public void onResultLoaded(List<Product> products) {
-//                resultItems.clear();
-//
-//                String text = "";
-//                for (Product product:products) {
-//                    resultItems.add(new ExampleItem(product.imgURL, product.name, Double.toString(product.price)));
-//                }
-//                mAdapter.notifyDataSetChanged();
-//            }
-//        });
-//        ahGetter.setQuery(editText.getText().toString());
-//        ahGetter.orderBy(AHAPI.orderBy.ASC);
-//        ahGetter.getProducts(getContext());
+        final AHAPIAsync ahGetter = new AHAPIAsync(72);
+        ahGetter.setQuery(editText.getText().toString());
+        ahGetter.orderBy(AHAPI.orderBy.ASC);
+        ahGetter.setListener(new AHAPIAsync.onResultLoadedListener() {
+            @Override
+            public void onResultLoaded(List<Product> products) {
+                resultItems.clear();
+
+                String text = "";
+                for (Product product:products) {
+                    resultItems.add(new ExampleItem(product.imgURL, product.name, Double.toString(product.price)));
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+        ahGetter.execute();
 
         hideKeyboardFrom(getContext(), mView);
     }

@@ -22,10 +22,15 @@ import java.util.List;
 
 public class AHAPIAsync extends AsyncTask<String, Void, List<Product>> {
     private String urlQuery = App.getContext().getString(R.string.ah_api);
+    private onResultLoadedListener listener;
     private List<Product> products;
 
     public AHAPIAsync(int resultSize){
         urlQuery += App.getContext().getString(R.string.ah_size) + resultSize;
+    }
+
+    public interface onResultLoadedListener{
+        void onResultLoaded(List<Product> products);
     }
 
     public void orderBy(AHAPI.orderBy order){
@@ -46,7 +51,9 @@ public class AHAPIAsync extends AsyncTask<String, Void, List<Product>> {
         urlQuery += App.getContext().getString(R.string.ah_query) + query;
     }
 
-
+    public void setListener(onResultLoadedListener listener){
+        this.listener = listener;
+    }
 
     @Override
     protected List<Product> doInBackground(String... strings) {
@@ -96,5 +103,11 @@ public class AHAPIAsync extends AsyncTask<String, Void, List<Product>> {
         e.printStackTrace();
     }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(List<Product> products) {
+        super.onPostExecute(products);
+        this.listener.onResultLoaded(products);
     }
 }
