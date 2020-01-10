@@ -37,6 +37,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         public RecipeViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
             m_loader = itemView.findViewById(R.id.progressBarWeeklyItem);
+            m_loader.setVisibility(View.INVISIBLE);
             mImageView = itemView.findViewById(R.id.recipeImage);
             mTopText = itemView.findViewById(R.id.topText);
             mBottomText = itemView.findViewById(R.id.bottomText);

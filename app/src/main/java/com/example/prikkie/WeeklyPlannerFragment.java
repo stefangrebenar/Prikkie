@@ -133,7 +133,7 @@ public class WeeklyPlannerFragment extends Fragment {
             @Override
             public void onItemClick(int position) {
                 String title = resultItems.get(position).getTopText();
-                ProgressBar loader = (ProgressBar)mLayoutManager.findViewByPosition(position).findViewById(R.id.progressBarWeeklyItem);
+                ProgressBar loader = (ProgressBar) mLayoutManager.findViewByPosition(position).findViewById(R.id.progressBarWeeklyItem);
                 loader.setVisibility(View.VISIBLE);
                 Toast msg = Toast.makeText(getContext(), title + " wordt vervangen voor een ander recept", Toast.LENGTH_SHORT);
                 msg.show();
@@ -183,12 +183,34 @@ public class WeeklyPlannerFragment extends Fragment {
             int amountOfRecipes = getAmountofRecipes(); // get from api (Maybe without the excluded recipes)
             int amountOfCheckedRecipes = 0;
             int[] checkedRecipes = new int[amountOfRecipes];
+            boolean firstDuplicate = true;
+            boolean firstTimeCheckingIfRecipeFallsWithinBudget = true;
             ArrayList<Recipe> finalRecipes = new ArrayList<Recipe>();
             ArrayList<Ingredient> excludedIngredients = new ArrayList<Ingredient>();
             // Api get preferences?
 
             Log.d("planner123", "Amount of recipes" + amountOfRecipes);
             do {
+                if(amountOfCheckedRecipes >= amountOfRecipes){
+                    // If the user wants to generate more recipes than the amount of recipes in the database.
+                    // In this case, the app will return duplicate recipes.
+                    if(firstDuplicate) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast msg = Toast.makeText(getContext(), "Voor dit aantal dagen kunnen er met het huidige budget een aantal recepten meerdere keren voorkomen.", Toast.LENGTH_SHORT);
+                                msg.show();
+                            }
+                        });
+                        firstDuplicate = false;
+                    }
+                    if(firstTimeCheckingIfRecipeFallsWithinBudget == false){
+                        break;
+                    }
+                    firstTimeCheckingIfRecipeFallsWithinBudget = false;
+                    amountOfCheckedRecipes = 0;
+                    checkedRecipes = new int[amountOfRecipes];
+                }
                 Log.i("planner123", "ignored recipeIds" + Arrays.toString(checkedRecipes));
                 ArrayList<Recipe> recipes = getRandomRecipes2(checkedRecipes);
                 if (recipes == null) {
@@ -203,6 +225,7 @@ public class WeeklyPlannerFragment extends Fragment {
                     if (recipePrice <= budget / amountOfDays) {
                         recipe.price = recipePrice;
                         finalRecipes.add(recipe);
+                        firstTimeCheckingIfRecipeFallsWithinBudget = true;
                         checkedRecipes[amountOfCheckedRecipes] = recipe.id;
                         amountOfCheckedRecipes++;
                         break;
@@ -212,7 +235,18 @@ public class WeeklyPlannerFragment extends Fragment {
                     }
                     amountOfCheckedRecipes++;
                 }
-            } while (finalRecipes.size() < amountOfDays && amountOfCheckedRecipes < amountOfRecipes - 1);
+            } while (finalRecipes.size() < amountOfDays && amountOfCheckedRecipes <= amountOfRecipes);
+
+            if(finalRecipes.size() < amountOfDays){
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast msg = Toast.makeText(getContext(), "Er konden helaas geen recepten binnen uw budget gevonden worden voor dit aantal dagen.", Toast.LENGTH_SHORT);
+                        msg.show();
+                    }
+                });
+            }
 
             Log.i("planner123", "returning final recipe");
             return finalRecipes;
@@ -402,12 +436,14 @@ public class WeeklyPlannerFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Recipe recipe) {
-//            for (Recipe recipe: recipes) {
-//                resultItems.add(new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN,"%.2f", recipe.price)));
-//            }
-            resultItems.set(index, new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN, "%.2f", recipe.price)));
-            mAdapter.notifyDataSetChanged();
-            loader.setVisibility(View.INVISIBLE);
+            try {
+                resultItems.set(index, new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN, "%.2f", recipe.price)));
+                mAdapter.notifyDataSetChanged();
+                loader.setVisibility(View.INVISIBLE);
+            }
+            catch(Exception e){
+                // For if the user would reroll all recipes while rerolling just 1.
+            }
             super.onPostExecute(recipe);
         }
 
