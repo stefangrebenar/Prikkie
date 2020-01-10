@@ -139,29 +139,47 @@ public class HomeDefaultFragment extends Fragment {
     }
 
     private void addIngredientsToShoppingList(){
-        int duration = Toast.LENGTH_SHORT;
 
-        for(Ingredient ingredient : recipe.ingredients) {
-            AHAPIAsync api = new AHAPIAsync(1);
-            api.setQuery(ingredient.Dutch);
-            api.setTaxonomy(ingredient.Taxonomy);
-            api.orderBy(AHAPI.orderBy.ASC);
-            api.execute();
+        Runnable shoppingThread = new Runnable() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        m_view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+                    }
+                });
+                for(Ingredient ingredient : recipe.ingredients) {
+                    AHAPIAsync api = new AHAPIAsync(1);
+                    api.setQuery(ingredient.Dutch);
+                    api.setTaxonomy(ingredient.Taxonomy);
+                    api.orderBy(AHAPI.orderBy.ASC);
+                    api.execute();
 
-            try {
-                Product product = api.get(1, TimeUnit.SECONDS).get(0);
-                ShoppingListItem item = new ShoppingListItem(product.name, product.price, product.imgURL, false);
-                shoppingListViewModel.insert(item);
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
+                    try {
+                        Product product = api.get(1, TimeUnit.SECONDS).get(0);
+                        ShoppingListItem item = new ShoppingListItem(product.name, product.price, product.imgURL, false);
+                        shoppingListViewModel.insert(item);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (TimeoutException e) {
+                        e.printStackTrace();
+                    }
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        m_view.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+                        Toast toast = Toast.makeText(getContext(), "Ingredienten voor " + recipe.title + " zijn toegevoegd aan de boodschappenlijst", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                });
             }
-        }
-        Toast toast = Toast.makeText(getContext(), "Ingredienten voor " + recipe.title + " zijn toegevoegd aan de boodschappenlijst", duration);
-        toast.show();
+        };
+        Thread t = new Thread(shoppingThread);
+        t.start();
     }
 
     // Seperate thread to keep the ui responsive while loading a recipe.
