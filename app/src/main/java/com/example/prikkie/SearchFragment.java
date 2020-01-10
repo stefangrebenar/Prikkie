@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -46,12 +47,14 @@ public class SearchFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private View mView;
     private ShoppingListViewModel shoppingListViewModel;
+    private ProgressBar m_loader;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, viewGroup, false);
         mView = view;
 
+        m_loader = (ProgressBar) view.findViewById(R.id.progressBarSearchFragment);
         resultRecycler = (RecyclerView) view.findViewById(R.id.resultRecycler);
         editText = (EditText) view.findViewById(R.id.editText);
         final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
@@ -62,6 +65,7 @@ public class SearchFragment extends Fragment {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                m_loader.setVisibility(View.VISIBLE);
                 getProductsButton(v);
             }
         });
@@ -71,49 +75,10 @@ public class SearchFragment extends Fragment {
     }
 
     public void getProductsButton(View view) {
-        final Product prod1;
-
-//        final  AHAPI ahGetter = new AHAPI(72, new AHAPI.onResultLoadedListener() {
-        final AHAPIAsync ahGetter = new AHAPIAsync(72);
-        ahGetter.setQuery(editText.getText().toString());
-        ahGetter.orderBy(AHAPI.orderBy.ASC);
-//        ahGetter.setListener(new AHAPIAsync.onResultLoadedListener() {
-//            @Override
-//            public void onResultLoaded(List<Product> products) {
-//                resultItems.clear();
-//
-//                String text = "";
-//                for (Product product:products) {
-//                    resultItems.add(new ExampleItem(product.imgURL, product.name, Double.toString(product.price)));
-//                }
-//                mAdapter.notifyDataSetChanged();
-//            }
-//        });
-        ahGetter.execute();
-        try {
-            List<Product> products = ahGetter.get(1, TimeUnit.SECONDS);
-            resultItems.clear();
-
-            String text = "";
-            if(products != null) {
-                for (Product product : products) {
-                    resultItems.add(new ExampleItem(product.imgURL, product.name, Double.toString(product.price)));
-                }
-            }
-            mAdapter.notifyDataSetChanged();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-        }
-
-//        ahGetter.setQuery(editText.getText().toString());
-//        ahGetter.orderBy(AHAPI.orderBy.ASC);
-//        ahGetter.getProducts(getContext());
-
         hideKeyboardFrom(getContext(), mView);
+        SearchThread st = new SearchThread();
+        Thread thread = new Thread(st);
+        thread.start();
     }
 
     //Builds the recylerView and sets up the adapter
@@ -142,5 +107,45 @@ public class SearchFragment extends Fragment {
                 shoppingListViewModel.insert(item);
             }
         });
+    }
+
+    class SearchThread implements Runnable{
+
+        @Override
+        public void run() {
+            final AHAPIAsync ahGetter = new AHAPIAsync(72);
+            ahGetter.setQuery(editText.getText().toString());
+            ahGetter.orderBy(AHAPI.orderBy.ASC);
+            ahGetter.execute();
+            try {
+                List<Product> products = ahGetter.get(2, TimeUnit.SECONDS);
+                resultItems.clear();
+
+                String text = "";
+                if(products != null) {
+                    for (Product product : products) {
+                        resultItems.add(new ExampleItem(product.imgURL, product.name, Double.toString(product.price)));
+                    }
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    m_loader.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
     }
 }

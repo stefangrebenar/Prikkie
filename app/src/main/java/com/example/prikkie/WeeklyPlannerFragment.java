@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +66,7 @@ public class WeeklyPlannerFragment extends Fragment {
     private EditText budgetHolder;
     private EditText daysHolder;
     private ProductAsync lastTask;
+    private ProgressBar m_loader;
 
     public static WeeklyPlannerFragment getFragment() {
         if (m_fragment == null) {
@@ -81,6 +83,7 @@ public class WeeklyPlannerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         m_view = inflater.inflate(R.layout.fragment_planner, viewGroup, false);
 
+        m_loader = (ProgressBar) m_view.findViewById(R.id.progressBarPlannerFragment);
         resultRecycler = (RecyclerView) m_view.findViewById(R.id.recipeList);
         submitButton = m_view.findViewById(R.id.submitBudgetButton);
         budgetHolder = m_view.findViewById(R.id.budgetHolder);
@@ -95,6 +98,7 @@ public class WeeklyPlannerFragment extends Fragment {
                     if (lastTask != null) {
                         lastTask.cancel(true);
                     }
+                    m_loader.setVisibility(View.VISIBLE);
                     lastTask = new ProductAsync(Float.parseFloat(budgetHolder.getText().toString()), Integer.parseInt(daysHolder.getText().toString()));
                     lastTask.execute();
                     Toast msg = Toast.makeText(getContext(), "Recepten worden opgehaald", Toast.LENGTH_SHORT);
@@ -129,9 +133,11 @@ public class WeeklyPlannerFragment extends Fragment {
             @Override
             public void onItemClick(int position) {
                 String title = resultItems.get(position).getTopText();
+                ProgressBar loader = (ProgressBar)mLayoutManager.findViewByPosition(position).findViewById(R.id.progressBarWeeklyItem);
+                loader.setVisibility(View.VISIBLE);
                 Toast msg = Toast.makeText(getContext(), title + " wordt vervangen voor een ander recept", Toast.LENGTH_SHORT);
                 msg.show();
-                new RefreshAsync(Float.parseFloat(budgetHolder.getText().toString()), Integer.parseInt(daysHolder.getText().toString()), position, new int[0]).execute();
+                new RefreshAsync(Float.parseFloat(budgetHolder.getText().toString()), Integer.parseInt(daysHolder.getText().toString()), loader, position, new int[0]).execute();
             }
         });
     }
@@ -168,6 +174,7 @@ public class WeeklyPlannerFragment extends Fragment {
                 resultItems.add(new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN, "%.2f", recipe.price)));
             }
             mAdapter.notifyDataSetChanged();
+            m_loader.setVisibility(View.INVISIBLE);
 
             super.onPostExecute(recipes);
         }
@@ -368,6 +375,7 @@ public class WeeklyPlannerFragment extends Fragment {
     }
 
     public class RefreshAsync extends AsyncTask<Void, Void, Recipe> {
+        private ProgressBar loader;
         private float budget;
         private int amountOfDays;
         private int index;
@@ -376,11 +384,12 @@ public class WeeklyPlannerFragment extends Fragment {
         private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
         final PrikkieRecipeApi api = new PrikkieRecipeApi();
 
-        public RefreshAsync(float budget, int amountOfDays, int index, int[] checkedRecipes) {
+        public RefreshAsync(float budget, int amountOfDays, ProgressBar loader, int index, int[] checkedRecipes) {
             this.budget = budget;
             this.amountOfDays = amountOfDays;
             this.index = index;
             this.checkedRecipes = checkedRecipes;
+            this.loader = loader;
         }
 
         @Override
@@ -398,7 +407,7 @@ public class WeeklyPlannerFragment extends Fragment {
 //            }
             resultItems.set(index, new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN, "%.2f", recipe.price)));
             mAdapter.notifyDataSetChanged();
-
+            loader.setVisibility(View.INVISIBLE);
             super.onPostExecute(recipe);
         }
 
