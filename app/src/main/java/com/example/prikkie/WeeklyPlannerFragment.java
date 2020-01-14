@@ -59,7 +59,7 @@ public class WeeklyPlannerFragment extends Fragment {
     public View m_view;
     private static WeeklyPlannerFragment m_fragment;
     private RecyclerView resultRecycler;
-    private ArrayList<ExampleItem> resultItems = new ArrayList<>();
+    private ArrayList<Recipe> resultItems = new ArrayList<>();
     private RecipeAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Button submitButton;
@@ -124,21 +124,14 @@ public class WeeklyPlannerFragment extends Fragment {
     public void buildRecyclerView() {
         resultRecycler.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager((MainActivity) getContext());
-        mAdapter = new RecipeAdapter(resultItems);
+        mAdapter = new RecipeAdapter(resultItems, (MainActivity)getActivity(), this, budgetHolder, daysHolder);
 
         resultRecycler.setLayoutManager(mLayoutManager);
         resultRecycler.setAdapter(mAdapter);
 
         mAdapter.setOnItemClickListener(new RecipeAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
-                String title = resultItems.get(position).getTopText();
-                ProgressBar loader = (ProgressBar) mLayoutManager.findViewByPosition(position).findViewById(R.id.progressBarWeeklyItem);
-                loader.setVisibility(View.VISIBLE);
-                Toast msg = Toast.makeText(getContext(), title + " wordt vervangen voor een ander recept", Toast.LENGTH_SHORT);
-                msg.show();
-                new RefreshAsync(Float.parseFloat(budgetHolder.getText().toString()), Integer.parseInt(daysHolder.getText().toString()), loader, position, new int[0]).execute();
-            }
+            public void onItemClick(int position) {    }
         });
     }
 
@@ -171,7 +164,7 @@ public class WeeklyPlannerFragment extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<Recipe> recipes) {
             for (Recipe recipe : recipes) {
-                resultItems.add(new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN, "%.2f", recipe.price)));
+                resultItems.add(recipe);
             }
             mAdapter.notifyDataSetChanged();
             m_loader.setVisibility(View.INVISIBLE);
@@ -392,6 +385,7 @@ public class WeeklyPlannerFragment extends Fragment {
                                 ingredients.add(ingredient);
                             }
                             recipe.ingredients = ingredients;
+                            Log.d("TEST", recipe.title + " : " + recipe.imagePath);
                         }
                         recipes.add(recipe);
                         Collections.shuffle(recipes);
@@ -408,9 +402,15 @@ public class WeeklyPlannerFragment extends Fragment {
         }
     }
 
+    public void Refresh(int position){
+        ProgressBar loader = (ProgressBar) mLayoutManager.findViewByPosition(position).findViewById(R.id.progressBarWeeklyItem);
+        loader.setVisibility(View.VISIBLE);
+        new WeeklyPlannerFragment.RefreshAsync(Float.parseFloat(budgetHolder.getText().toString()), Integer.parseInt(daysHolder.getText().toString()), loader, position, new int[0]).execute();
+    }
+
     public class RefreshAsync extends AsyncTask<Void, Void, Recipe> {
-        private ProgressBar loader;
         private float budget;
+        private ProgressBar loader;
         private int amountOfDays;
         private int index;
         private int[] checkedRecipes;
@@ -437,7 +437,7 @@ public class WeeklyPlannerFragment extends Fragment {
         @Override
         protected void onPostExecute(Recipe recipe) {
             try {
-                resultItems.set(index, new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN, "%.2f", recipe.price)));
+                resultItems.set(index, recipe);
                 mAdapter.notifyDataSetChanged();
                 loader.setVisibility(View.INVISIBLE);
             }
