@@ -44,6 +44,7 @@ public class RecipeDetails extends Fragment {
 
     private static Recipe recipe;
     private static boolean newRecipe = true;
+    private View m_view;
     private ImageView image;
     private static ScrollView sv;
     private ShoppingListViewModel shoppingListViewModel;
@@ -51,6 +52,7 @@ public class RecipeDetails extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup viewGroup, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recipe_details_fragment, viewGroup, false);
+        m_view = view;
         shoppingListViewModel = ViewModelProviders.of(getActivity()).get(ShoppingListViewModel.class);
         ImageView back = (ImageView) view.findViewById(R.id.back_button);
         if(back != null) {
@@ -100,30 +102,48 @@ public class RecipeDetails extends Fragment {
         }
     }
 
-    private void addIngredientsToShoppingList(){
-        int duration = Toast.LENGTH_SHORT;
+    private void addIngredientsToShoppingList() {
 
-        for(Ingredient ingredient : recipe.ingredients) {
-            AHAPIAsync api = new AHAPIAsync(1);
-            api.setQuery(ingredient.Dutch);
-            api.setTaxonomy(ingredient.Taxonomy);
-            api.orderBy(AHAPI.orderBy.ASC);
-            api.execute();
+        Runnable shoppingThread = new Runnable() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        m_view.findViewById(R.id.progressBarRecipeDetails).setVisibility(View.VISIBLE);
+                    }
+                });
+                for (Ingredient ingredient : recipe.ingredients) {
+                    AHAPIAsync api = new AHAPIAsync(1);
+                    api.setQuery(ingredient.Dutch);
+                    api.setTaxonomy(ingredient.Taxonomy);
+                    api.orderBy(AHAPI.orderBy.ASC);
+                    api.execute();
 
-            try {
-                Product product = api.get(1, TimeUnit.SECONDS).get(0);
-                ShoppingListItem item = new ShoppingListItem(product.name, product.price, product.imgURL, false);
-                shoppingListViewModel.insert(item);
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
+                    try {
+                        Product product = api.get(1, TimeUnit.SECONDS).get(0);
+                        ShoppingListItem item = new ShoppingListItem(product.name, product.price, product.imgURL, false);
+                        shoppingListViewModel.insert(item);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (TimeoutException e) {
+                        e.printStackTrace();
+                    }
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        m_view.findViewById(R.id.progressBarRecipeDetails).setVisibility(View.INVISIBLE);
+                        Toast toast = Toast.makeText(getContext(), "Ingredienten voor " + recipe.title + " zijn toegevoegd aan de boodschappenlijst", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                });
             }
-        }
-        Toast toast = Toast.makeText(getContext(), "Ingredienten voor " + recipe.title + " zijn toegevoegd aan de boodschappenlijst", duration);
-        toast.show();
+        };
+        Thread t = new Thread(shoppingThread);
+        t.start();
     }
 
     public static void setRecipe(Recipe recipe){

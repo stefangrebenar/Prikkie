@@ -33,6 +33,7 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +85,7 @@ public class HomeDefaultFragment extends Fragment {
             public void onClick(View v) {
                 if(!budgetText.getText().toString().isEmpty()) {
                     sendBudget();
-                    m_view.findViewById(R.id.RecipeScrollView).setVisibility(View.VISIBLE);
+                    m_view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
                     RecipeThread rt = new RecipeThread();
                     Thread t = new Thread(rt);
                     t.start();
@@ -138,34 +139,53 @@ public class HomeDefaultFragment extends Fragment {
     }
 
     private void addIngredientsToShoppingList(){
-        int duration = Toast.LENGTH_SHORT;
 
-        for(Ingredient ingredient : recipe.ingredients) {
-            AHAPIAsync api = new AHAPIAsync(1);
-            api.setQuery(ingredient.Dutch);
-            api.setTaxonomy(ingredient.Taxonomy);
-            api.orderBy(AHAPI.orderBy.ASC);
-            api.execute();
+        Runnable shoppingThread = new Runnable() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        m_view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+                    }
+                });
+                for(Ingredient ingredient : recipe.ingredients) {
+                    AHAPIAsync api = new AHAPIAsync(1);
+                    api.setQuery(ingredient.Dutch);
+                    api.setTaxonomy(ingredient.Taxonomy);
+                    api.orderBy(AHAPI.orderBy.ASC);
+                    api.execute();
 
-            try {
-                Product product = api.get(1, TimeUnit.SECONDS).get(0);
-                ShoppingListItem item = new ShoppingListItem(product.name, product.price, product.imgURL, false);
-                shoppingListViewModel.insert(item);
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
+                    try {
+                        Product product = api.get(1, TimeUnit.SECONDS).get(0);
+                        ShoppingListItem item = new ShoppingListItem(product.name, product.price, product.imgURL, false);
+                        shoppingListViewModel.insert(item);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (TimeoutException e) {
+                        e.printStackTrace();
+                    }
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        m_view.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+                        Toast toast = Toast.makeText(getContext(), "Ingredienten voor " + recipe.title + " zijn toegevoegd aan de boodschappenlijst", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                });
             }
-        }
-        Toast toast = Toast.makeText(getContext(), "Ingredienten voor " + recipe.title + " zijn toegevoegd aan de boodschappenlijst", duration);
-        toast.show();
+        };
+        Thread t = new Thread(shoppingThread);
+        t.start();
     }
 
     // Seperate thread to keep the ui responsive while loading a recipe.
     class RecipeThread implements Runnable {
         private float budget;
+        private Recipe cheapestRecipe = null;
         private Map<String, Double> ingredientPrice = new HashMap<String, Double>();
         private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
         final PrikkieRecipeApi api = new PrikkieRecipeApi();
@@ -182,9 +202,9 @@ public class HomeDefaultFragment extends Fragment {
         @Override
         public void run() {
             recipe = getRecipesByBudget();
-
+            MainActivity ma = (MainActivity) m_view.getContext();
             if (recipe != null) {
-                ((MainActivity) m_view.getContext()).runOnUiThread(new Runnable() {
+                ma.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         String ingredientsListed = "";
@@ -193,8 +213,6 @@ public class HomeDefaultFragment extends Fragment {
                         recipePreperations = m_view.findViewById(R.id.recipePreparations);
                         recipeDescription = m_view.findViewById(R.id.recipe_description);
                         recipeTitle = m_view.findViewById(R.id.recipeTitle);
-                        ConstraintLayout innerConstraintLayout = m_view.findViewById(R.id.innerConstraintLayout);
-                        // recipePicture.setImageBitmap(recipe.bitmap);
 
                         ingredientsListed = recipe.ingredientsToString();
 
@@ -203,9 +221,28 @@ public class HomeDefaultFragment extends Fragment {
                         recipeDescription.setText(recipe.description);
                         ingredientList.setText(ingredientsListed);
                         recipePreperations.setText(recipe.method);
+                        ScrollView sv = m_view.findViewById(R.id.RecipeScrollView);
+                        sv.scrollTo(0,0);
+                        sv.setVisibility(View.VISIBLE);
+                        m_view.findViewById(R.id.recipe_container_layout).setVisibility(View.VISIBLE);
                     }
                 });
             }
+            else {
+                ma.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast msg = Toast.makeText(getContext(), "Er zijn geen recepten gevonden binnen uw budget. Het goedkoopste recept is " + cheapestRecipe.title + " voor €" + cheapestRecipe.price, Toast.LENGTH_LONG);
+                        msg.show();
+                    }
+                });
+            }
+            ma.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    m_view.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+                }
+            });
         }
 
         public Recipe getRecipesByBudget() {
@@ -226,6 +263,7 @@ public class HomeDefaultFragment extends Fragment {
             ArrayList<Ingredient> excludedIngredients = new ArrayList<Ingredient>();
             // Api get preferences?
             do {
+                Log.d("TEST", Arrays.toString(checkedRecipes));
                 ArrayList<Recipe> recipes = getRandomRecipes(excludedIngredients, checkedRecipes);
                 if (recipes == null) {
                     Log.d("TEST", "didn't get any recipes");
@@ -233,18 +271,27 @@ public class HomeDefaultFragment extends Fragment {
                 }
                 for (Recipe recipe : recipes) {
                     double recipePrice = getPriceForIngredients(recipe.ingredients);
+                    recipe.price = recipePrice;
                     Log.d("TEST", recipe.title + " = " + recipePrice);
                     if (recipePrice <= budget) {
                         finalRecipe = recipe;
                         break;
+                    }
+                    if(cheapestRecipe == null){
+                        cheapestRecipe = recipe;
+                    }
+                    if(recipe.price < cheapestRecipe.price){
+                        cheapestRecipe = recipe;
                     }
                     if (checkedRecipes.length > 0) {
                         checkedRecipes[amountOfCheckedRecipes] = recipe.id;
                     }
                     amountOfCheckedRecipes++;
                 }
-            } while (finalRecipe == null && amountOfCheckedRecipes < amountOfRecipes - 1);
-
+                if(finalRecipe == null){
+                    Log.d("TEST", "FINAL RECIPE == NULL");
+                }
+            } while (finalRecipe == null && amountOfCheckedRecipes < amountOfRecipes);
             return finalRecipe;
         }
 

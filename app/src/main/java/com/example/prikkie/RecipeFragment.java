@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import androidx.annotation.UiThread;
 import androidx.cardview.widget.CardView;
@@ -40,6 +41,7 @@ public class RecipeFragment extends Fragment {
 
     private RecipeListAdapter m_adapter;
     private ArrayList<Recipe> recipes;
+    private ProgressBar m_loader;
 
     ConstraintLayout expandableView;
     Button arrowBtn;
@@ -54,6 +56,8 @@ public class RecipeFragment extends Fragment {
         include = view.findViewById(R.id.includedIngredients);
         exclude = view.findViewById(R.id.excludeIngredient);
         m_recipeListView = view.findViewById(R.id.recipeList);
+        m_loader = view.findViewById(R.id.progressBarRecipesFragment);
+        m_loader.setVisibility(View.VISIBLE);
 
         buildRecyclerView();
         showRecipe(view);
@@ -62,6 +66,7 @@ public class RecipeFragment extends Fragment {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                m_loader.setVisibility(View.VISIBLE);
                 showRecipe(v);
             }
         });
@@ -145,6 +150,7 @@ public class RecipeFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    m_loader.setVisibility(View.INVISIBLE);
                     m_adapter.setRecipes(recipes);
                 }
             });

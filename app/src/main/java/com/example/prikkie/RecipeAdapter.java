@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,9 +32,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         public TextView mTopText;
         public TextView mBottomText;
         public Button mRefreshButton;
+        public ProgressBar m_loader;
 
         public RecipeViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
+            m_loader = itemView.findViewById(R.id.progressBarWeeklyItem);
+            m_loader.setVisibility(View.INVISIBLE);
             mImageView = itemView.findViewById(R.id.recipeImage);
             mTopText = itemView.findViewById(R.id.topText);
             mBottomText = itemView.findViewById(R.id.bottomText);

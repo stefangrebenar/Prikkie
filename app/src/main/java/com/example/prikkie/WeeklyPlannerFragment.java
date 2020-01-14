@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +66,7 @@ public class WeeklyPlannerFragment extends Fragment {
     private EditText budgetHolder;
     private EditText daysHolder;
     private ProductAsync lastTask;
+    private ProgressBar m_loader;
 
     public static WeeklyPlannerFragment getFragment() {
         if (m_fragment == null) {
@@ -81,6 +83,7 @@ public class WeeklyPlannerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         m_view = inflater.inflate(R.layout.fragment_planner, viewGroup, false);
 
+        m_loader = (ProgressBar) m_view.findViewById(R.id.progressBarPlannerFragment);
         resultRecycler = (RecyclerView) m_view.findViewById(R.id.recipeList);
         submitButton = m_view.findViewById(R.id.submitBudgetButton);
         budgetHolder = m_view.findViewById(R.id.budgetHolder);
@@ -95,6 +98,7 @@ public class WeeklyPlannerFragment extends Fragment {
                     if (lastTask != null) {
                         lastTask.cancel(true);
                     }
+                    m_loader.setVisibility(View.VISIBLE);
                     lastTask = new ProductAsync(Float.parseFloat(budgetHolder.getText().toString()), Integer.parseInt(daysHolder.getText().toString()));
                     lastTask.execute();
                     Toast msg = Toast.makeText(getContext(), "Recepten worden opgehaald", Toast.LENGTH_SHORT);
@@ -129,9 +133,11 @@ public class WeeklyPlannerFragment extends Fragment {
             @Override
             public void onItemClick(int position) {
                 String title = resultItems.get(position).getTopText();
+                ProgressBar loader = (ProgressBar) mLayoutManager.findViewByPosition(position).findViewById(R.id.progressBarWeeklyItem);
+                loader.setVisibility(View.VISIBLE);
                 Toast msg = Toast.makeText(getContext(), title + " wordt vervangen voor een ander recept", Toast.LENGTH_SHORT);
                 msg.show();
-                new RefreshAsync(Float.parseFloat(budgetHolder.getText().toString()), Integer.parseInt(daysHolder.getText().toString()), position, new int[0]).execute();
+                new RefreshAsync(Float.parseFloat(budgetHolder.getText().toString()), Integer.parseInt(daysHolder.getText().toString()), loader, position, new int[0]).execute();
             }
         });
     }
@@ -168,6 +174,7 @@ public class WeeklyPlannerFragment extends Fragment {
                 resultItems.add(new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN, "%.2f", recipe.price)));
             }
             mAdapter.notifyDataSetChanged();
+            m_loader.setVisibility(View.INVISIBLE);
 
             super.onPostExecute(recipes);
         }
@@ -176,12 +183,34 @@ public class WeeklyPlannerFragment extends Fragment {
             int amountOfRecipes = getAmountofRecipes(); // get from api (Maybe without the excluded recipes)
             int amountOfCheckedRecipes = 0;
             int[] checkedRecipes = new int[amountOfRecipes];
+            boolean firstDuplicate = true;
+            boolean firstTimeCheckingIfRecipeFallsWithinBudget = true;
             ArrayList<Recipe> finalRecipes = new ArrayList<Recipe>();
             ArrayList<Ingredient> excludedIngredients = new ArrayList<Ingredient>();
             // Api get preferences?
 
             Log.d("planner123", "Amount of recipes" + amountOfRecipes);
             do {
+                if(amountOfCheckedRecipes >= amountOfRecipes){
+                    // If the user wants to generate more recipes than the amount of recipes in the database.
+                    // In this case, the app will return duplicate recipes.
+                    if(firstDuplicate) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast msg = Toast.makeText(getContext(), "Voor dit aantal dagen kunnen er met het huidige budget een aantal recepten meerdere keren voorkomen.", Toast.LENGTH_SHORT);
+                                msg.show();
+                            }
+                        });
+                        firstDuplicate = false;
+                    }
+                    if(firstTimeCheckingIfRecipeFallsWithinBudget == false){
+                        break;
+                    }
+                    firstTimeCheckingIfRecipeFallsWithinBudget = false;
+                    amountOfCheckedRecipes = 0;
+                    checkedRecipes = new int[amountOfRecipes];
+                }
                 Log.i("planner123", "ignored recipeIds" + Arrays.toString(checkedRecipes));
                 ArrayList<Recipe> recipes = getRandomRecipes2(checkedRecipes);
                 if (recipes == null) {
@@ -196,6 +225,7 @@ public class WeeklyPlannerFragment extends Fragment {
                     if (recipePrice <= budget / amountOfDays) {
                         recipe.price = recipePrice;
                         finalRecipes.add(recipe);
+                        firstTimeCheckingIfRecipeFallsWithinBudget = true;
                         checkedRecipes[amountOfCheckedRecipes] = recipe.id;
                         amountOfCheckedRecipes++;
                         break;
@@ -205,7 +235,18 @@ public class WeeklyPlannerFragment extends Fragment {
                     }
                     amountOfCheckedRecipes++;
                 }
-            } while (finalRecipes.size() < amountOfDays && amountOfCheckedRecipes < amountOfRecipes - 1);
+            } while (finalRecipes.size() < amountOfDays && amountOfCheckedRecipes <= amountOfRecipes);
+
+            if(finalRecipes.size() < amountOfDays){
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast msg = Toast.makeText(getContext(), "Er konden helaas geen recepten binnen uw budget gevonden worden voor dit aantal dagen.", Toast.LENGTH_SHORT);
+                        msg.show();
+                    }
+                });
+            }
 
             Log.i("planner123", "returning final recipe");
             return finalRecipes;
@@ -368,6 +409,7 @@ public class WeeklyPlannerFragment extends Fragment {
     }
 
     public class RefreshAsync extends AsyncTask<Void, Void, Recipe> {
+        private ProgressBar loader;
         private float budget;
         private int amountOfDays;
         private int index;
@@ -376,11 +418,12 @@ public class WeeklyPlannerFragment extends Fragment {
         private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
         final PrikkieRecipeApi api = new PrikkieRecipeApi();
 
-        public RefreshAsync(float budget, int amountOfDays, int index, int[] checkedRecipes) {
+        public RefreshAsync(float budget, int amountOfDays, ProgressBar loader, int index, int[] checkedRecipes) {
             this.budget = budget;
             this.amountOfDays = amountOfDays;
             this.index = index;
             this.checkedRecipes = checkedRecipes;
+            this.loader = loader;
         }
 
         @Override
@@ -393,12 +436,14 @@ public class WeeklyPlannerFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Recipe recipe) {
-//            for (Recipe recipe: recipes) {
-//                resultItems.add(new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN,"%.2f", recipe.price)));
-//            }
-            resultItems.set(index, new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN, "%.2f", recipe.price)));
-            mAdapter.notifyDataSetChanged();
-
+            try {
+                resultItems.set(index, new ExampleItem(recipe.imagePath, recipe.title, String.format(Locale.GERMAN, "%.2f", recipe.price)));
+                mAdapter.notifyDataSetChanged();
+                loader.setVisibility(View.INVISIBLE);
+            }
+            catch(Exception e){
+                // For if the user would reroll all recipes while rerolling just 1.
+            }
             super.onPostExecute(recipe);
         }
 
