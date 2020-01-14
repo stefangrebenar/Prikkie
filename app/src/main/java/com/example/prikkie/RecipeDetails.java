@@ -32,6 +32,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static com.example.prikkie.RecipeDetails.Fragment.*;
+
 public class RecipeDetails extends Fragment {
     private static RecipeDetails m_fragment;
     public static RecipeDetails getFragment(){
@@ -48,6 +50,11 @@ public class RecipeDetails extends Fragment {
     private ImageView image;
     private static ScrollView sv;
     private ShoppingListViewModel shoppingListViewModel;
+    public static enum Fragment {
+        RECIPES,
+        WEEKLYPLANNER
+    }
+    public Fragment PreviousFragment;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup viewGroup, @Nullable Bundle savedInstanceState) {
@@ -59,7 +66,12 @@ public class RecipeDetails extends Fragment {
             back.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setFragment(RecipeFragment.getFragment());
+                    if(PreviousFragment == RECIPES) {
+                        setFragment(RecipeFragment.getFragment());
+                    }
+                    else if(PreviousFragment == WEEKLYPLANNER){
+                            setFragmentMainActivity(WeeklyPlannerFragment.getFragment());
+                    }
                 }
             });
         }
@@ -160,8 +172,13 @@ public class RecipeDetails extends Fragment {
         }
     }
 
-    public void setFragment(Fragment fragment) {
+    public void setFragment(androidx.fragment.app.Fragment fragment) {
         MainActivity ma = (MainActivity)getActivity();
         ma.getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.frame_container, fragment).commit();
+    }
+
+    public void setFragmentMainActivity(androidx.fragment.app.Fragment fragment) {
+        MainActivity ma = (MainActivity)getActivity();
+        ma.getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.fragment_container, fragment).commit();
     }
 }

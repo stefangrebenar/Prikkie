@@ -54,8 +54,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
                             listener.onItemClick(position);
-                            RecipeDetails.setRecipe(m_recipes.get(position));
-                            setFragment(RecipeDetails.getFragment());
+                            RecipeDetails rd = RecipeDetails.getFragment();
+                            rd.setRecipe(m_recipes.get(position));
+                            rd.PreviousFragment = RecipeDetails.Fragment.RECIPES;
+                            setFragment(rd);
                         }
                     }
                 }
