@@ -23,8 +23,18 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     private OnItemClickListener m_Listener;
     private MainActivity mainActivity;
 
-    public void setRecipes(ArrayList<Recipe> recipes){
-        m_recipes = recipes;
+    public ArrayList<Recipe> getRecipes(){
+        return m_recipes;
+    }
+    public void setRecipes(ArrayList<Recipe> recipes, int currentPage){
+        // New query has been loaded, or anything else that means the list should be reloaded completely.
+        if(currentPage == 1){
+            m_recipes = recipes;
+        }
+        // The new loaded recipes should be added on the end of the list. (Same query, but want to load more)
+        else{
+            m_recipes.addAll(recipes);
+        }
         this.notifyDataSetChanged();
     }
 

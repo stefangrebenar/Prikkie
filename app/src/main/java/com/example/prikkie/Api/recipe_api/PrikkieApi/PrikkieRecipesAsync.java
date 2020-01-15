@@ -1,10 +1,12 @@
 package com.example.prikkie.Api.recipe_api.PrikkieApi;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.prikkie.Api.recipe_api.Recipe;
 import com.example.prikkie.App;
 import com.example.prikkie.R;
+import com.example.prikkie.RecipeFragment;
 import com.example.prikkie.ingredientDB.Ingredient;
 
 import org.apache.http.HttpEntity;
@@ -56,6 +58,7 @@ public class PrikkieRecipesAsync extends AsyncTask<String, Void, ArrayList<Recip
             urlQuery += "&" + App.getContext().getString(R.string.prikkie_page)+page;
 
             // Preform request
+            Log.d("TEST", urlQuery);
             HttpGet httpGet = new HttpGet(urlQuery);
             HttpClient httpclient = new DefaultHttpClient();
             HttpResponse response = httpclient.execute(httpGet);
@@ -124,6 +127,12 @@ public class PrikkieRecipesAsync extends AsyncTask<String, Void, ArrayList<Recip
                         }
                         this.recipes.add(recipe);
 //                        Collections.shuffle(this.recipes);
+                    }
+                }
+                if(jsonObject.has("last_page")){
+                    RecipeFragment rf = RecipeFragment.getFragment();
+                    if(rf.isVisible()){
+                        rf.lastPage = jsonObject.getInt("last_page");
                     }
                 }
                 return recipes;
