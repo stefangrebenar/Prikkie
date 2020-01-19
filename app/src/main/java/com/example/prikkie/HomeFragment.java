@@ -100,6 +100,9 @@ public class HomeFragment extends Fragment {
 
     public void setFragment(Fragment fragment, int frame){
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        if(getActivity().getSupportFragmentManager().getFragments().contains(RecipeDetails.getFragment())) {
+            fragmentTransaction.remove(RecipeDetails.getFragment());
+        }
         if (getActivity().getSupportFragmentManager().getFragments().contains(fragment)) {
             fragmentTransaction.remove(fragment);
             fragmentTransaction.add(frame, fragment);

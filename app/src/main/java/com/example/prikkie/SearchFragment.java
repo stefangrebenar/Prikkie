@@ -118,7 +118,7 @@ public class SearchFragment extends Fragment {
             ahGetter.orderBy(AHAPI.orderBy.ASC);
             ahGetter.execute();
             try {
-                List<Product> products = ahGetter.get(2, TimeUnit.SECONDS);
+                List<Product> products = ahGetter.get(3, TimeUnit.SECONDS);
                 resultItems.clear();
 
                 String text = "";

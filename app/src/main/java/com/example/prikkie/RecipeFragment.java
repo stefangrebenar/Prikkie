@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import androidx.annotation.UiThread;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -18,10 +18,11 @@ import androidx.transition.TransitionManager;
 
 import com.example.prikkie.Api.recipe_api.PrikkieApi.PrikkieRecipeApi;
 import com.example.prikkie.Api.recipe_api.Recipe;
-import com.example.prikkie.ingredientDB.Ingredient;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+
+import static com.example.prikkie.App.hideKeyboardFrom;
 
 public class RecipeFragment extends Fragment {
     private static RecipeFragment m_fragment;
@@ -38,10 +39,15 @@ public class RecipeFragment extends Fragment {
     private TextInputEditText include;
     private TextInputEditText exclude;
     private RecyclerView m_recipeListView;
+    private int currentPage;
+    public int lastPage;
+    public LinearLayoutManager layoutManager;
+    private boolean m_loadingMore;
 
     private RecipeListAdapter m_adapter;
     private ArrayList<Recipe> recipes;
     private ProgressBar m_loader;
+    private View m_view;
 
     ConstraintLayout expandableView;
     Button arrowBtn;
@@ -49,31 +55,32 @@ public class RecipeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup viewGroup, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recipe, viewGroup, false);
+        m_view = inflater.inflate(R.layout.fragment_recipe, viewGroup, false);
 
-        searchButton = view.findViewById(R.id.recipeSubmitButton);
-        searchQuery = view.findViewById(R.id.recipeSearch);
-        include = view.findViewById(R.id.includedIngredients);
-        exclude = view.findViewById(R.id.excludeIngredient);
-        m_recipeListView = view.findViewById(R.id.recipeList);
-        m_loader = view.findViewById(R.id.progressBarRecipesFragment);
-        m_loader.setVisibility(View.VISIBLE);
+        searchButton = m_view.findViewById(R.id.recipeSubmitButton);
+        searchQuery = m_view.findViewById(R.id.recipeSearch);
+        include = m_view.findViewById(R.id.includedIngredients);
+        exclude = m_view.findViewById(R.id.excludeIngredient);
+        m_recipeListView = m_view.findViewById(R.id.recipeList);
+        m_loader = m_view.findViewById(R.id.progressBarRecipesFragment);
 
         buildRecyclerView();
 
-        Button search = (Button) view.findViewById(R.id.recipeSubmitButton);
+        Button search = (Button) m_view.findViewById(R.id.recipeSubmitButton);
+
+        expandableView = m_view.findViewById(R.id.expandableView);
+        arrowBtn = m_view.findViewById(R.id.arrowBtn);
+        cardView = m_view.findViewById(R.id.cardView);
+
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 m_loader.setVisibility(View.VISIBLE);
-                showRecipe(v);
+                currentPage = 1;
+                showRecipe();
+                hideKeyboardFrom(getContext(), m_view);
             }
         });
-
-        expandableView = view.findViewById(R.id.expandableView);
-        arrowBtn = view.findViewById(R.id.arrowBtn);
-        cardView = view.findViewById(R.id.cardView);
-
         arrowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,18 +89,26 @@ public class RecipeFragment extends Fragment {
                     expandableView.setVisibility(View.VISIBLE);
                     arrowBtn.setBackgroundResource(R.drawable.ic_keyboard_arrow_up_white_24dp);
                 } else {
-                    TransitionManager.beginDelayedTransition(cardView, new AutoTransition());
-                    expandableView.setVisibility(View.GONE);
-                    arrowBtn.setBackgroundResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+                    hideExpandableView();
                 }
             }
         });
 
-        search.performClick();
-        return view;
+        if(m_adapter.getRecipes() == null) {
+            m_loader.setVisibility(View.VISIBLE);
+            search.performClick();
+        }
+        return m_view;
     }
 
-    public void showRecipe(View view){
+    private void hideExpandableView(){
+        TransitionManager.beginDelayedTransition(cardView, new AutoTransition());
+        expandableView.setVisibility(View.GONE);
+        arrowBtn.setBackgroundResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+    }
+
+    public void showRecipe(){
+        m_loadingMore = true;
         //Get the recipe keywords
         String keywords = searchQuery.getText().toString();
         //Get the prefered ingredients
@@ -105,14 +120,40 @@ public class RecipeFragment extends Fragment {
         thread.name = keywords;
         thread.includes = ingredients;
         thread.excludes = excludes;
+        thread.page = currentPage;
         Thread t = new Thread(thread);
         t.start();
+    }
+
+    private void loadMoreRecipes(){
+        if(currentPage < lastPage){
+            currentPage++;
+            showRecipe();
+        }
     }
 
     //Builds the recylerView and sets up the adapter
     public void buildRecyclerView(){
         m_recipeListView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager((MainActivity) getContext());
+        m_recipeListView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                //super.onScrolled(recyclerView, dx, dy);
+
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                if (!m_loadingMore) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >=
+                            totalItemCount && firstVisibleItemPosition >= 0) {
+                        loadMoreRecipes();
+                    }
+                }
+            }
+        });
+        layoutManager = new LinearLayoutManager((MainActivity) getContext());
 
         if(m_adapter == null) {
             m_adapter = new RecipeListAdapter(recipes, getActivity());
@@ -149,10 +190,14 @@ public class RecipeFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if(expandableView.getVisibility()==View.VISIBLE){
+                        arrowBtn.performClick();
+                    }
+                    m_adapter.setRecipes(recipes, currentPage);
                     m_loader.setVisibility(View.INVISIBLE);
-                    m_adapter.setRecipes(recipes);
                 }
             });
+            m_loadingMore = false;
         }
 
         private ArrayList<Recipe> getRecipesFromApi(){

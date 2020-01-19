@@ -70,7 +70,11 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
 
-                    getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.fragment_container, selectedFragment).commit();
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    if(getSupportFragmentManager().getFragments().contains(RecipeDetails.getFragment())) {
+                        ft.remove(RecipeDetails.getFragment());
+                    }
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 }
             };
