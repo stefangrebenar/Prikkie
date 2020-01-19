@@ -190,9 +190,6 @@ public class RecipeFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if(expandableView.getVisibility()==View.VISIBLE){
-                        arrowBtn.performClick();
-                    }
                     m_adapter.setRecipes(recipes, currentPage);
                     m_loader.setVisibility(View.INVISIBLE);
                 }

@@ -70,13 +70,23 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
 
+
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    if(getSupportFragmentManager().getFragments().contains(RecipeDetails.getFragment())) {
-                        ft.remove(RecipeDetails.getFragment());
+                    if(HomeFragment.getFragment().isVisible() && selectedFragment == HomeFragment.getFragment()){
+                        // Stays on same page
+                    }else if(WeeklyPlannerFragment.getFragment().isVisible() && selectedFragment == WeeklyPlannerFragment.getFragment()){
+                        // Stays on same page
+                    }else{
+                        closeDetails(ft);
                     }
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 }
             };
 
+    private void closeDetails(FragmentTransaction ft){
+        if(getSupportFragmentManager().getFragments().contains(RecipeDetails.getFragment())) {
+            ft.remove(RecipeDetails.getFragment());
+        }
+    }
 }
