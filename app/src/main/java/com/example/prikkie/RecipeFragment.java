@@ -60,7 +60,6 @@ public class RecipeFragment extends Fragment {
         m_loader.setVisibility(View.VISIBLE);
 
         buildRecyclerView();
-        showRecipe(view);
 
         Button search = (Button) view.findViewById(R.id.recipeSubmitButton);
         search.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +69,6 @@ public class RecipeFragment extends Fragment {
                 showRecipe(v);
             }
         });
-
 
         expandableView = view.findViewById(R.id.expandableView);
         arrowBtn = view.findViewById(R.id.arrowBtn);
@@ -91,6 +89,7 @@ public class RecipeFragment extends Fragment {
             }
         });
 
+        search.performClick();
         return view;
     }
 

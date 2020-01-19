@@ -1,5 +1,6 @@
 package com.example.prikkie;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,12 +67,7 @@ public class RecipeDetails extends Fragment {
             back.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(PreviousFragment == RECIPES) {
-                        setFragment(RecipeFragment.getFragment());
-                    }
-                    else if(PreviousFragment == WEEKLYPLANNER){
-                            setFragmentMainActivity(WeeklyPlannerFragment.getFragment());
-                    }
+                    CloseView();
                 }
             });
         }
@@ -99,6 +95,7 @@ public class RecipeDetails extends Fragment {
         }
         return view;
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -111,6 +108,15 @@ public class RecipeDetails extends Fragment {
                 }
             });
             sv.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void CloseView(){
+        if(PreviousFragment == RECIPES) {
+            setFragment(RecipeFragment.getFragment());
+        }
+        else if(PreviousFragment == WEEKLYPLANNER){
+            setFragmentMainActivity(WeeklyPlannerFragment.getFragment());
         }
     }
 
@@ -144,14 +150,17 @@ public class RecipeDetails extends Fragment {
                         e.printStackTrace();
                     }
                 }
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        m_view.findViewById(R.id.progressBarRecipeDetails).setVisibility(View.INVISIBLE);
-                        Toast toast = Toast.makeText(getContext(), "Ingredienten voor " + recipe.title + " zijn toegevoegd aan de boodschappenlijst", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                });
+                Activity activity = getActivity();
+                if(activity != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            m_view.findViewById(R.id.progressBarRecipeDetails).setVisibility(View.INVISIBLE);
+                            Toast toast = Toast.makeText(getContext(), "Ingredienten voor " + recipe.title + " zijn toegevoegd aan de boodschappenlijst", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                    });
+                }
             }
         };
         Thread t = new Thread(shoppingThread);

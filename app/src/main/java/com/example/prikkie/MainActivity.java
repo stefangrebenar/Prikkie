@@ -1,6 +1,8 @@
 package com.example.prikkie;
 
+import android.app.Application;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -32,6 +34,22 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,HomeFragment.getFragment()).commit();
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(HomeDefaultFragment.getFragment().isVisible()){
+            this.finishAffinity();
+        } else if(RecipeDetails.getFragment().isVisible()){
+            RecipeDetails.getFragment().CloseView();
+        } else if(WeeklyPlannerFragment.getFragment().isVisible()){
+            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.fragment_container, HomeFragment.getFragment()).commit();
+        } else if(ShoppingListFragment.getFragment().isVisible()){
+            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.fragment_container, HomeFragment.getFragment()).commit();
+        }
+        else{
+            super.onBackPressed();
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
