@@ -67,6 +67,11 @@ public class RecipeFragment extends Fragment {
         buildRecyclerView();
 
         Button search = (Button) m_view.findViewById(R.id.recipeSubmitButton);
+
+        expandableView = m_view.findViewById(R.id.expandableView);
+        arrowBtn = m_view.findViewById(R.id.arrowBtn);
+        cardView = m_view.findViewById(R.id.cardView);
+
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,16 +79,8 @@ public class RecipeFragment extends Fragment {
                 currentPage = 1;
                 showRecipe();
                 hideKeyboardFrom(getContext(), m_view);
-                if(expandableView.getVisibility()==View.VISIBLE){
-                    hideExpandableView();
-                }
             }
         });
-
-        expandableView = m_view.findViewById(R.id.expandableView);
-        arrowBtn = m_view.findViewById(R.id.arrowBtn);
-        cardView = m_view.findViewById(R.id.cardView);
-
         arrowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,8 +190,11 @@ public class RecipeFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    m_loader.setVisibility(View.INVISIBLE);
+                    if(expandableView.getVisibility()==View.VISIBLE){
+                        arrowBtn.performClick();
+                    }
                     m_adapter.setRecipes(recipes, currentPage);
+                    m_loader.setVisibility(View.INVISIBLE);
                 }
             });
             m_loadingMore = false;

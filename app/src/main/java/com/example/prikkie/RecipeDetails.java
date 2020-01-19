@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -139,7 +140,7 @@ public class RecipeDetails extends Fragment {
                     api.execute();
 
                     try {
-                        Product product = api.get(1, TimeUnit.SECONDS).get(0);
+                        Product product = api.get(3, TimeUnit.SECONDS).get(0);
                         ShoppingListItem item = new ShoppingListItem(product.name, product.price, product.imgURL, false);
                         shoppingListViewModel.insert(item);
                     } catch (ExecutionException e) {
@@ -183,11 +184,15 @@ public class RecipeDetails extends Fragment {
 
     public void setFragment(androidx.fragment.app.Fragment fragment) {
         MainActivity ma = (MainActivity)getActivity();
-        ma.getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.frame_container, fragment).commit();
+        FragmentTransaction ft = ma.getSupportFragmentManager().beginTransaction();
+        ft.remove(m_fragment);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.frame_container, fragment).commit();
     }
 
     public void setFragmentMainActivity(androidx.fragment.app.Fragment fragment) {
         MainActivity ma = (MainActivity)getActivity();
-        ma.getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.fragment_container, fragment).commit();
+        FragmentTransaction ft = ma.getSupportFragmentManager().beginTransaction();
+        ft.remove(m_fragment);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.fragment_container, fragment).commit();
     }
 }

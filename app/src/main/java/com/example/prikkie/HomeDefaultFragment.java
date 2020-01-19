@@ -157,7 +157,7 @@ public class HomeDefaultFragment extends Fragment {
                     api.execute();
 
                     try {
-                        Product product = api.get(1, TimeUnit.SECONDS).get(0);
+                        Product product = api.get(3, TimeUnit.SECONDS).get(0);
                         ShoppingListItem item = new ShoppingListItem(product.name, product.price, product.imgURL, false);
                         shoppingListViewModel.insert(item);
                     } catch (ExecutionException e) {
